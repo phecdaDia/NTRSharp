@@ -32,7 +32,13 @@ namespace NewNtrClient
 				if (Source.InvokeRequired) Source.Invoke(Method);
 				else Method.DynamicInvoke();
 			} catch (Exception) { }
+			
 
+		}
+
+		public static IEnumerable<String> Split(this String Source, String Splitter, StringSplitOptions Options = StringSplitOptions.None)
+		{
+			return Source.Split(new string[] { Splitter }, Options);
 		}
 
 

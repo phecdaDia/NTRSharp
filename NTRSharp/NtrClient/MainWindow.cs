@@ -34,6 +34,8 @@ namespace NewNtrClient
 			this.Load += MainWindow_Load;
 
 			this.FormClosing += (s, e_) => { this.NtrClient?.Disconnect(false); };
+
+			// debugging
 			AllocConsole();
 		}
 
@@ -127,6 +129,7 @@ namespace NewNtrClient
 		
 		private void buttonMemlayout_Click(object sender, EventArgs e)
 		{
+			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
 			UInt32 Pid = GetPid();
 			this.NtrClient.SendMemLayoutPacket(Pid);
 		}
@@ -167,17 +170,16 @@ namespace NewNtrClient
 			ReadNtrStringType Rnst = this.ReadNtrStringType;
 			this.ReadNtrStringType = ReadNtrStringType.None;
 
-			if (Rnst == ReadNtrStringType.None)
-			{
-				LogLine(Message);
-				return;
-			}
-			else if (Rnst == ReadNtrStringType.Process)
+			LogLine(Message);
+			
+			if (Rnst == ReadNtrStringType.Process)
 			{
 				// Now replace regex:" {2,}" with a single space.
 				Message = new Regex(@"[ |\t]{2,}").Replace(Message, " ");
 
-				List<String> ProcessStringList = Message.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+				// probably going to rewrite this, I don't like this solution
+
+				List<String> ProcessStringList = Message.Split(Environment.NewLine).ToList();
 				List<String> cList = new List<string>();
 				List<NtrProcess> pList = new List<NtrProcess>();
 				for (int i = 0; i < ProcessStringList.Count - 1; i++)
@@ -199,17 +201,53 @@ namespace NewNtrClient
 					this.cmbProcesses.SelectedIndex = 0;
 				}));
 
-			} else if (Rnst == ReadNtrStringType.MemLayout)
+			}
+			else if (Rnst == ReadNtrStringType.MemLayout)
 			{
+				/*
+					@"00100000 - 00dd7fff , size: 00cd8000"
+					  0        1 2        3 4     5	 
+				 */
+				
+				
+				List<String> MemoryLayoutList = Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
+				if (MemoryLayoutList.Count >= 3)
+				{
+					Console.WriteLine("MLL Count: {0}", MemoryLayoutList.Count);
+					MemoryLayoutList.RemoveAt(0);
+					MemoryLayoutList.RemoveAt(MemoryLayoutList.Count - 1);
+
+					List<String> MemLayouts = new List<string>();
+					foreach (String Entry in MemoryLayoutList)
+					{
+						try
+						{
+							String[] s = Entry.Split(' ');
+							// split this later with @" | "
+							String k = String.Format("{0} | {1} | {2}", s[0], s[2], s[5]);
+							MemLayouts.Add(k);
+						}
+						catch (Exception)
+						{
+
+						}
+					}
+
+					cmbMemlayout.TryInvoke(new Action(() =>
+					{
+						cmbMemlayout.Items.Clear();
+						cmbMemlayout.Items.AddRange(MemLayouts.ToArray());
+					}));
+
+				}
 
 			}
 
-			LogLine(Message);
 		}
 
 		public UInt32 GetPid()
 		{
-			if (this.cmbProcesses.Items.Count > 1) return Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0]);
+			if (this.cmbProcesses.Items.Count > 1) return Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0], 16);
 			else return 0u;
 		}
 	}

@@ -17,7 +17,7 @@ namespace NewNtrClient.NtrObject
 
 		public NtrProcess(String ProcessString)
 		{
-			Console.WriteLine(ProcessString);
+			//Console.WriteLine(ProcessString);
 			//		UINT32			String			UINT64/String			UINT32
 			//pid: 0x00000029, pname: Rabbit_R, tid: 0004000000197100, kpobj: fff7bb40
 			// Split on , => Regex?
@@ -45,7 +45,7 @@ namespace NewNtrClient.NtrObject
 
 		public override String ToString()
 		{
-			return String.Format("{1} - {0:X}", this.Name, this.ProcessId);
+			return String.Format("{0:X} - {1}", this.ProcessId, this.Name);
 		}
 	}
 }

@@ -232,7 +232,6 @@ namespace NtrSharp
 			}
 		}
 
-		/* MODIFIED */
 		private void HandleReadMemory(UInt32 Sequence, byte[] DataBuffer)
 		{
 			if (Sequence != LastReadMemorySequence)
