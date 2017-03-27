@@ -1,0 +1,5 @@
+﻿
+Known Issues
+
+You can press buttons before connecting, doesn't allow sending packets though
+
