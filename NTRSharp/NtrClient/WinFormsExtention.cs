@@ -9,6 +9,10 @@ namespace NewNtrClient
 {
 	public static class WinFormsExtention
 	{
+
+		// Extention Methods
+
+
 		public static void AppendLine(this TextBox Source, string Value)
 		{
 			try
@@ -41,6 +45,12 @@ namespace NewNtrClient
 			return Source.Split(new string[] { Splitter }, Options);
 		}
 
+		public static T[] SubArray<T>(this T[] data, int index, int length)
+		{
+			T[] result = new T[length];
+			Array.Copy(data, index, result, 0, length);
+			return result;
+		}
 
 	}
 }

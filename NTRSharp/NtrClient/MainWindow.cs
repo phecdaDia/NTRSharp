@@ -1,5 +1,6 @@
 ﻿using NewNtrClient.NtrObject;
 using NtrSharp;
+using NtrSharp.Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -104,6 +105,10 @@ namespace NewNtrClient
 
 
 			this.NtrClient.SetServer(txtIpAddress.Text, 8000);
+
+			this.ReadMemoryType = ReadMemoryType.None;
+			this.ReadNtrStringType = ReadNtrStringType.None;
+
 			new Task(() =>
 			{
 				int Retry = 0;
@@ -126,7 +131,14 @@ namespace NewNtrClient
 			this.ReadNtrStringType = ReadNtrStringType.Process;
 			this.NtrClient.SendProcessPacket();
 		}
-		
+
+		private void cmbProcesses_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
+			UInt32 Pid = GetPid();
+			this.NtrClient.SendMemLayoutPacket(Pid);
+		}
+
 		private void buttonMemlayout_Click(object sender, EventArgs e)
 		{
 			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
@@ -134,6 +146,179 @@ namespace NewNtrClient
 			this.NtrClient.SendMemLayoutPacket(Pid);
 		}
 
+		private void buttonDumpMemoryFile_Click(object sender, EventArgs e)
+		{
+			this.ReadMemoryType = ReadMemoryType.DumpAsFile;
+			UInt32 Address = Convert.ToUInt32(txtDumpMemAddrStart.Text, 16);
+			UInt32 Length = Convert.ToUInt32(txtDumpMemAddrLength.Text, 16);
+
+			this.NtrClient.SendReadMemPacket(Address, Length, GetPid());
+		}
+
+		private void buttonDumpMemoryConsole_Click(object sender, EventArgs e)
+		{
+			this.ReadMemoryType = ReadMemoryType.DumpAsConsole;
+			UInt32 Address = Convert.ToUInt32(txtDumpMemAddrStart.Text, 16);
+			UInt32 Length = Convert.ToUInt32(txtDumpMemAddrLength.Text, 16);
+
+			this.NtrClient.SendReadMemPacket(Address, Length, GetPid());
+		}
+
+		private void buttonUseBaseCode_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				byte[] baseCode = Convert.FromBase64String(txtBaseCode.Text);
+				//LogLine(ByteArrayToHexString(baseCode));
+				UInt32 Address = BitConverter.ToUInt32(baseCode, 0);
+				//LogLine("{0:X08}", Address);
+				Int32 ProcessNameLength = BitConverter.ToInt32(baseCode, 4);
+				String ProcessName = Encoding.ASCII.GetString(baseCode, 8, ProcessNameLength);
+
+				Int32 DataLength = BitConverter.ToInt32(baseCode, 8 + ProcessNameLength);
+				//LogLine("{0:X}", DataLength);
+				byte[] Buffer = Compression.Decompress(baseCode.SubArray(12 + ProcessNameLength, DataLength));
+
+				//LogLine("{0} {1:X08} => {2}", ProcessName, Address, ByteArrayToHexString(Buffer));
+
+				if (ProcessName != GetProcessName())
+				{
+					LogLine("Invalid process selected. Please select {0} to use this code!", ProcessName);
+					return;
+				}
+
+				this.NtrClient.SendWriteMemPacket(Address, GetPid(), Buffer);
+
+
+			}
+			catch (Exception ex)
+			{
+				LogLine("Not a valid Base64 Code");
+				LogLine(ex.Message + Environment.NewLine + ex.StackTrace);
+				return;
+			}
+		}
+
+		private void buttonCreateBaseCode_Click(object sender, EventArgs e)
+		{
+			this.ReadMemoryType = ReadMemoryType.CreateCode;
+			UInt32 Address = Convert.ToUInt32(txtBaseAddress.Text, 16);
+			UInt32 Length = Convert.ToUInt32(txtBaseLength.Text, 16);
+			this.NtrClient.SendReadMemPacket(Address, Length, GetPid());
+		}
+
+		private void buttonBaseClipboardCopy_Click(object sender, EventArgs e)
+		{
+			Clipboard.SetText(txtBaseCode.Text);
+		}
+
+		private void buttonBaseClipboardPaste_Click(object sender, EventArgs e)
+		{
+			txtBaseCode.Text = Clipboard.GetText();
+		}
+
+		// Validating
+
+		private void txtDumpMemAddrStart_Validating(object sender, CancelEventArgs e)
+		{
+			TextBox txt = sender as TextBox;
+			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
+			String Validator = txt.Text.ToUpper();
+			for (int i = txt.Text.Length; i < 8; i++)
+			{
+				Validator = "0" + Validator;
+			}
+
+			if (!ValidRegex.IsMatch(Validator))
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				txt.Text = Validator;
+				// todo: test if the memregion is valid and disable/enable the dump buttons
+			}
+		}
+
+		private void txtDumpMemAddrLength_Validating(object sender, CancelEventArgs e)
+		{
+			TextBox txt = sender as TextBox;
+			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
+			String Validator = txt.Text.ToUpper();
+			for (int i = txt.Text.Length; i < 8; i++)
+			{
+				Validator = "0" + Validator;
+			}
+
+			if (!ValidRegex.IsMatch(Validator))
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				txt.Text = Validator;
+			}
+		}
+
+		private void textBoxBaseAddress_Validating(object sender, CancelEventArgs e)
+		{
+			TextBox txt = sender as TextBox;
+			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
+			String Validator = txt.Text.ToUpper();
+			for (int i = txt.Text.Length; i < 8; i++)
+			{
+				Validator = "0" + Validator;
+			}
+
+			if (!ValidRegex.IsMatch(Validator))
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				txt.Text = Validator;
+			}
+		}
+
+		private void textBoxBaseLength_Validating(object sender, CancelEventArgs e)
+		{
+			TextBox txt = sender as TextBox;
+			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
+			String Validator = txt.Text.ToUpper();
+			for (int i = txt.Text.Length; i < 8; i++)
+			{
+				Validator = "0" + Validator;
+			}
+
+			if (!ValidRegex.IsMatch(Validator))
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				txt.Text = Validator;
+			}
+		}
+
+		private void txtDumpMemFilename_Validating(object sender, CancelEventArgs e)
+		{
+			TextBox txt = sender as TextBox;
+			Regex ValidRegex = new Regex(@"^[\w_\-\d]+\.[\w]+$");
+			String Validator = txt.Text;
+
+			if (String.IsNullOrEmpty(Validator)) return;
+			
+			if (Validator.Split(".", StringSplitOptions.RemoveEmptyEntries).ToArray().Length == 1)
+			{
+				Validator += @".bin";
+			}
+
+			if (!ValidRegex.IsMatch(Validator)) e.Cancel = true;
+			else
+			{
+				txt.Text = Validator;
+			}
+		}
 		// Handling stuff
 
 		private void EnableConnect()
@@ -158,10 +343,45 @@ namespace NewNtrClient
 		{
 			ReadMemoryType Rmt = this.ReadMemoryType;
 			this.ReadMemoryType = ReadMemoryType.None;
-			if (Rmt == ReadMemoryType.None)
+			if (Rmt == ReadMemoryType.DumpAsFile)
+			{
+				File.WriteAllBytes(txtDumpMemFilename.Text, Buffer);
+				LogLine("Saved 0x{0:X} bytes to {1}", Buffer.Length, txtDumpMemFilename.Text);
+			}
+			else if (Rmt == ReadMemoryType.DumpAsConsole)
 			{
 				LogLine(ByteArrayToHexString(Buffer));
 				return;
+			}
+			else if (Rmt == ReadMemoryType.CreateCode)
+			{
+				List<byte> byteCode = new List<byte>();
+
+				UInt32 Address = Convert.ToUInt32(txtBaseAddress.Text, 16);
+				UInt32 Length = Convert.ToUInt32(txtBaseLength.Text, 16);
+
+				String ProcessName;
+
+				this.cmbProcesses.TryInvoke(new Action(() => ProcessName = GetProcessName()));
+
+
+				if (String.IsNullOrEmpty(GetProcessName()))
+				{
+					LogLine("Process name is null or empty. WHY?!??");
+					return;
+				}
+
+				byteCode.AddRange(BitConverter.GetBytes(Address));
+				byteCode.AddRange(BitConverter.GetBytes(GetProcessName().Length));
+				byteCode.AddRange(Encoding.ASCII.GetBytes(GetProcessName()));
+				byteCode.AddRange(BitConverter.GetBytes(Length));
+				byteCode.AddRange(Compression.Compress(Buffer));
+
+				String Base64 = Convert.ToBase64String(byteCode.ToArray());
+				this.txtBaseCode.TryInvoke(new Action(() =>
+				{
+					this.txtBaseCode.Text = Base64;
+				}));
 			}
 		}
 
@@ -226,17 +446,16 @@ namespace NewNtrClient
 							// split this later with @" | "
 							String k = String.Format("{0} | {1} | {2}", s[0], s[2], s[5]);
 							MemLayouts.Add(k);
+							
 						}
-						catch (Exception)
-						{
-
-						}
+						catch (Exception) {}
 					}
 
 					cmbMemlayout.TryInvoke(new Action(() =>
 					{
 						cmbMemlayout.Items.Clear();
 						cmbMemlayout.Items.AddRange(MemLayouts.ToArray());
+						cmbMemlayout.SelectedIndex = 0;
 					}));
 
 				}
@@ -247,14 +466,43 @@ namespace NewNtrClient
 
 		public UInt32 GetPid()
 		{
-			if (this.cmbProcesses.Items.Count > 1) return Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0], 16);
-			else return 0u;
+			try
+			{
+				UInt32 Output = 0u;
+				this.cmbProcesses.TryInvoke(new Action(() =>
+				{
+					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 1) Output = Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0], 16);
+				}));
+				return Output;
+			}
+			catch (Exception) { return 0u; }
+		}
+
+		public String GetProcessName()
+		{
+			try
+			{
+				String Output = null;
+				this.cmbProcesses.TryInvoke(new Action(() =>
+				{
+					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 1) Output = this.cmbProcesses.Text.Split(' ')[2];
+				}));
+				return Output;
+			}
+			catch (Exception ex)
+			{
+				LogLine(ex.Message + Environment.NewLine + ex.StackTrace);
+				return null;
+			}
 		}
 	}
 
 	public enum ReadMemoryType
 	{
 		None,
+		DumpAsFile,
+		DumpAsConsole,
+		CreateCode,
 	}
 
 	public enum ReadNtrStringType

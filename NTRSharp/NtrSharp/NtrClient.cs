@@ -328,7 +328,7 @@ namespace NtrSharp
 
 		public void SendWriteMemPacket(UInt32 Address, UInt32 Pid, byte[] Buffer)
 		{
-			Log("Sending 'WRITEMEM' Packet ({0:X08} @0x{1:X})", Address, Pid);
+			Log("Sending 'WRITEMEM' Packet ({0:X08} @0x{1:X} 0x{2:X})", Address, Pid, Buffer.Length);
 			UInt32[] Args = new UInt32[] { Pid, Address, (UInt32) Buffer.Length };
 			SendPacket(1, 10, Args, Args[2]);
 			NetStream.Write(Buffer, 0, Buffer.Length);
