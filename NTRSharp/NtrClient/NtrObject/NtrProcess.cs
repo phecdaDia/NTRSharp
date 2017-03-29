@@ -15,8 +15,12 @@ namespace NewNtrClient.NtrObject
 		public String Name;
 		public UInt64 TitleId;
 
+		// Remove this and make it better
+
 		public NtrProcess(String ProcessString)
 		{
+			try
+			{
 			//Console.WriteLine(ProcessString);
 			//		UINT32			String			UINT64/String			UINT32
 			//pid: 0x00000029, pname: Rabbit_R, tid: 0004000000197100, kpobj: fff7bb40
@@ -33,7 +37,10 @@ namespace NewNtrClient.NtrObject
 			this.KernelObjectPointer = Convert.ToUInt32(CommaSplit[3].Substring(8), 16);
 
 			//Console.WriteLine("{0} => {1:X} TID: {2:X016} {3:X08}", Name, ProcessId, TitleId, KernelObjectPointer);
-        }
+			} catch (Exception) {
+				Console.WriteLine("Derpy?");
+			}
+	}
 
 		public NtrProcess(UInt32 ProcessId, String Name, UInt64 TitleId, UInt32 KernelObjectPointer)
 		{

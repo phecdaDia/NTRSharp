@@ -28,35 +28,42 @@ namespace NtrSharp
 		private Thread HeartbeatThread;
 		private NetworkStream NetStream;
 
+		private readonly int HEARTBEAT_INTERVAL = 1000; // How long shall the HeartbeatThread wait after every beat.
+
 		// Output Vars
 		public byte[] ReadMemory;
 
 		// Events
 		public event MessageReceivedEventHandler EvtMessageReceived;
 		public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
-		protected void OnMessageReceived(MessageReceivedEventArgs e) { if (EvtMessageReceived != null) EvtMessageReceived(this, e); }
+		protected void OnMessageReceived(MessageReceivedEventArgs e) { EvtMessageReceived?.Invoke(this, e); }
 		protected void Log(String Message, params object[] Format) { OnMessageReceived(new MessageReceivedEventArgs(String.Format(Message, Format))); }
 
 		// UTF8 return
 		// Temporary
 		public event NtrStringReceivedEventHandler EvtNtrStringReceived;
 		public delegate void NtrStringReceivedEventHandler(object sender, MessageReceivedEventArgs e);
-		protected void OnNtrStringReceived(MessageReceivedEventArgs e) { if (EvtNtrStringReceived != null) EvtNtrStringReceived(this, e); }
+		protected void OnNtrStringReceived(MessageReceivedEventArgs e) { EvtNtrStringReceived?.Invoke(this, e); }
 
 		// Read Memory
 		public event ReadMemoryReceivedEventHandler EvtReadMemoryReceived;
 		public delegate void ReadMemoryReceivedEventHandler(object sender, ReadMemoryReceivedEventArgs e);
-		protected void OnReadMemoryReceived(ReadMemoryReceivedEventArgs e) { if (EvtReadMemoryReceived != null) EvtReadMemoryReceived(this, e); }
+		protected void OnReadMemoryReceived(ReadMemoryReceivedEventArgs e) { EvtReadMemoryReceived?.Invoke(this, e); }
 
 		// Connect
 		public event ConnectEventHandler EvtConnect;
 		public delegate void ConnectEventHandler(object sender, EventArgs e);
-		protected void OnConnection() { if (EvtConnect != null) EvtConnect(this, new EventArgs()); }
+		protected void OnConnection() { EvtConnect?.Invoke(this, new EventArgs()); }
 
 		// Disconnect
 		public event DisconnectEventHandler EvtDisconnect;
 		public delegate void DisconnectEventHandler(object sender, EventArgs e);
-		protected void OnDisconnect() { if (EvtDisconnect != null) EvtDisconnect(this, new EventArgs()); }
+		protected void OnDisconnect() { EvtDisconnect?.Invoke(this, new EventArgs()); }
+
+		// Progress changed
+		public event ProgressEventHandler EvtProgress;
+		public delegate void ProgressEventHandler(object sender, EventArgs e);
+		protected void OnProgressChanged() { EvtProgress?.Invoke(this, new EventArgs()); }
 
 		public NtrClient(String ServerHost)
 		{
@@ -201,7 +208,7 @@ namespace NtrSharp
 			{
 				SendHeartbeatPacket();
 				//Console.WriteLine("Trying to send HeartbeatPacket");
-				Thread.Sleep(1000);
+				Thread.Sleep(HEARTBEAT_INTERVAL);
 			}
 			OnDisconnect();
 		}
@@ -213,13 +220,20 @@ namespace NtrSharp
 
 			do
 			{
-				if (UseProgress) Progress = (int)(((double)(Index) / Length) * 100);
+				if (UseProgress)
+				{
+					Progress = (int)(((double)(Index) / Length) * 100);
+					OnProgressChanged();
+				}
 
 				int Len = Stream.Read(Buffer, Index, Length - Index);
 				if (Len == 0) return 0;
 
 				Index += Len;
 			} while (Index < Length);
+
+			Progress = -1;
+			OnProgressChanged();
 
 			return Length;
 		}

@@ -33,6 +33,19 @@
 			this.ContentPanel = new System.Windows.Forms.Panel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.cbEditModeLittleEndian = new System.Windows.Forms.CheckBox();
+			this.buttonEditModeWriteHex = new System.Windows.Forms.Button();
+			this.txtEditModeDecimal = new System.Windows.Forms.TextBox();
+			this.txtEditModeHex = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.buttonEditModeWriteDecimal = new System.Windows.Forms.Button();
+			this.buttonEditModeRead = new System.Windows.Forms.Button();
+			this.cmbEditModeType = new System.Windows.Forms.ComboBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.txtEditModeAddress = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.buttonDumpMemoryConsole = new System.Windows.Forms.Button();
 			this.buttonDumpMemoryFile = new System.Windows.Forms.Button();
@@ -126,6 +139,19 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.cbEditModeLittleEndian);
+			this.tabPage1.Controls.Add(this.buttonEditModeWriteHex);
+			this.tabPage1.Controls.Add(this.txtEditModeDecimal);
+			this.tabPage1.Controls.Add(this.txtEditModeHex);
+			this.tabPage1.Controls.Add(this.label8);
+			this.tabPage1.Controls.Add(this.label7);
+			this.tabPage1.Controls.Add(this.buttonEditModeWriteDecimal);
+			this.tabPage1.Controls.Add(this.buttonEditModeRead);
+			this.tabPage1.Controls.Add(this.cmbEditModeType);
+			this.tabPage1.Controls.Add(this.label6);
+			this.tabPage1.Controls.Add(this.label5);
+			this.tabPage1.Controls.Add(this.label4);
+			this.tabPage1.Controls.Add(this.txtEditModeAddress);
 			this.tabPage1.Controls.Add(this.label2);
 			this.tabPage1.Controls.Add(this.buttonDumpMemoryConsole);
 			this.tabPage1.Controls.Add(this.buttonDumpMemoryFile);
@@ -141,11 +167,160 @@
 			this.tabPage1.Text = "General";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// cbEditModeLittleEndian
+			// 
+			this.cbEditModeLittleEndian.AutoSize = true;
+			this.cbEditModeLittleEndian.Checked = true;
+			this.cbEditModeLittleEndian.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbEditModeLittleEndian.Location = new System.Drawing.Point(333, 53);
+			this.cbEditModeLittleEndian.Name = "cbEditModeLittleEndian";
+			this.cbEditModeLittleEndian.Size = new System.Drawing.Size(84, 17);
+			this.cbEditModeLittleEndian.TabIndex = 20;
+			this.cbEditModeLittleEndian.Text = "Little Endian";
+			this.cbEditModeLittleEndian.UseVisualStyleBackColor = true;
+			// 
+			// buttonEditModeWriteHex
+			// 
+			this.buttonEditModeWriteHex.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditModeWriteHex.Location = new System.Drawing.Point(654, 79);
+			this.buttonEditModeWriteHex.Name = "buttonEditModeWriteHex";
+			this.buttonEditModeWriteHex.Size = new System.Drawing.Size(85, 23);
+			this.buttonEditModeWriteHex.TabIndex = 19;
+			this.buttonEditModeWriteHex.Text = "Write";
+			this.buttonEditModeWriteHex.UseVisualStyleBackColor = true;
+			this.buttonEditModeWriteHex.Click += new System.EventHandler(this.buttonEditModeWriteHex_Click);
+			// 
+			// txtEditModeDecimal
+			// 
+			this.txtEditModeDecimal.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditModeDecimal.Location = new System.Drawing.Point(570, 50);
+			this.txtEditModeDecimal.MaxLength = 10;
+			this.txtEditModeDecimal.Name = "txtEditModeDecimal";
+			this.txtEditModeDecimal.Size = new System.Drawing.Size(78, 23);
+			this.txtEditModeDecimal.TabIndex = 18;
+			this.txtEditModeDecimal.Text = "0";
+			this.txtEditModeDecimal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// txtEditModeHex
+			// 
+			this.txtEditModeHex.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditModeHex.Location = new System.Drawing.Point(569, 79);
+			this.txtEditModeHex.MaxLength = 8;
+			this.txtEditModeHex.Name = "txtEditModeHex";
+			this.txtEditModeHex.Size = new System.Drawing.Size(79, 23);
+			this.txtEditModeHex.TabIndex = 17;
+			this.txtEditModeHex.Text = "00000000";
+			this.txtEditModeHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtEditModeHex.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label8.Location = new System.Drawing.Point(479, 82);
+			this.label8.Name = "label8";
+			this.label8.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label8.Size = new System.Drawing.Size(84, 15);
+			this.label8.TabIndex = 16;
+			this.label8.Text = "Hexadecimal";
+			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label7.Location = new System.Drawing.Point(507, 53);
+			this.label7.Name = "label7";
+			this.label7.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label7.Size = new System.Drawing.Size(56, 15);
+			this.label7.TabIndex = 15;
+			this.label7.Text = "Decimal";
+			// 
+			// buttonEditModeWriteDecimal
+			// 
+			this.buttonEditModeWriteDecimal.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditModeWriteDecimal.Location = new System.Drawing.Point(654, 50);
+			this.buttonEditModeWriteDecimal.Name = "buttonEditModeWriteDecimal";
+			this.buttonEditModeWriteDecimal.Size = new System.Drawing.Size(85, 23);
+			this.buttonEditModeWriteDecimal.TabIndex = 14;
+			this.buttonEditModeWriteDecimal.Text = "Write";
+			this.buttonEditModeWriteDecimal.UseVisualStyleBackColor = true;
+			this.buttonEditModeWriteDecimal.Click += new System.EventHandler(this.buttonEditModeWriteDecimal_Click);
+			// 
+			// buttonEditModeRead
+			// 
+			this.buttonEditModeRead.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditModeRead.Location = new System.Drawing.Point(242, 50);
+			this.buttonEditModeRead.Name = "buttonEditModeRead";
+			this.buttonEditModeRead.Size = new System.Drawing.Size(85, 23);
+			this.buttonEditModeRead.TabIndex = 13;
+			this.buttonEditModeRead.Text = "Read";
+			this.buttonEditModeRead.UseVisualStyleBackColor = true;
+			this.buttonEditModeRead.Click += new System.EventHandler(this.buttonEditModeRead_Click);
+			// 
+			// cmbEditModeType
+			// 
+			this.cmbEditModeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cmbEditModeType.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cmbEditModeType.FormattingEnabled = true;
+			this.cmbEditModeType.Items.AddRange(new object[] {
+            "Byte",
+            "UInt16",
+            "UInt32"});
+			this.cmbEditModeType.Location = new System.Drawing.Point(171, 50);
+			this.cmbEditModeType.Name = "cmbEditModeType";
+			this.cmbEditModeType.Size = new System.Drawing.Size(62, 22);
+			this.cmbEditModeType.TabIndex = 12;
+			// 
+			// label6
+			// 
+			this.label6.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label6.Location = new System.Drawing.Point(239, 3);
+			this.label6.Name = "label6";
+			this.label6.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label6.Size = new System.Drawing.Size(179, 15);
+			this.label6.TabIndex = 11;
+			this.label6.Text = "Filename";
+			this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// label5
+			// 
+			this.label5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Location = new System.Drawing.Point(171, 3);
+			this.label5.Name = "label5";
+			this.label5.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label5.Size = new System.Drawing.Size(62, 15);
+			this.label5.TabIndex = 10;
+			this.label5.Text = "Length";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// label4
+			// 
+			this.label4.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(100, 3);
+			this.label4.Name = "label4";
+			this.label4.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label4.Size = new System.Drawing.Size(65, 15);
+			this.label4.TabIndex = 9;
+			this.label4.Text = "Address";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// txtEditModeAddress
+			// 
+			this.txtEditModeAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditModeAddress.Location = new System.Drawing.Point(103, 50);
+			this.txtEditModeAddress.MaxLength = 8;
+			this.txtEditModeAddress.Name = "txtEditModeAddress";
+			this.txtEditModeAddress.Size = new System.Drawing.Size(62, 23);
+			this.txtEditModeAddress.TabIndex = 8;
+			this.txtEditModeAddress.Text = "00000000";
+			this.txtEditModeAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtEditModeAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
+			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(5, 36);
+			this.label2.Location = new System.Drawing.Point(6, 53);
 			this.label2.Name = "label2";
 			this.label2.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.label2.Size = new System.Drawing.Size(91, 15);
@@ -154,8 +329,8 @@
 			// 
 			// buttonDumpMemoryConsole
 			// 
-			this.buttonDumpMemoryConsole.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonDumpMemoryConsole.Location = new System.Drawing.Point(582, 8);
+			this.buttonDumpMemoryConsole.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonDumpMemoryConsole.Location = new System.Drawing.Point(583, 21);
 			this.buttonDumpMemoryConsole.Name = "buttonDumpMemoryConsole";
 			this.buttonDumpMemoryConsole.Size = new System.Drawing.Size(156, 23);
 			this.buttonDumpMemoryConsole.TabIndex = 6;
@@ -165,8 +340,8 @@
 			// 
 			// buttonDumpMemoryFile
 			// 
-			this.buttonDumpMemoryFile.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonDumpMemoryFile.Location = new System.Drawing.Point(423, 8);
+			this.buttonDumpMemoryFile.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonDumpMemoryFile.Location = new System.Drawing.Point(424, 21);
 			this.buttonDumpMemoryFile.Name = "buttonDumpMemoryFile";
 			this.buttonDumpMemoryFile.Size = new System.Drawing.Size(156, 23);
 			this.buttonDumpMemoryFile.TabIndex = 5;
@@ -177,7 +352,7 @@
 			// txtDumpMemFilename
 			// 
 			this.txtDumpMemFilename.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtDumpMemFilename.Location = new System.Drawing.Point(238, 8);
+			this.txtDumpMemFilename.Location = new System.Drawing.Point(239, 21);
 			this.txtDumpMemFilename.Name = "txtDumpMemFilename";
 			this.txtDumpMemFilename.Size = new System.Drawing.Size(179, 23);
 			this.txtDumpMemFilename.TabIndex = 4;
@@ -186,32 +361,32 @@
 			// txtDumpMemAddrLength
 			// 
 			this.txtDumpMemAddrLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtDumpMemAddrLength.Location = new System.Drawing.Point(170, 8);
+			this.txtDumpMemAddrLength.Location = new System.Drawing.Point(171, 21);
 			this.txtDumpMemAddrLength.MaxLength = 8;
 			this.txtDumpMemAddrLength.Name = "txtDumpMemAddrLength";
 			this.txtDumpMemAddrLength.Size = new System.Drawing.Size(62, 23);
 			this.txtDumpMemAddrLength.TabIndex = 3;
 			this.txtDumpMemAddrLength.Text = "00000000";
 			this.txtDumpMemAddrLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtDumpMemAddrLength.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemAddrLength_Validating);
+			this.txtDumpMemAddrLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// txtDumpMemAddrStart
 			// 
 			this.txtDumpMemAddrStart.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtDumpMemAddrStart.Location = new System.Drawing.Point(102, 8);
+			this.txtDumpMemAddrStart.Location = new System.Drawing.Point(103, 21);
 			this.txtDumpMemAddrStart.MaxLength = 8;
 			this.txtDumpMemAddrStart.Name = "txtDumpMemAddrStart";
 			this.txtDumpMemAddrStart.Size = new System.Drawing.Size(62, 23);
 			this.txtDumpMemAddrStart.TabIndex = 1;
 			this.txtDumpMemAddrStart.Text = "00000000";
 			this.txtDumpMemAddrStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtDumpMemAddrStart.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemAddrStart_Validating);
+			this.txtDumpMemAddrStart.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(12, 11);
+			this.label1.Location = new System.Drawing.Point(13, 24);
 			this.label1.Name = "label1";
 			this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.label1.Size = new System.Drawing.Size(84, 15);
@@ -312,7 +487,7 @@
 			this.txtBaseLength.TabIndex = 5;
 			this.txtBaseLength.Text = "00000000";
 			this.txtBaseLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtBaseLength.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxBaseLength_Validating);
+			this.txtBaseLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// txtBaseAddress
 			// 
@@ -324,7 +499,7 @@
 			this.txtBaseAddress.TabIndex = 4;
 			this.txtBaseAddress.Text = "00000000";
 			this.txtBaseAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtBaseAddress.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxBaseAddress_Validating);
+			this.txtBaseAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// cmbMemlayout
 			// 
@@ -486,6 +661,19 @@
 		private System.Windows.Forms.Button buttonUseBaseCode;
 		private System.Windows.Forms.Button buttonBaseClipboardPaste;
 		private System.Windows.Forms.Button buttonBaseClipboardCopy;
+		private System.Windows.Forms.ComboBox cmbEditModeType;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox txtEditModeAddress;
+		private System.Windows.Forms.Button buttonEditModeWriteHex;
+		private System.Windows.Forms.TextBox txtEditModeDecimal;
+		private System.Windows.Forms.TextBox txtEditModeHex;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Button buttonEditModeWriteDecimal;
+		private System.Windows.Forms.Button buttonEditModeRead;
+		private System.Windows.Forms.CheckBox cbEditModeLittleEndian;
 	}
 }
 
