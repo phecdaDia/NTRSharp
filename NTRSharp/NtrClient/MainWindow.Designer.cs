@@ -72,6 +72,9 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.test1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.disconnectfalseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.disconnecttrueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.ContentTable.SuspendLayout();
 			this.ContentPanel.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -597,9 +600,32 @@
 			// 
 			// test1ToolStripMenuItem
 			// 
+			this.test1ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.disconnectfalseToolStripMenuItem,
+            this.disconnecttrueToolStripMenuItem,
+            this.toolStripSeparator1});
 			this.test1ToolStripMenuItem.Name = "test1ToolStripMenuItem";
-			this.test1ToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
-			this.test1ToolStripMenuItem.Text = "Test1";
+			this.test1ToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.test1ToolStripMenuItem.Text = "Disconnect Test";
+			// 
+			// disconnectfalseToolStripMenuItem
+			// 
+			this.disconnectfalseToolStripMenuItem.Name = "disconnectfalseToolStripMenuItem";
+			this.disconnectfalseToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+			this.disconnectfalseToolStripMenuItem.Text = "Disconnect(false)";
+			this.disconnectfalseToolStripMenuItem.Click += new System.EventHandler(this.disconnectfalseToolStripMenuItem_Click);
+			// 
+			// disconnecttrueToolStripMenuItem
+			// 
+			this.disconnecttrueToolStripMenuItem.Name = "disconnecttrueToolStripMenuItem";
+			this.disconnecttrueToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+			this.disconnecttrueToolStripMenuItem.Text = "Disconnect(true)";
+			this.disconnecttrueToolStripMenuItem.Click += new System.EventHandler(this.disconnecttrueToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(162, 6);
 			// 
 			// MainWindow
 			// 
@@ -674,6 +700,9 @@
 		private System.Windows.Forms.Button buttonEditModeWriteDecimal;
 		private System.Windows.Forms.Button buttonEditModeRead;
 		private System.Windows.Forms.CheckBox cbEditModeLittleEndian;
+		private System.Windows.Forms.ToolStripMenuItem disconnectfalseToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem disconnecttrueToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 	}
 }
 

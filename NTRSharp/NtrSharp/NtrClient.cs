@@ -112,9 +112,11 @@ namespace NtrSharp
 			try
 			{
 				Tcp?.Close();
+				Tcp = null;
 				if (WaitPacketThread)
 				{
-					PacketRecvThread?.Join();
+					//PacketRecvThread?.Join();
+					PacketRecvThread.Abort();
 				}
 			}
 			finally
@@ -137,7 +139,7 @@ namespace NtrSharp
 				try
 				{
 					Ret = ReadNetworkStream(Stream, Buffer, Buffer.Length);
-					if (Ret == 0) break; // Unable to read network stream
+					if (Ret == 0) return; // Unable to read network stream
 
 					int t = 0;
 					UInt32 Magic = BitConverter.ToUInt32(Buffer, t);
@@ -190,6 +192,12 @@ namespace NtrSharp
 						HandlePacket(Command, Sequence, DataBuffer);
                     }
 
+				}
+				catch (ThreadAbortException tex)
+				{
+					Log("Thread aborted");
+					Log(tex.Message + Environment.NewLine + tex.StackTrace);
+					return;
 				}
 				catch (Exception ex)
 				{

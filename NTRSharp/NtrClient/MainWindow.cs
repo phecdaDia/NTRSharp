@@ -171,12 +171,6 @@ namespace NewNtrClient
 			UInt32 Address = Convert.ToUInt32(txtDumpMemAddrStart.Text, 16);
 			UInt32 Length = Convert.ToUInt32(txtDumpMemAddrLength.Text, 16);
 
-			if (Length > MAX_CONSOLE_DUMP)
-			{
-				Length = MAX_CONSOLE_DUMP;
-				LogLine("Length exceeded 0x{0:X}, shortened to 0x{0:X}", MAX_CONSOLE_DUMP);
-			}
-
 			if (!IsValidMemregion(Address, Length))
 			{
 				LogLine("Invalid Address / Length. No valid memregions found!");
@@ -194,6 +188,13 @@ namespace NewNtrClient
 			UInt32 Address = Convert.ToUInt32(txtDumpMemAddrStart.Text, 16);
 			UInt32 Length = Convert.ToUInt32(txtDumpMemAddrLength.Text, 16);
 
+
+			if (Length > MAX_CONSOLE_DUMP)
+			{
+				Length = MAX_CONSOLE_DUMP;
+				LogLine("Length exceeded 0x{0:X}, shortened to 0x{0:X}", MAX_CONSOLE_DUMP);
+			}
+			
 			if (!IsValidMemregion(Address, Length))
 			{
 				LogLine("Invalid Address / Length. No valid memregions found!");
@@ -290,7 +291,8 @@ namespace NewNtrClient
 			UInt32 Address = Convert.ToUInt32(txtEditModeAddress.Text, 16);
 			UInt32 Length = GetEditModeLength();
 
-			byte[] b = BitConverter.GetBytes(Convert.ToUInt32(txtEditModeHex.Text, 16)).Reverse().ToArray();
+			byte[] b = BitConverter.GetBytes(Convert.ToUInt32(txtEditModeHex.Text, 16));
+			if (cbEditModeLittleEndian.Checked) b.Reverse();
 			b = b.SubArray(4 - (int)Length, (int)Length);
 
 			if (!IsValidMemregion(Address, Length))
@@ -446,6 +448,14 @@ namespace NewNtrClient
 				}
 
 				LogLine(ByteArrayToHexString(Buffer));
+
+				Boolean IsLittleEndian = false;
+				cbEditModeLittleEndian.TryInvoke(new Action(() =>
+				{
+					IsLittleEndian = cbEditModeLittleEndian.Checked;
+				}));
+
+				if (!IsLittleEndian) Buffer.Reverse();
 
 				UInt32 Hex = 0u;
 				for (int i = 0; i < Buffer.Length && i < 4; i++)
@@ -644,6 +654,16 @@ namespace NewNtrClient
 			}));
 
 			return output;
+		}
+
+		private void disconnectfalseToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.NtrClient?.Disconnect(false);
+		}
+
+		private void disconnecttrueToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.NtrClient.Disconnect(true);
 		}
 	}
 
