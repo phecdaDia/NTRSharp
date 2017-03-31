@@ -697,6 +697,10 @@ namespace NewNtrClient
 			TextBox txt = sender as TextBox;
 			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
 			String Validator = txt.Text.ToUpper();
+			for (int i = Validator.Length; i < 8; i++)
+			{
+				Validator = "0" + Validator;
+			}
 
 			if (!ValidRegex.IsMatch(Validator))
 			{
