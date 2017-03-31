@@ -54,12 +54,15 @@ namespace NewNtrClient
 		public static IEnumerable<string> Split(this string str, int chunkSize, Boolean allow)
 		{
 			List<string> k = new List<string>();
+			//Console.WriteLine(str);
+			//Console.WriteLine("Len: {0} Chunks: {1}", str.Length, chunkSize);
 
 			int i = 0;
 			while (i < str.Length - chunkSize)
 			{
 				k.Add(str.Substring(i, chunkSize));
 				i += chunkSize;
+				//Console.WriteLine("Added String: {0}", k.LastOrDefault());
 			}
 
 			if (allow) k.Add(str.Substring(i, str.Length - i));

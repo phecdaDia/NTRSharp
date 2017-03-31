@@ -507,6 +507,7 @@ namespace NewNtrClient
 			AllowTxtEditByteTextChanged = false;
 			txt.Text = Code;
 			txt.SelectionStart = Index + 1;
+			AllowTxtEditByteTextChanged = true;
 		}
 
 		private void buttonEditorEncrypt_Click(object sender, EventArgs e)
