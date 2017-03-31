@@ -163,16 +163,9 @@ namespace NewNtrClient
 							sfd.Filter = "Text|*.txt";
 							if (sfd.ShowDialog() == DialogResult.OK)
 							{
-								List<byte> byteCode = new List<byte>();
-								String k = txtEditorBase.Text;
-								k = String.Join(null, k.Split(' '));
-								for (int i = 0; i < k.Length - 2; i+=2)
-								{
 
-									byteCode.Add(Convert.ToByte(k.Substring(i, 2), 16));
-								}
 
-								File.WriteAllBytes(sfd.FileName, byteCode.ToArray());
+								File.WriteAllText(sfd.FileName, txtEditorBase.Text);
 							}
 						}
 					}),
