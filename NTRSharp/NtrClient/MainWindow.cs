@@ -26,6 +26,8 @@ namespace NewNtrClient
 		private readonly Int32 COMPRESSION_MODE = 2;
 		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
 
+		private readonly Boolean IsDebug = true;
+
 		// Extern
 		[System.Runtime.InteropServices.DllImportAttribute("kernel32.dll", EntryPoint = "AllocConsole")]
 		[return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
@@ -40,7 +42,7 @@ namespace NewNtrClient
 			this.FormClosing += (s, e_) => { this.NtrClient?.Disconnect(false); };
 
 			// debugging
-			//AllocConsole();
+			if (IsDebug) AllocConsole();
 		}
 
 		// Static Methods
@@ -209,19 +211,38 @@ namespace NewNtrClient
 		{
 			try
 			{
-				byte[] baseCode = Convert.FromBase64String(txtBaseCode.Text);
+				byte[] baseCode = Compression.Decompress(Convert.FromBase64String(txtBaseCode.Text), COMPRESSION_MODE);
 				//LogLine(ByteArrayToHexString(baseCode));
-				UInt32 Address = BitConverter.ToUInt32(baseCode, 0);
-				//LogLine("{0:X08}", Address);
-				Int32 ProcessNameLength = BitConverter.ToInt32(baseCode, 4);
-				String ProcessName = Encoding.ASCII.GetString(baseCode, 8, ProcessNameLength);
+				Int32 Index = 0;
+				LogLine(ByteArrayToHexString(baseCode));
+				UInt32 magic = BitConverter.ToUInt32(baseCode, Index);
+				Index += 4;
+				if (magic != BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0))
+				{
+					LogLine("Received {0:X08}, expected {1:X08}", magic, BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0));
+					LogLine("Invalid Magic. It might be a broken code or an outdated one");
 
-				Int32 DataLength = BitConverter.ToInt32(baseCode, 8 + ProcessNameLength);
+					return;
+				}
+
+
+
+				UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
+				Index += 4;
+				//LogLine("{0:X08}", Address);
+				Int32 ProcessNameLength = BitConverter.ToInt32(baseCode, Index);
+				Index += 4;
+				String ProcessName = Encoding.ASCII.GetString(baseCode, Index, ProcessNameLength);
+				Index += ProcessNameLength;
+
+				Int32 DataLength = BitConverter.ToInt32(baseCode, Index);
+				Index += 4;
 				//LogLine("{0:X}", DataLength);
 
-				byte[] DataBuffer = Compression.Decompress(baseCode.SubArray(12 + ProcessNameLength, DataLength), COMPRESSION_MODE);
+				byte[] DataBuffer = baseCode.SubArray(Index, DataLength);
+				Index += DataLength;
 
-				//LogLine("{0} {1:X08} => {2}", ProcessName, Address, ByteArrayToHexString(Buffer));
+				//LogLine("{0} {1:X08} => {2}", ProcessName, Address, ByteArrayToHexString(DataBuffer));
 
 				if (!IsValidMemregion(Address, (uint)DataLength))
 				{
@@ -241,7 +262,7 @@ namespace NewNtrClient
 			catch (Exception ex)
 			{
 				LogLine("Not a valid Base64 Code");
-				LogLine(ex.Message + Environment.NewLine + ex.StackTrace);
+				if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace);	// good enough
 				return;
 			}
 		}
@@ -332,6 +353,102 @@ namespace NewNtrClient
 				//throw;
 			}
 		}
+
+		private void buttonBaseHelp_Click(object sender, EventArgs e)
+		{
+			MessageBox.Show(
+				"How to use Base64 Codes:" + Environment.NewLine +
+				 Environment.NewLine +
+				 "If you want to create Base64 Codes simply specify an address you want to copy from and the length. You can then share the Base64 code for other people to use. Please beware that this won't work with dynamic pointer." + Environment.NewLine +
+				 Environment.NewLine +
+				 "If you want to use Base64 Codes simply paste the code you received into the textbox below or use the \"Paste\" button and click \"Use Code\""
+				,
+			"Help", MessageBoxButtons.OK);
+		}
+
+		private void txtEditorByte_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			//Log("Derp: ");
+			TextBox txt = sender as TextBox;
+			char[] AllowedChars = new char[]
+			{
+				'0', '1', '2', '3',
+				'4', '5', '6', '7',
+				'8', '9',
+
+				'A', 'B',
+				'C', 'D', 'E', 'F',
+
+				'a', 'b',			// figure out how to cast "toupper" and remove this
+				'c', 'd', 'e', 'f',
+
+				(char)Keys.Back,
+
+			};
+			char Key = e.KeyChar;
+			if (!AllowedChars.Contains(Key))
+			{
+				e.Handled = true;
+				return;
+			}
+
+			if (txt.SelectionStart >= 1 && txt.Text[txt.SelectionStart - 1] == ' ') txt.SelectionStart--;
+		}
+
+		Boolean AllowTxtEditByteTextChanged = true;
+		private void txtEditorByte_TextChanged(object sender, EventArgs e)
+		{
+			if (!AllowTxtEditByteTextChanged)
+			{
+				AllowTxtEditByteTextChanged = true;
+				return;
+			}
+			TextBox txt = sender as TextBox;
+			String Code = txt.Text;
+			int Index = txt.SelectionStart;
+			Index -= Code.Substring(0, Index).Split(' ').Length;
+			Index += (Index + 1) / 2;
+			//LogLine("Derp?");
+
+			Code = Code.Replace(Environment.NewLine, String.Empty);
+			Code = Code.Replace(" ", String.Empty);
+
+
+			// Now split every 2
+			String[] CodeSplit = Code.Split(2, true).ToArray();
+
+
+
+			Code = String.Join(" ", CodeSplit);
+
+			LogLine(Code);
+			AllowTxtEditByteTextChanged = false;
+			txt.Text = Code;
+			txt.SelectionStart = Index + 1;
+		}
+
+		private void buttonEditorEncrypt_Click(object sender, EventArgs e)
+		{
+			// todo
+		}
+
+		private void buttonEditorDecrypt_Click(object sender, EventArgs e)
+		{
+			// todo
+		}
+
+		// toolstrip
+
+		private void disconnectfalseToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.NtrClient?.Disconnect(false);
+		}
+
+		private void disconnecttrueToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.NtrClient.Disconnect(true);
+		}
+
 
 		// Validating
 
@@ -425,14 +542,16 @@ namespace NewNtrClient
 					return;
 				}
 
+				byteCode.AddRange(Encoding.ASCII.GetBytes("BASE")); // magic
 				byteCode.AddRange(BitConverter.GetBytes(Address));
 				byteCode.AddRange(BitConverter.GetBytes(GetProcessName().Length));
 				byteCode.AddRange(Encoding.ASCII.GetBytes(GetProcessName()));
-				byte[] DataBuffer = Compression.Compress(Buffer, COMPRESSION_MODE);
-				byteCode.AddRange(BitConverter.GetBytes(DataBuffer.Length));
-				byteCode.AddRange(DataBuffer);
+				//byte[] DataBuffer = Compression.Compress(Buffer, COMPRESSION_MODE);
+				byteCode.AddRange(BitConverter.GetBytes(Buffer.Length));
+				byteCode.AddRange(Buffer);
+				
 
-				String Base64 = Convert.ToBase64String(byteCode.ToArray());
+				String Base64 = Convert.ToBase64String(Compression.Compress(byteCode.ToArray(), COMPRESSION_MODE));
 				this.txtBaseCode.TryInvoke(new Action(() =>
 				{
 					this.txtBaseCode.Text = Base64;
@@ -465,7 +584,7 @@ namespace NewNtrClient
 
 				txtEditModeHex.TryInvoke(new Action(() =>
 				{
-					String k = Convert.ToString(Hex, 16);
+					String k = Convert.ToString(Hex, 16).ToUpper();
 
 					for (int i = k.Length; i < 8; i++)
 					{
@@ -654,16 +773,6 @@ namespace NewNtrClient
 			}));
 
 			return output;
-		}
-
-		private void disconnectfalseToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			this.NtrClient?.Disconnect(false);
-		}
-
-		private void disconnecttrueToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			this.NtrClient.Disconnect(true);
 		}
 	}
 

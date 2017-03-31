@@ -51,6 +51,21 @@ namespace NewNtrClient
 			Array.Copy(data, index, result, 0, length);
 			return result;
 		}
+		public static IEnumerable<string> Split(this string str, int chunkSize, Boolean allow)
+		{
+			List<string> k = new List<string>();
+
+			int i = 0;
+			while (i < str.Length - chunkSize)
+			{
+				k.Add(str.Substring(i, chunkSize));
+				i += chunkSize;
+			}
+
+			if (allow) k.Add(str.Substring(i, str.Length - i));
+
+			return k;
+		}
 
 	}
 }

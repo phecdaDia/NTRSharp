@@ -54,14 +54,25 @@
 			this.txtDumpMemAddrStart = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.buttonBaseHelp = new System.Windows.Forms.Button();
 			this.buttonBaseClipboardPaste = new System.Windows.Forms.Button();
 			this.buttonBaseClipboardCopy = new System.Windows.Forms.Button();
 			this.buttonUseBaseCode = new System.Windows.Forms.Button();
-			this.txtBaseCode = new System.Windows.Forms.RichTextBox();
+			this.txtBaseCode = new System.Windows.Forms.TextBox();
 			this.buttonCreateBaseCode = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.txtBaseLength = new System.Windows.Forms.TextBox();
 			this.txtBaseAddress = new System.Windows.Forms.TextBox();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.button1 = new System.Windows.Forms.Button();
+			this.buttonEditorEncrypt = new System.Windows.Forms.Button();
+			this.buttonEditorDecrypt = new System.Windows.Forms.Button();
+			this.textBoxEditorAddress = new System.Windows.Forms.TextBox();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.txtEditorBase = new System.Windows.Forms.TextBox();
+			this.txtEditorByte = new System.Windows.Forms.TextBox();
 			this.cmbMemlayout = new System.Windows.Forms.ComboBox();
 			this.buttonMemlayout = new System.Windows.Forms.Button();
 			this.cmbProcesses = new System.Windows.Forms.ComboBox();
@@ -80,6 +91,10 @@
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
+			this.tabPage3.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.panel1.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -133,7 +148,9 @@
 			this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.tabControl1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tabControl1.Location = new System.Drawing.Point(0, 37);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -162,10 +179,10 @@
 			this.tabPage1.Controls.Add(this.txtDumpMemAddrLength);
 			this.tabPage1.Controls.Add(this.txtDumpMemAddrStart);
 			this.tabPage1.Controls.Add(this.label1);
-			this.tabPage1.Location = new System.Drawing.Point(4, 25);
+			this.tabPage1.Location = new System.Drawing.Point(4, 27);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(744, 166);
+			this.tabPage1.Size = new System.Drawing.Size(744, 164);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "General";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -177,7 +194,7 @@
 			this.cbEditModeLittleEndian.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.cbEditModeLittleEndian.Location = new System.Drawing.Point(333, 53);
 			this.cbEditModeLittleEndian.Name = "cbEditModeLittleEndian";
-			this.cbEditModeLittleEndian.Size = new System.Drawing.Size(84, 17);
+			this.cbEditModeLittleEndian.Size = new System.Drawing.Size(117, 19);
 			this.cbEditModeLittleEndian.TabIndex = 20;
 			this.cbEditModeLittleEndian.Text = "Little Endian";
 			this.cbEditModeLittleEndian.UseVisualStyleBackColor = true;
@@ -398,6 +415,7 @@
 			// 
 			// tabPage2
 			// 
+			this.tabPage2.Controls.Add(this.buttonBaseHelp);
 			this.tabPage2.Controls.Add(this.buttonBaseClipboardPaste);
 			this.tabPage2.Controls.Add(this.buttonBaseClipboardCopy);
 			this.tabPage2.Controls.Add(this.buttonUseBaseCode);
@@ -406,18 +424,29 @@
 			this.tabPage2.Controls.Add(this.label3);
 			this.tabPage2.Controls.Add(this.txtBaseLength);
 			this.tabPage2.Controls.Add(this.txtBaseAddress);
-			this.tabPage2.Location = new System.Drawing.Point(4, 25);
+			this.tabPage2.Location = new System.Drawing.Point(4, 27);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(744, 166);
+			this.tabPage2.Size = new System.Drawing.Size(744, 164);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Base64 Code";
 			this.tabPage2.UseVisualStyleBackColor = true;
 			// 
+			// buttonBaseHelp
+			// 
+			this.buttonBaseHelp.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonBaseHelp.Location = new System.Drawing.Point(695, 6);
+			this.buttonBaseHelp.Name = "buttonBaseHelp";
+			this.buttonBaseHelp.Size = new System.Drawing.Size(36, 23);
+			this.buttonBaseHelp.TabIndex = 14;
+			this.buttonBaseHelp.Text = "[?]";
+			this.buttonBaseHelp.UseVisualStyleBackColor = true;
+			this.buttonBaseHelp.Click += new System.EventHandler(this.buttonBaseHelp_Click);
+			// 
 			// buttonBaseClipboardPaste
 			// 
 			this.buttonBaseClipboardPaste.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBaseClipboardPaste.Location = new System.Drawing.Point(643, 6);
+			this.buttonBaseClipboardPaste.Location = new System.Drawing.Point(601, 6);
 			this.buttonBaseClipboardPaste.Name = "buttonBaseClipboardPaste";
 			this.buttonBaseClipboardPaste.Size = new System.Drawing.Size(88, 23);
 			this.buttonBaseClipboardPaste.TabIndex = 11;
@@ -428,7 +457,7 @@
 			// buttonBaseClipboardCopy
 			// 
 			this.buttonBaseClipboardCopy.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBaseClipboardCopy.Location = new System.Drawing.Point(549, 6);
+			this.buttonBaseClipboardCopy.Location = new System.Drawing.Point(507, 6);
 			this.buttonBaseClipboardCopy.Name = "buttonBaseClipboardCopy";
 			this.buttonBaseClipboardCopy.Size = new System.Drawing.Size(88, 23);
 			this.buttonBaseClipboardCopy.TabIndex = 10;
@@ -451,12 +480,12 @@
 			// 
 			this.txtBaseCode.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.txtBaseCode.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtBaseCode.Location = new System.Drawing.Point(3, 35);
+			this.txtBaseCode.Location = new System.Drawing.Point(3, 33);
+			this.txtBaseCode.Multiline = true;
 			this.txtBaseCode.Name = "txtBaseCode";
-			this.txtBaseCode.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+			this.txtBaseCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtBaseCode.Size = new System.Drawing.Size(738, 128);
 			this.txtBaseCode.TabIndex = 8;
-			this.txtBaseCode.Text = "";
 			// 
 			// buttonCreateBaseCode
 			// 
@@ -504,6 +533,128 @@
 			this.txtBaseAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtBaseAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.tableLayoutPanel1);
+			this.tabPage3.Location = new System.Drawing.Point(4, 27);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage3.Size = new System.Drawing.Size(744, 164);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Code Creator";
+			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 1;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 18.98734F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 81.01266F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(738, 158);
+			this.tableLayoutPanel1.TabIndex = 7;
+			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.button1);
+			this.panel1.Controls.Add(this.buttonEditorEncrypt);
+			this.panel1.Controls.Add(this.buttonEditorDecrypt);
+			this.panel1.Controls.Add(this.textBoxEditorAddress);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(0, 0);
+			this.panel1.Margin = new System.Windows.Forms.Padding(0);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(738, 29);
+			this.panel1.TabIndex = 0;
+			// 
+			// button1
+			// 
+			this.button1.Location = new System.Drawing.Point(235, 3);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(128, 23);
+			this.button1.TabIndex = 14;
+			this.button1.Text = "Read from file";
+			this.button1.UseVisualStyleBackColor = true;
+			// 
+			// buttonEditorEncrypt
+			// 
+			this.buttonEditorEncrypt.Location = new System.Drawing.Point(73, 3);
+			this.buttonEditorEncrypt.Name = "buttonEditorEncrypt";
+			this.buttonEditorEncrypt.Size = new System.Drawing.Size(75, 23);
+			this.buttonEditorEncrypt.TabIndex = 13;
+			this.buttonEditorEncrypt.Text = "Encrypt";
+			this.buttonEditorEncrypt.UseVisualStyleBackColor = true;
+			this.buttonEditorEncrypt.Click += new System.EventHandler(this.buttonEditorEncrypt_Click);
+			// 
+			// buttonEditorDecrypt
+			// 
+			this.buttonEditorDecrypt.Location = new System.Drawing.Point(154, 2);
+			this.buttonEditorDecrypt.Name = "buttonEditorDecrypt";
+			this.buttonEditorDecrypt.Size = new System.Drawing.Size(75, 23);
+			this.buttonEditorDecrypt.TabIndex = 12;
+			this.buttonEditorDecrypt.Text = "Decrypt";
+			this.buttonEditorDecrypt.UseVisualStyleBackColor = true;
+			this.buttonEditorDecrypt.Click += new System.EventHandler(this.buttonEditorDecrypt_Click);
+			// 
+			// textBoxEditorAddress
+			// 
+			this.textBoxEditorAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textBoxEditorAddress.Location = new System.Drawing.Point(5, 3);
+			this.textBoxEditorAddress.MaxLength = 8;
+			this.textBoxEditorAddress.Name = "textBoxEditorAddress";
+			this.textBoxEditorAddress.Size = new System.Drawing.Size(62, 23);
+			this.textBoxEditorAddress.TabIndex = 11;
+			this.textBoxEditorAddress.Text = "00000000";
+			this.textBoxEditorAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.729F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.271F));
+			this.tableLayoutPanel2.Controls.Add(this.txtEditorBase, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.txtEditorByte, 0, 0);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 29);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 1;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(738, 129);
+			this.tableLayoutPanel2.TabIndex = 1;
+			// 
+			// txtEditorBase
+			// 
+			this.txtEditorBase.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtEditorBase.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorBase.Location = new System.Drawing.Point(370, 3);
+			this.txtEditorBase.Multiline = true;
+			this.txtEditorBase.Name = "txtEditorBase";
+			this.txtEditorBase.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtEditorBase.Size = new System.Drawing.Size(365, 123);
+			this.txtEditorBase.TabIndex = 10;
+			this.txtEditorBase.Text = "BASE64 CODE";
+			// 
+			// txtEditorByte
+			// 
+			this.txtEditorByte.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtEditorByte.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorByte.Location = new System.Drawing.Point(3, 3);
+			this.txtEditorByte.Multiline = true;
+			this.txtEditorByte.Name = "txtEditorByte";
+			this.txtEditorByte.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtEditorByte.Size = new System.Drawing.Size(361, 123);
+			this.txtEditorByte.TabIndex = 9;
+			this.txtEditorByte.Text = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \r\n";
+			this.txtEditorByte.TextChanged += new System.EventHandler(this.txtEditorByte_TextChanged);
+			this.txtEditorByte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEditorByte_KeyPress);
+			// 
 			// cmbMemlayout
 			// 
 			this.cmbMemlayout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -514,7 +665,7 @@
             "00000000 | 00000000 | 00000000"});
 			this.cmbMemlayout.Location = new System.Drawing.Point(501, 7);
 			this.cmbMemlayout.Name = "cmbMemlayout";
-			this.cmbMemlayout.Size = new System.Drawing.Size(234, 23);
+			this.cmbMemlayout.Size = new System.Drawing.Size(247, 23);
 			this.cmbMemlayout.TabIndex = 6;
 			// 
 			// buttonMemlayout
@@ -647,6 +798,12 @@
 			this.tabPage1.PerformLayout();
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
+			this.tabPage3.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -683,7 +840,7 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox txtBaseLength;
 		private System.Windows.Forms.TextBox txtBaseAddress;
-		private System.Windows.Forms.RichTextBox txtBaseCode;
+		private System.Windows.Forms.TextBox txtBaseCode;
 		private System.Windows.Forms.Button buttonUseBaseCode;
 		private System.Windows.Forms.Button buttonBaseClipboardPaste;
 		private System.Windows.Forms.Button buttonBaseClipboardCopy;
@@ -703,6 +860,17 @@
 		private System.Windows.Forms.ToolStripMenuItem disconnectfalseToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem disconnecttrueToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.Button buttonBaseHelp;
+		private System.Windows.Forms.TabPage tabPage3;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Button buttonEditorEncrypt;
+		private System.Windows.Forms.Button buttonEditorDecrypt;
+		private System.Windows.Forms.TextBox textBoxEditorAddress;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.TextBox txtEditorBase;
+		private System.Windows.Forms.TextBox txtEditorByte;
+		private System.Windows.Forms.Button button1;
 	}
 }
 
