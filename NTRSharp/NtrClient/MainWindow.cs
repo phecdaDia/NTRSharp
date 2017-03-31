@@ -26,7 +26,11 @@ namespace NewNtrClient
 		private readonly Int32 COMPRESSION_MODE = 2;
 		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
 
+#if DEBUG
 		private readonly Boolean IsDebug = true;
+#else
+		private readonly Boolean IsDebug = false;
+#endif
 
 		// Extern
 		[System.Runtime.InteropServices.DllImportAttribute("kernel32.dll", EntryPoint = "AllocConsole")]

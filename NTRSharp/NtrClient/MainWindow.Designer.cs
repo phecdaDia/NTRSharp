@@ -612,7 +612,6 @@
 			this.txtEditorProcess.Name = "txtEditorProcess";
 			this.txtEditorProcess.Size = new System.Drawing.Size(82, 23);
 			this.txtEditorProcess.TabIndex = 12;
-			this.txtEditorProcess.Text = "Rabbit_R";
 			this.txtEditorProcess.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// buttonEditorReadFile
