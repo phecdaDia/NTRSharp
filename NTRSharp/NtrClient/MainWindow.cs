@@ -86,7 +86,9 @@ namespace NewNtrClient
 
 		public void LogLine(String Message, params object[] Format)
 		{
-			txtOutput.AppendText(String.Format(Message, Format) + Environment.NewLine);
+			if (txtOutput.IsDisposed) return;
+			txtOutput.TryInvoke(new Action(() => txtOutput.AppendText(String.Format(Message, Format) + Environment.NewLine)));
+			
 		}
 
 		// Form Events
@@ -125,7 +127,7 @@ namespace NewNtrClient
 								List<byte> byteCode = new List<byte>();
 								String k = txtEditorByte.Text;
 								k = String.Join(null, k.Split(' '));
-								for (int i = 0; i < k.Length - 2; i+=2)
+								for (int i = 0; i <= k.Length - 2; i+=2)
 								{
 
 									byteCode.Add(Convert.ToByte(k.Substring(i, 2), 16));
@@ -151,7 +153,20 @@ namespace NewNtrClient
 						}
 					}),
 
-					new MenuItem("Clear", (s, e_) => txtEditorByte.Text = null)
+					new MenuItem("Clear", (s, e_) => txtEditorByte.Text = null),
+					new MenuItem("Copy", (s, e_) => Clipboard.SetText(txtEditorByte.Text)),
+					new MenuItem("Paste", (s, e_) => {
+						String t = Clipboard.GetText();
+						t = String.Join(null, t.Split(' '));
+						t = String.Join(null, t.Split(Environment.NewLine));
+						t = t.ToUpper();
+
+						if (!new Regex("[0-9A-F]*").IsMatch(t)) return;
+
+						//t = String.Join(" ", t.Split(2, true));
+						txtEditorByte.Text = t;
+
+					}),
 				});
 
 
@@ -185,7 +200,9 @@ namespace NewNtrClient
 						}
 					}),
 
-					new MenuItem("Clear", (s, e_) => txtEditorBase.Text = null)
+					new MenuItem("Clear", (s, e_) => txtEditorBase.Text = null),
+					new MenuItem("Copy", (s, e_) => Clipboard.SetText(txtEditorBase.Text)),
+					new MenuItem("Paste", (s, e_) => txtEditorBase.Text = Clipboard.GetText()),
 				});
 				Log(".");
 
@@ -215,6 +232,7 @@ namespace NewNtrClient
 
 			new Task(() =>
 			{
+				Console.WriteLine("Derpy");
 				int Retry = 0;
 				LogLine("Trying to connect to {0}", txtIpAddress.Text);
 				do
@@ -515,24 +533,31 @@ namespace NewNtrClient
 			List<byte> byteCode = new List<byte>();
 			String k = txtEditorByte.Text;
 			k = String.Join(null, k.Split(' '));
-			for (int i = 0; i < k.Length - 2; i+=2)
+			k = String.Join(null, k.Split(Environment.NewLine));
+
+			//Console.WriteLine(k.Length);
+			for (int i = 0; i <= k.Length - 2; i+=2)
 			{
-				byte s = Convert.ToByte(k.Substring(i, 2), 16);
+				String j = k.Substring(i, 2);
+				//Console.WriteLine(j);
+				byte s = Convert.ToByte(j, 16);
 				byteCode.Add(s);
 			}
+
+			//Console.WriteLine(byteCode.Count);
 
 			//LogLine(ByteArrayToHexString(byteCode.ToArray()));
 
 			UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
 
-			txtEditorBase.Text = ToBase64Code(Address, txtEditorProcess.Text, byteCode);
+			txtEditorBase.Text = ToBase64Code(Address, GetProcessName(), byteCode);
 		}
 
 		private void buttonEditorDecrypt_Click(object sender, EventArgs e)
 		{
 			try
 			{
-				byte[] baseCode = Compression.Decompress(Convert.FromBase64String(txtBaseCode.Text), COMPRESSION_MODE);
+				byte[] baseCode = Compression.Decompress(Convert.FromBase64String(txtEditorBase.Text), COMPRESSION_MODE);
 				//LogLine(ByteArrayToHexString(baseCode));
 				Int32 Index = 0;
 				//LogLine(ByteArrayToHexString(baseCode));
@@ -563,8 +588,19 @@ namespace NewNtrClient
 				byte[] DataBuffer = baseCode.SubArray(Index, DataLength);
 				Index += DataLength;
 
-				txtEditorAddress.Text = Convert.ToString(Address, 16).ToUpper();
-				txtEditorProcess.Text = ProcessName;
+				if (ProcessName != GetProcessName())
+				{
+					LogLine("You can't use this code on this process. Expected: {0}", ProcessName);
+					return;
+				}
+
+				String t = Convert.ToString(Address, 16).ToString();
+				for (int i = t.Length; i < 8; i++)
+				{
+					t = "0" + t;
+				}
+				txtEditorAddress.Text = t;
+				
 
 				txtEditorByte.Text = ByteArrayToHexString(DataBuffer);
 
@@ -583,17 +619,11 @@ namespace NewNtrClient
 		{
 			try
 			{
-				if (GetProcessName() != txtEditorProcess.Text)
-				{
-					LogLine("Please select the {0} process", txtEditorProcess.Text);
-					return;
-				}
-
 				UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
 				List<byte> byteCode = new List<byte>();
 				String k = txtEditorByte.Text;
 				k = String.Join(null, k.Split(' '));
-				for (int i = 0; i < k.Length - 2; i += 2)
+				for (int i = 0; i <= k.Length - 2; i += 2)
 				{
 					byte s = Convert.ToByte(k.Substring(i, 2), 16);
 					byteCode.Add(s);
@@ -622,7 +652,7 @@ namespace NewNtrClient
 		private void buttonEditorClear_Click(object sender, EventArgs e)
 		{
 			txtEditorAddress.Text = "00000000";
-			txtEditorProcess.Text = null;
+			txtEditorLength.Text = "00000000";
 
 			txtEditorByte.Text = null;
 			txtEditorBase.Text = null;
@@ -640,6 +670,25 @@ namespace NewNtrClient
 			this.NtrClient.Disconnect(true);
 		}
 
+		private void buttonEditorCreate_Click(object sender, EventArgs e)
+		{
+
+
+			UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
+			UInt32 Length = Convert.ToUInt32(txtEditorLength.Text, 16);
+
+
+			if (!IsValidMemregion(Address, Length))
+			{
+				LogLine("Invalid Address / Length. No valid memregions found!");
+				return;
+			}
+
+			this.ReadMemoryType = ReadMemoryType.CreateEditorCode;
+
+			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+		}
+
 
 		// Validating
 
@@ -648,10 +697,6 @@ namespace NewNtrClient
 			TextBox txt = sender as TextBox;
 			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
 			String Validator = txt.Text.ToUpper();
-			for (int i = txt.Text.Length; i < 8; i++)
-			{
-				Validator = "0" + Validator;
-			}
 
 			if (!ValidRegex.IsMatch(Validator))
 			{
@@ -730,10 +775,6 @@ namespace NewNtrClient
 				UInt32 Address = Convert.ToUInt32(txtBaseAddress.Text, 16);
 				UInt32 Length = Convert.ToUInt32(txtBaseLength.Text, 16);
 
-				String ProcessName;
-
-				this.cmbProcesses.TryInvoke(new Action(() => ProcessName = GetProcessName()));
-
 
 				if (String.IsNullOrEmpty(GetProcessName()))
 				{
@@ -758,6 +799,22 @@ namespace NewNtrClient
 					this.txtBaseCode.Text = Base64;
 				}));
 			} 
+			else if (Rmt == ReadMemoryType.CreateEditorCode)
+			{
+				List<byte> byteCode = new List<byte>();
+
+				UInt32 Address = Convert.ToUInt32(txtBaseAddress.Text, 16);
+				UInt32 Length = Convert.ToUInt32(txtBaseLength.Text, 16);
+				
+
+				String Base64 = ToBase64Code(Address, GetProcessName(), Buffer);
+				this.txtEditorBase.TryInvoke(new Action(() =>
+				{
+					this.txtEditorBase.Text = Base64;
+				}));
+
+				this.txtEditorByte.TryInvoke(new Action(() => this.txtEditorByte.Text = ByteArrayToHexString(Buffer)));
+			}
 			else if (Rmt == ReadMemoryType.EditMode)
 			{
 				UInt32 l = GetEditModeLength();
@@ -978,6 +1035,8 @@ namespace NewNtrClient
 
 		private String ToBase64Code(UInt32 Address, String Process, IEnumerable<byte> Buffer)
 		{
+			if (String.IsNullOrEmpty(Process)) return null;
+
 			List<byte> byteCode = new List<byte>();
 
 			byteCode.AddRange(Encoding.ASCII.GetBytes("BASE")); // magic
@@ -1000,6 +1059,7 @@ namespace NewNtrClient
 		DumpAsFile,
 		DumpAsConsole,
 		CreateCode,
+		CreateEditorCode,
 		EditMode,
 	}
 

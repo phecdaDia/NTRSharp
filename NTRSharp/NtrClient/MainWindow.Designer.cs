@@ -68,7 +68,6 @@
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.buttonEditorClear = new System.Windows.Forms.Button();
 			this.label9 = new System.Windows.Forms.Label();
-			this.txtEditorProcess = new System.Windows.Forms.TextBox();
 			this.buttonEditorEncrypt = new System.Windows.Forms.Button();
 			this.buttonEditorDecrypt = new System.Windows.Forms.Button();
 			this.txtEditorAddress = new System.Windows.Forms.TextBox();
@@ -90,6 +89,8 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.buttonEditorHelp = new System.Windows.Forms.Button();
 			this.buttonEditorUse = new System.Windows.Forms.Button();
+			this.buttonEditorCreate = new System.Windows.Forms.Button();
+			this.txtEditorLength = new System.Windows.Forms.TextBox();
 			this.ContentTable.SuspendLayout();
 			this.ContentPanel.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -566,11 +567,12 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.txtEditorLength);
+			this.panel1.Controls.Add(this.buttonEditorCreate);
 			this.panel1.Controls.Add(this.buttonEditorUse);
 			this.panel1.Controls.Add(this.buttonEditorHelp);
 			this.panel1.Controls.Add(this.buttonEditorClear);
 			this.panel1.Controls.Add(this.label9);
-			this.panel1.Controls.Add(this.txtEditorProcess);
 			this.panel1.Controls.Add(this.buttonEditorEncrypt);
 			this.panel1.Controls.Add(this.buttonEditorDecrypt);
 			this.panel1.Controls.Add(this.txtEditorAddress);
@@ -583,10 +585,10 @@
 			// 
 			// buttonEditorClear
 			// 
-			this.buttonEditorClear.Location = new System.Drawing.Point(619, 3);
+			this.buttonEditorClear.Location = new System.Drawing.Point(323, 3);
 			this.buttonEditorClear.Name = "buttonEditorClear";
 			this.buttonEditorClear.Size = new System.Drawing.Size(77, 23);
-			this.buttonEditorClear.TabIndex = 17;
+			this.buttonEditorClear.TabIndex = 15;
 			this.buttonEditorClear.Text = "Clear";
 			this.buttonEditorClear.UseVisualStyleBackColor = true;
 			this.buttonEditorClear.Click += new System.EventHandler(this.buttonEditorClear_Click);
@@ -602,19 +604,9 @@
 			this.label9.TabIndex = 16;
 			this.label9.Text = "Code Editor";
 			// 
-			// txtEditorProcess
-			// 
-			this.txtEditorProcess.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtEditorProcess.Location = new System.Drawing.Point(161, 4);
-			this.txtEditorProcess.MaxLength = 8;
-			this.txtEditorProcess.Name = "txtEditorProcess";
-			this.txtEditorProcess.Size = new System.Drawing.Size(82, 23);
-			this.txtEditorProcess.TabIndex = 12;
-			this.txtEditorProcess.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
 			// buttonEditorEncrypt
 			// 
-			this.buttonEditorEncrypt.Location = new System.Drawing.Point(249, 3);
+			this.buttonEditorEncrypt.Location = new System.Drawing.Point(161, 3);
 			this.buttonEditorEncrypt.Name = "buttonEditorEncrypt";
 			this.buttonEditorEncrypt.Size = new System.Drawing.Size(75, 23);
 			this.buttonEditorEncrypt.TabIndex = 13;
@@ -624,7 +616,7 @@
 			// 
 			// buttonEditorDecrypt
 			// 
-			this.buttonEditorDecrypt.Location = new System.Drawing.Point(330, 3);
+			this.buttonEditorDecrypt.Location = new System.Drawing.Point(242, 3);
 			this.buttonEditorDecrypt.Name = "buttonEditorDecrypt";
 			this.buttonEditorDecrypt.Size = new System.Drawing.Size(75, 23);
 			this.buttonEditorDecrypt.TabIndex = 14;
@@ -816,19 +808,42 @@
 			this.buttonEditorHelp.Location = new System.Drawing.Point(702, 3);
 			this.buttonEditorHelp.Name = "buttonEditorHelp";
 			this.buttonEditorHelp.Size = new System.Drawing.Size(36, 23);
-			this.buttonEditorHelp.TabIndex = 18;
+			this.buttonEditorHelp.TabIndex = 19;
 			this.buttonEditorHelp.Text = "[?]";
 			this.buttonEditorHelp.UseVisualStyleBackColor = true;
 			// 
 			// buttonEditorUse
 			// 
-			this.buttonEditorUse.Location = new System.Drawing.Point(411, 3);
+			this.buttonEditorUse.Location = new System.Drawing.Point(603, 3);
 			this.buttonEditorUse.Name = "buttonEditorUse";
-			this.buttonEditorUse.Size = new System.Drawing.Size(77, 23);
-			this.buttonEditorUse.TabIndex = 15;
+			this.buttonEditorUse.Size = new System.Drawing.Size(93, 23);
+			this.buttonEditorUse.TabIndex = 18;
 			this.buttonEditorUse.Text = "Use Code";
 			this.buttonEditorUse.UseVisualStyleBackColor = true;
 			this.buttonEditorUse.Click += new System.EventHandler(this.buttonEditorUse_Click);
+			// 
+			// buttonEditorCreate
+			// 
+			this.buttonEditorCreate.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditorCreate.Location = new System.Drawing.Point(504, 3);
+			this.buttonEditorCreate.Name = "buttonEditorCreate";
+			this.buttonEditorCreate.Size = new System.Drawing.Size(93, 23);
+			this.buttonEditorCreate.TabIndex = 17;
+			this.buttonEditorCreate.Text = "Create Code";
+			this.buttonEditorCreate.UseVisualStyleBackColor = true;
+			this.buttonEditorCreate.Click += new System.EventHandler(this.buttonEditorCreate_Click);
+			// 
+			// txtEditorLength
+			// 
+			this.txtEditorLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorLength.Location = new System.Drawing.Point(436, 3);
+			this.txtEditorLength.MaxLength = 8;
+			this.txtEditorLength.Name = "txtEditorLength";
+			this.txtEditorLength.Size = new System.Drawing.Size(62, 23);
+			this.txtEditorLength.TabIndex = 16;
+			this.txtEditorLength.Text = "00000000";
+			this.txtEditorLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtEditorLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// MainWindow
 			// 
@@ -924,9 +939,10 @@
 		private System.Windows.Forms.TextBox txtEditorByte;
 		private System.Windows.Forms.Button buttonEditorClear;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.TextBox txtEditorProcess;
 		private System.Windows.Forms.Button buttonEditorHelp;
 		private System.Windows.Forms.Button buttonEditorUse;
+		private System.Windows.Forms.TextBox txtEditorLength;
+		private System.Windows.Forms.Button buttonEditorCreate;
 	}
 }
 

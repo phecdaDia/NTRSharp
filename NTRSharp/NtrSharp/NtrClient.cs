@@ -116,7 +116,7 @@ namespace NtrSharp
 				if (WaitPacketThread)
 				{
 					//PacketRecvThread?.Join();
-					PacketRecvThread.Abort();
+					PacketRecvThread?.Abort();
 				}
 			}
 			finally
