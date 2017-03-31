@@ -24,7 +24,7 @@ There are two methods to create Base64 Codes.
 > Open the debugger and connect to your 3ds. Select the process you want to create a code for. Once the Memregions appeared go to "Base64 Codes" and enter the address and length of the code. Once that's done just click "Create Code" and the Base64 code should appear. You can now exchange this code with your friends and give them items, equipment or similar. 
 
 **Advanced method**:  
-*Not yet implemented - placeholder*
+> Open the debugger and go to "Code Editor". There you can start creating a new code by entering an address and process name. Now all that's left is the data. The left textbox functions as a hexeditor where you can start writing bytes. If you want to export your code as Base64 simply encrypt it and copy from the right textbox. If you have a code you want to modify simply paste a Base64 code in the right textbox and click decrypt it. Now you can edit it in the hexeditor. You can additionally load a file.
 
 ### How to use Base64 Codes
 If you received a Base64 code open the debugger and connect to your 3ds. Select the process this code is for. Now go to "Base64 Codes" and paste the code into the textbox. All that's left is hitting the "Use Code" button which will do the rest. 
