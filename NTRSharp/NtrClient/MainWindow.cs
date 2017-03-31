@@ -86,7 +86,7 @@ namespace NewNtrClient
 
 		public void LogLine(String Message, params object[] Format)
 		{
-			txtOutput.AppendLine(String.Format(Message, Format));
+			txtOutput.AppendText(String.Format(Message, Format) + Environment.NewLine);
 		}
 
 		// Form Events
@@ -97,6 +97,7 @@ namespace NewNtrClient
 				LogLine("NTR by cell9");
 				LogLine("NTRSharp by imthe666st");
 
+				Log("Setup");
 				this.cmbEditModeType.SelectedIndex = 0;
 				this.cmbMemlayout.SelectedIndex = 0;
 				this.cmbProcesses.SelectedIndex = 0;
@@ -111,7 +112,91 @@ namespace NewNtrClient
 
 				this.NtrClient.EvtProgress += (s, e_) => { SetProgress(this.NtrClient?.Progress ?? 0); };
 
-				LogLine("Finished setup");
+				Log(".");
+
+				txtEditorByte.ContextMenu = new ContextMenu(new MenuItem[] {
+					new MenuItem("Save to file", (s, e_) => {
+						using(SaveFileDialog sfd = new SaveFileDialog())
+						{
+							sfd.DefaultExt = "bin";
+							sfd.Filter = "Binary|*.bin";
+							if (sfd.ShowDialog() == DialogResult.OK)
+							{
+								List<byte> byteCode = new List<byte>();
+								String k = txtEditorByte.Text;
+								k = String.Join(null, k.Split(' '));
+								for (int i = 0; i < k.Length - 2; i+=2)
+								{
+
+									byteCode.Add(Convert.ToByte(k.Substring(i, 2), 16));
+								}
+
+								File.WriteAllBytes(sfd.FileName, byteCode.ToArray());
+							}
+						}
+					}),
+					new MenuItem("Load from file", (s, e_) => {
+						using (OpenFileDialog ofd = new OpenFileDialog())
+						{
+							ofd.Filter = "All|*.*";
+							ofd.Multiselect = false;
+							if (ofd.ShowDialog() == DialogResult.OK)
+							{
+								if (File.Exists(ofd.FileName))
+								{
+									byte[] data = File.ReadAllBytes(ofd.FileName);
+									txtEditorByte.Text = ByteArrayToHexString(data);
+								}
+							}
+						}
+					}),
+
+					new MenuItem("Clear", (s, e_) => txtEditorByte.Text = null)
+				});
+
+
+				txtEditorBase.ContextMenu = new ContextMenu(new MenuItem[] {
+					new MenuItem("Save to file", (s, e_) => {
+						using(SaveFileDialog sfd = new SaveFileDialog())
+						{
+							sfd.DefaultExt = "txt";
+							sfd.Filter = "Text|*.txt";
+							if (sfd.ShowDialog() == DialogResult.OK)
+							{
+								List<byte> byteCode = new List<byte>();
+								String k = txtEditorBase.Text;
+								k = String.Join(null, k.Split(' '));
+								for (int i = 0; i < k.Length - 2; i+=2)
+								{
+
+									byteCode.Add(Convert.ToByte(k.Substring(i, 2), 16));
+								}
+
+								File.WriteAllBytes(sfd.FileName, byteCode.ToArray());
+							}
+						}
+					}),
+					new MenuItem("Load from file", (s, e_) => {
+						using (OpenFileDialog ofd = new OpenFileDialog())
+						{
+							ofd.Filter = "All|*.*";
+							ofd.Multiselect = false;
+							if (ofd.ShowDialog() == DialogResult.OK)
+							{
+								if (File.Exists(ofd.FileName))
+								{
+									byte[] data = File.ReadAllBytes(ofd.FileName);
+									txtEditorBase.Text = ByteArrayToHexString(data);
+								}
+							}
+						}
+					}),
+
+					new MenuItem("Clear", (s, e_) => txtEditorBase.Text = null)
+				});
+				Log(".");
+
+				LogLine(Environment.NewLine + "Finished setup");
 			}
 			catch (Exception ex)
 			{
@@ -520,7 +605,12 @@ namespace NewNtrClient
 					byteCode.Add(s);
 				}
 
+				if (!IsValidMemregion(Address, (uint)byteCode.Count))
+				{
 
+					LogLine("Invalid Address / Length. No valid memregions found!");
+					return;
+				}
 
 
 				this.NtrClient?.SendWriteMemPacket(Address, GetPid(), byteCode.ToArray());
@@ -535,24 +625,9 @@ namespace NewNtrClient
 			}
 		}
 
-		private void buttonEditorReadFile_Click(object sender, EventArgs e)
-		{
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.Filter = "All|*.*";
-			ofd.Multiselect = false;
-			if (ofd.ShowDialog() == DialogResult.OK)
-			{
-				if (File.Exists(ofd.FileName))
-				{
-					byte[] data = File.ReadAllBytes(ofd.FileName);
-					txtEditorByte.Text = ByteArrayToHexString(data);
-				}
-			}
-		}
-
 		private void buttonEditorClear_Click(object sender, EventArgs e)
 		{
-			txtEditorAddress.Text = null;
+			txtEditorAddress.Text = "00000000";
 			txtEditorProcess.Text = null;
 
 			txtEditorByte.Text = null;

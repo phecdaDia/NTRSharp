@@ -69,7 +69,6 @@
 			this.buttonEditorClear = new System.Windows.Forms.Button();
 			this.label9 = new System.Windows.Forms.Label();
 			this.txtEditorProcess = new System.Windows.Forms.TextBox();
-			this.buttonEditorReadFile = new System.Windows.Forms.Button();
 			this.buttonEditorEncrypt = new System.Windows.Forms.Button();
 			this.buttonEditorDecrypt = new System.Windows.Forms.Button();
 			this.txtEditorAddress = new System.Windows.Forms.TextBox();
@@ -572,7 +571,6 @@
 			this.panel1.Controls.Add(this.buttonEditorClear);
 			this.panel1.Controls.Add(this.label9);
 			this.panel1.Controls.Add(this.txtEditorProcess);
-			this.panel1.Controls.Add(this.buttonEditorReadFile);
 			this.panel1.Controls.Add(this.buttonEditorEncrypt);
 			this.panel1.Controls.Add(this.buttonEditorDecrypt);
 			this.panel1.Controls.Add(this.txtEditorAddress);
@@ -613,16 +611,6 @@
 			this.txtEditorProcess.Size = new System.Drawing.Size(82, 23);
 			this.txtEditorProcess.TabIndex = 12;
 			this.txtEditorProcess.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// buttonEditorReadFile
-			// 
-			this.buttonEditorReadFile.Location = new System.Drawing.Point(494, 3);
-			this.buttonEditorReadFile.Name = "buttonEditorReadFile";
-			this.buttonEditorReadFile.Size = new System.Drawing.Size(119, 23);
-			this.buttonEditorReadFile.TabIndex = 16;
-			this.buttonEditorReadFile.Text = "Read from file";
-			this.buttonEditorReadFile.UseVisualStyleBackColor = true;
-			this.buttonEditorReadFile.Click += new System.EventHandler(this.buttonEditorReadFile_Click);
 			// 
 			// buttonEditorEncrypt
 			// 
@@ -934,7 +922,6 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.TextBox txtEditorBase;
 		private System.Windows.Forms.TextBox txtEditorByte;
-		private System.Windows.Forms.Button buttonEditorReadFile;
 		private System.Windows.Forms.Button buttonEditorClear;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TextBox txtEditorProcess;
