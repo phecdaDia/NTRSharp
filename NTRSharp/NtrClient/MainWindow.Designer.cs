@@ -66,10 +66,13 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.button1 = new System.Windows.Forms.Button();
+			this.buttonEditorClear = new System.Windows.Forms.Button();
+			this.label9 = new System.Windows.Forms.Label();
+			this.txtEditorProcess = new System.Windows.Forms.TextBox();
+			this.buttonEditorReadFile = new System.Windows.Forms.Button();
 			this.buttonEditorEncrypt = new System.Windows.Forms.Button();
 			this.buttonEditorDecrypt = new System.Windows.Forms.Button();
-			this.textBoxEditorAddress = new System.Windows.Forms.TextBox();
+			this.txtEditorAddress = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtEditorBase = new System.Windows.Forms.TextBox();
 			this.txtEditorByte = new System.Windows.Forms.TextBox();
@@ -86,6 +89,8 @@
 			this.disconnectfalseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.disconnecttrueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.buttonEditorHelp = new System.Windows.Forms.Button();
+			this.buttonEditorUse = new System.Windows.Forms.Button();
 			this.ContentTable.SuspendLayout();
 			this.ContentPanel.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -435,7 +440,7 @@
 			// buttonBaseHelp
 			// 
 			this.buttonBaseHelp.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBaseHelp.Location = new System.Drawing.Point(695, 6);
+			this.buttonBaseHelp.Location = new System.Drawing.Point(708, 6);
 			this.buttonBaseHelp.Name = "buttonBaseHelp";
 			this.buttonBaseHelp.Size = new System.Drawing.Size(36, 23);
 			this.buttonBaseHelp.TabIndex = 14;
@@ -446,7 +451,7 @@
 			// buttonBaseClipboardPaste
 			// 
 			this.buttonBaseClipboardPaste.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBaseClipboardPaste.Location = new System.Drawing.Point(601, 6);
+			this.buttonBaseClipboardPaste.Location = new System.Drawing.Point(614, 7);
 			this.buttonBaseClipboardPaste.Name = "buttonBaseClipboardPaste";
 			this.buttonBaseClipboardPaste.Size = new System.Drawing.Size(88, 23);
 			this.buttonBaseClipboardPaste.TabIndex = 11;
@@ -457,7 +462,7 @@
 			// buttonBaseClipboardCopy
 			// 
 			this.buttonBaseClipboardCopy.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonBaseClipboardCopy.Location = new System.Drawing.Point(507, 6);
+			this.buttonBaseClipboardCopy.Location = new System.Drawing.Point(520, 7);
 			this.buttonBaseClipboardCopy.Name = "buttonBaseClipboardCopy";
 			this.buttonBaseClipboardCopy.Size = new System.Drawing.Size(88, 23);
 			this.buttonBaseClipboardCopy.TabIndex = 10;
@@ -468,7 +473,7 @@
 			// buttonUseBaseCode
 			// 
 			this.buttonUseBaseCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonUseBaseCode.Location = new System.Drawing.Point(362, 6);
+			this.buttonUseBaseCode.Location = new System.Drawing.Point(331, 6);
 			this.buttonUseBaseCode.Name = "buttonUseBaseCode";
 			this.buttonUseBaseCode.Size = new System.Drawing.Size(93, 23);
 			this.buttonUseBaseCode.TabIndex = 9;
@@ -490,7 +495,7 @@
 			// buttonCreateBaseCode
 			// 
 			this.buttonCreateBaseCode.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonCreateBaseCode.Location = new System.Drawing.Point(263, 6);
+			this.buttonCreateBaseCode.Location = new System.Drawing.Point(232, 6);
 			this.buttonCreateBaseCode.Name = "buttonCreateBaseCode";
 			this.buttonCreateBaseCode.Size = new System.Drawing.Size(93, 23);
 			this.buttonCreateBaseCode.TabIndex = 7;
@@ -502,7 +507,7 @@
 			// 
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(37, 9);
+			this.label3.Location = new System.Drawing.Point(6, 9);
 			this.label3.Name = "label3";
 			this.label3.RightToLeft = System.Windows.Forms.RightToLeft.No;
 			this.label3.Size = new System.Drawing.Size(84, 15);
@@ -512,7 +517,7 @@
 			// txtBaseLength
 			// 
 			this.txtBaseLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtBaseLength.Location = new System.Drawing.Point(195, 6);
+			this.txtBaseLength.Location = new System.Drawing.Point(164, 6);
 			this.txtBaseLength.MaxLength = 8;
 			this.txtBaseLength.Name = "txtBaseLength";
 			this.txtBaseLength.Size = new System.Drawing.Size(62, 23);
@@ -524,7 +529,7 @@
 			// txtBaseAddress
 			// 
 			this.txtBaseAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtBaseAddress.Location = new System.Drawing.Point(127, 6);
+			this.txtBaseAddress.Location = new System.Drawing.Point(96, 6);
 			this.txtBaseAddress.MaxLength = 8;
 			this.txtBaseAddress.Name = "txtBaseAddress";
 			this.txtBaseAddress.Size = new System.Drawing.Size(62, 23);
@@ -562,10 +567,15 @@
 			// 
 			// panel1
 			// 
-			this.panel1.Controls.Add(this.button1);
+			this.panel1.Controls.Add(this.buttonEditorUse);
+			this.panel1.Controls.Add(this.buttonEditorHelp);
+			this.panel1.Controls.Add(this.buttonEditorClear);
+			this.panel1.Controls.Add(this.label9);
+			this.panel1.Controls.Add(this.txtEditorProcess);
+			this.panel1.Controls.Add(this.buttonEditorReadFile);
 			this.panel1.Controls.Add(this.buttonEditorEncrypt);
 			this.panel1.Controls.Add(this.buttonEditorDecrypt);
-			this.panel1.Controls.Add(this.textBoxEditorAddress);
+			this.panel1.Controls.Add(this.txtEditorAddress);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Margin = new System.Windows.Forms.Padding(0);
@@ -573,18 +583,51 @@
 			this.panel1.Size = new System.Drawing.Size(738, 29);
 			this.panel1.TabIndex = 0;
 			// 
-			// button1
+			// buttonEditorClear
 			// 
-			this.button1.Location = new System.Drawing.Point(235, 3);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(128, 23);
-			this.button1.TabIndex = 14;
-			this.button1.Text = "Read from file";
-			this.button1.UseVisualStyleBackColor = true;
+			this.buttonEditorClear.Location = new System.Drawing.Point(619, 3);
+			this.buttonEditorClear.Name = "buttonEditorClear";
+			this.buttonEditorClear.Size = new System.Drawing.Size(77, 23);
+			this.buttonEditorClear.TabIndex = 17;
+			this.buttonEditorClear.Text = "Clear";
+			this.buttonEditorClear.UseVisualStyleBackColor = true;
+			this.buttonEditorClear.Click += new System.EventHandler(this.buttonEditorClear_Click);
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label9.Location = new System.Drawing.Point(3, 6);
+			this.label9.Name = "label9";
+			this.label9.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label9.Size = new System.Drawing.Size(84, 15);
+			this.label9.TabIndex = 16;
+			this.label9.Text = "Code Editor";
+			// 
+			// txtEditorProcess
+			// 
+			this.txtEditorProcess.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorProcess.Location = new System.Drawing.Point(161, 4);
+			this.txtEditorProcess.MaxLength = 8;
+			this.txtEditorProcess.Name = "txtEditorProcess";
+			this.txtEditorProcess.Size = new System.Drawing.Size(82, 23);
+			this.txtEditorProcess.TabIndex = 12;
+			this.txtEditorProcess.Text = "Rabbit_R";
+			this.txtEditorProcess.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// buttonEditorReadFile
+			// 
+			this.buttonEditorReadFile.Location = new System.Drawing.Point(494, 3);
+			this.buttonEditorReadFile.Name = "buttonEditorReadFile";
+			this.buttonEditorReadFile.Size = new System.Drawing.Size(119, 23);
+			this.buttonEditorReadFile.TabIndex = 16;
+			this.buttonEditorReadFile.Text = "Read from file";
+			this.buttonEditorReadFile.UseVisualStyleBackColor = true;
+			this.buttonEditorReadFile.Click += new System.EventHandler(this.buttonEditorReadFile_Click);
 			// 
 			// buttonEditorEncrypt
 			// 
-			this.buttonEditorEncrypt.Location = new System.Drawing.Point(73, 3);
+			this.buttonEditorEncrypt.Location = new System.Drawing.Point(249, 3);
 			this.buttonEditorEncrypt.Name = "buttonEditorEncrypt";
 			this.buttonEditorEncrypt.Size = new System.Drawing.Size(75, 23);
 			this.buttonEditorEncrypt.TabIndex = 13;
@@ -594,24 +637,25 @@
 			// 
 			// buttonEditorDecrypt
 			// 
-			this.buttonEditorDecrypt.Location = new System.Drawing.Point(154, 2);
+			this.buttonEditorDecrypt.Location = new System.Drawing.Point(330, 3);
 			this.buttonEditorDecrypt.Name = "buttonEditorDecrypt";
 			this.buttonEditorDecrypt.Size = new System.Drawing.Size(75, 23);
-			this.buttonEditorDecrypt.TabIndex = 12;
+			this.buttonEditorDecrypt.TabIndex = 14;
 			this.buttonEditorDecrypt.Text = "Decrypt";
 			this.buttonEditorDecrypt.UseVisualStyleBackColor = true;
 			this.buttonEditorDecrypt.Click += new System.EventHandler(this.buttonEditorDecrypt_Click);
 			// 
-			// textBoxEditorAddress
+			// txtEditorAddress
 			// 
-			this.textBoxEditorAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBoxEditorAddress.Location = new System.Drawing.Point(5, 3);
-			this.textBoxEditorAddress.MaxLength = 8;
-			this.textBoxEditorAddress.Name = "textBoxEditorAddress";
-			this.textBoxEditorAddress.Size = new System.Drawing.Size(62, 23);
-			this.textBoxEditorAddress.TabIndex = 11;
-			this.textBoxEditorAddress.Text = "00000000";
-			this.textBoxEditorAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtEditorAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorAddress.Location = new System.Drawing.Point(93, 3);
+			this.txtEditorAddress.MaxLength = 8;
+			this.txtEditorAddress.Name = "txtEditorAddress";
+			this.txtEditorAddress.Size = new System.Drawing.Size(62, 23);
+			this.txtEditorAddress.TabIndex = 11;
+			this.txtEditorAddress.Text = "00000000";
+			this.txtEditorAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtEditorAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -654,6 +698,7 @@
 			this.txtEditorByte.Text = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \r\n";
 			this.txtEditorByte.TextChanged += new System.EventHandler(this.txtEditorByte_TextChanged);
 			this.txtEditorByte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEditorByte_KeyPress);
+			this.txtEditorByte.Validating += new System.ComponentModel.CancelEventHandler(this.txtEditorByte_Validating);
 			// 
 			// cmbMemlayout
 			// 
@@ -778,6 +823,26 @@
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(162, 6);
 			// 
+			// buttonEditorHelp
+			// 
+			this.buttonEditorHelp.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditorHelp.Location = new System.Drawing.Point(702, 3);
+			this.buttonEditorHelp.Name = "buttonEditorHelp";
+			this.buttonEditorHelp.Size = new System.Drawing.Size(36, 23);
+			this.buttonEditorHelp.TabIndex = 18;
+			this.buttonEditorHelp.Text = "[?]";
+			this.buttonEditorHelp.UseVisualStyleBackColor = true;
+			// 
+			// buttonEditorUse
+			// 
+			this.buttonEditorUse.Location = new System.Drawing.Point(411, 3);
+			this.buttonEditorUse.Name = "buttonEditorUse";
+			this.buttonEditorUse.Size = new System.Drawing.Size(77, 23);
+			this.buttonEditorUse.TabIndex = 15;
+			this.buttonEditorUse.Text = "Use Code";
+			this.buttonEditorUse.UseVisualStyleBackColor = true;
+			this.buttonEditorUse.Click += new System.EventHandler(this.buttonEditorUse_Click);
+			// 
 			// MainWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -866,11 +931,16 @@
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button buttonEditorEncrypt;
 		private System.Windows.Forms.Button buttonEditorDecrypt;
-		private System.Windows.Forms.TextBox textBoxEditorAddress;
+		private System.Windows.Forms.TextBox txtEditorAddress;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.TextBox txtEditorBase;
 		private System.Windows.Forms.TextBox txtEditorByte;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button buttonEditorReadFile;
+		private System.Windows.Forms.Button buttonEditorClear;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.TextBox txtEditorProcess;
+		private System.Windows.Forms.Button buttonEditorHelp;
+		private System.Windows.Forms.Button buttonEditorUse;
 	}
 }
 
