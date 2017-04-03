@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,8 +25,14 @@ namespace NewNtrClient
 
 		private NtrProcess[] Processes = null;
 
+		private byte[] ReadMemory;
+		private Boolean NewReadMemory = false;
+
+		private int ReadAllMemIndex = 0;
+		List<byte> DumpData = null;
+
 		private readonly Int32 COMPRESSION_MODE = 2;
-		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
+		private readonly UInt32 MAX_CONSOLE_DUMP = 0x100;
 
 #if DEBUG
 		private readonly Boolean IsDebug = true;
@@ -309,62 +317,83 @@ namespace NewNtrClient
 
 		private void buttonUseBaseCode_Click(object sender, EventArgs e)
 		{
-			try
+			new Task(() =>
 			{
-				byte[] baseCode = Compression.Decompress(Convert.FromBase64String(txtBaseCode.Text), COMPRESSION_MODE);
-				//LogLine(ByteArrayToHexString(baseCode));
-				Int32 Index = 0;
-				//LogLine(ByteArrayToHexString(baseCode));
-				UInt32 magic = BitConverter.ToUInt32(baseCode, Index);
-				Index += 4;
-				if (magic != BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0))
-				{
-					LogLine("Received {0:X08}, expected {1:X08}", magic, BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0));
-					LogLine("Invalid Magic. It might be a broken code or an outdated one");
 
+				try
+				{
+					byte[] baseCode = Compression.Decompress(Convert.FromBase64String(txtBaseCode.Text), COMPRESSION_MODE);
+					//LogLine(ByteArrayToHexString(baseCode));
+					Int32 Index = 0;
+					//LogLine(ByteArrayToHexString(baseCode));
+					UInt32 magic = BitConverter.ToUInt32(baseCode, Index);
+					Index += 4;
+					if (magic != BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0))
+					{
+						LogLine("Received {0:X08}, expected {1:X08}", magic, BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0));
+						LogLine("Invalid Magic. It might be a broken code or an outdated one");
+
+						return;
+					}
+
+
+
+					UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
+					Index += 4;
+					UInt32 PtrOffset = BitConverter.ToUInt32(baseCode, Index);
+					Index += 4;
+					//LogLine("{0:X08}", Address);
+					Int32 ProcessNameLength = BitConverter.ToInt32(baseCode, Index);
+					Index += 4;
+					String ProcessName = Encoding.ASCII.GetString(baseCode, Index, ProcessNameLength);
+					Index += ProcessNameLength;
+
+					Int32 DataLength = BitConverter.ToInt32(baseCode, Index);
+					Index += 4;
+					//LogLine("{0:X}", DataLength);
+
+					byte[] DataBuffer = baseCode.SubArray(Index, DataLength);
+					Index += DataLength;
+
+					//LogLine("{0} {1:X08} => {2}", ProcessName, Address, ByteArrayToHexString(DataBuffer));
+
+					if (ProcessName != GetProcessName())
+					{
+						LogLine("Invalid process selected. Please select {0} to use this code!", ProcessName);
+						return;
+					}
+
+					else if (!IsValidMemregion(Address, (uint)DataLength))
+					{
+						LogLine("Invalid Address / Length. No valid memregions found!");
+						return;
+					}
+
+					if (PtrOffset != 0xffffffff)
+					{
+
+						if (!WaitForReadMemory(Address, 4, GetPid())) return;
+						Address = BitConverter.ToUInt32(this.ReadMemory, 0) + PtrOffset;
+
+						if (!IsValidMemregion(Address, (uint)DataLength))
+						{
+
+							LogLine("Invalid Address / Length. No valid memregions found!");
+							return;
+						}
+					}
+
+					this.NtrClient?.SendWriteMemPacket(Address, GetPid(), DataBuffer);
+
+
+				}
+				catch (Exception ex)
+				{
+					LogLine("Not a valid Base64 Code");
+					if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
 					return;
 				}
-
-
-
-				UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
-				Index += 4;
-				//LogLine("{0:X08}", Address);
-				Int32 ProcessNameLength = BitConverter.ToInt32(baseCode, Index);
-				Index += 4;
-				String ProcessName = Encoding.ASCII.GetString(baseCode, Index, ProcessNameLength);
-				Index += ProcessNameLength;
-
-				Int32 DataLength = BitConverter.ToInt32(baseCode, Index);
-				Index += 4;
-				//LogLine("{0:X}", DataLength);
-
-				byte[] DataBuffer = baseCode.SubArray(Index, DataLength);
-				Index += DataLength;
-
-				//LogLine("{0} {1:X08} => {2}", ProcessName, Address, ByteArrayToHexString(DataBuffer));
-
-				if (!IsValidMemregion(Address, (uint)DataLength))
-				{
-					LogLine("Invalid Address / Length. No valid memregions found!");
-					return;
-				}
-				else if (ProcessName != GetProcessName())
-				{
-					LogLine("Invalid process selected. Please select {0} to use this code!", ProcessName);
-					return;
-				}
-
-				this.NtrClient?.SendWriteMemPacket(Address, GetPid(), DataBuffer);
-
-
-			}
-			catch (Exception ex)
-			{
-				LogLine("Not a valid Base64 Code");
-				if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace);	// good enough
-				return;
-			}
+			}).Start();
 		}
 
 		private void buttonCreateBaseCode_Click(object sender, EventArgs e)
@@ -525,6 +554,8 @@ namespace NewNtrClient
 			AllowTxtEditByteTextChanged = false;
 			txt.Text = Code;
 			txt.SelectionStart = Index + 1;
+			txt.SelectionLength = 0;
+			txt.ScrollToCaret();
 			AllowTxtEditByteTextChanged = true;
 		}
 
@@ -549,8 +580,9 @@ namespace NewNtrClient
 			//LogLine(ByteArrayToHexString(byteCode.ToArray()));
 
 			UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
+			UInt32 PtrOffset = Convert.ToUInt32(txtEditorOffset.Text, 16);
 
-			txtEditorBase.Text = ToBase64Code(Address, GetProcessName(), byteCode);
+			txtEditorBase.Text = ToBase64Code(Address, GetProcessName(), byteCode, PtrOffset);
 		}
 
 		private void buttonEditorDecrypt_Click(object sender, EventArgs e)
@@ -575,6 +607,8 @@ namespace NewNtrClient
 
 				UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
 				Index += 4;
+				UInt32 PtrOffset = BitConverter.ToUInt32(baseCode, Index);
+				Index += 4;
 				//LogLine("{0:X08}", Address);
 				Int32 ProcessNameLength = BitConverter.ToInt32(baseCode, Index);
 				Index += 4;
@@ -594,12 +628,17 @@ namespace NewNtrClient
 					return;
 				}
 
-				String t = Convert.ToString(Address, 16).ToString();
-				for (int i = t.Length; i < 8; i++)
+				this.txtEditorAddress.Text = Address.ToString("X08").ToUpper();
+
+				Console.WriteLine("PTRO: {0:X08}", PtrOffset);
+				if (PtrOffset != 0xffffffff)
 				{
-					t = "0" + t;
+					cbPointer.Checked = true;
+					this.txtEditorOffset.Text = PtrOffset.ToString("X08").ToUpper();
 				}
-				txtEditorAddress.Text = t;
+				else cbPointer.Checked = false;
+
+				this.txtEditorLength.Text = DataBuffer.Length.ToString("X08").ToUpper();
 				
 
 				txtEditorByte.Text = ByteArrayToHexString(DataBuffer);
@@ -617,36 +656,55 @@ namespace NewNtrClient
 
 		private void buttonEditorUse_Click(object sender, EventArgs e)
 		{
-			try
+			new Task(() =>
 			{
-				UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
-				List<byte> byteCode = new List<byte>();
-				String k = txtEditorByte.Text;
-				k = String.Join(null, k.Split(' '));
-				for (int i = 0; i <= k.Length - 2; i += 2)
+				try
 				{
-					byte s = Convert.ToByte(k.Substring(i, 2), 16);
-					byteCode.Add(s);
+					UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
+					UInt32 PtrOffset = Convert.ToUInt32(txtEditorOffset.Text, 16);
+					List<byte> byteCode = new List<byte>();
+					String k = txtEditorByte.Text;
+					k = String.Join(null, k.Split(' '));
+					for (int i = 0; i <= k.Length - 2; i += 2)
+					{
+						byte s = Convert.ToByte(k.Substring(i, 2), 16);
+						byteCode.Add(s);
+					}
+
+					if (!IsValidMemregion(Address, (uint)byteCode.Count))
+					{
+
+						LogLine("Invalid Address / Length. No valid memregions found!");
+						return;
+					}
+
+					if (PtrOffset != 0xffffffff && cbPointer.Checked)
+					{
+
+						if (!WaitForReadMemory(Address, 4, GetPid())) return;
+						Address = BitConverter.ToUInt32(this.ReadMemory, 0) + PtrOffset;
+
+						if (!IsValidMemregion(Address, (uint)byteCode.Count))
+						{
+
+							LogLine("Invalid Address / Length. No valid memregions found!");
+							return;
+						}
+						LogLine("New address: {0:X08}", Address);
+					}
+
+					this.NtrClient?.SendWriteMemPacket(Address, GetPid(), byteCode.ToArray());
+
+
 				}
-
-				if (!IsValidMemregion(Address, (uint)byteCode.Count))
+				catch (Exception ex)
 				{
-
-					LogLine("Invalid Address / Length. No valid memregions found!");
+					LogLine("Unable to parse code");
+					if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
 					return;
 				}
 
-
-				this.NtrClient?.SendWriteMemPacket(Address, GetPid(), byteCode.ToArray());
-
-
-			}
-			catch (Exception ex)
-			{
-				LogLine("Not a valid Base64 Code");
-				if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-				return;
-			}
+			}).Start();
 		}
 
 		private void buttonEditorClear_Click(object sender, EventArgs e)
@@ -672,21 +730,33 @@ namespace NewNtrClient
 
 		private void buttonEditorCreate_Click(object sender, EventArgs e)
 		{
-
-
-			UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
-			UInt32 Length = Convert.ToUInt32(txtEditorLength.Text, 16);
-
-
-			if (!IsValidMemregion(Address, Length))
+			new Task(() =>
 			{
-				LogLine("Invalid Address / Length. No valid memregions found!");
-				return;
-			}
 
-			this.ReadMemoryType = ReadMemoryType.CreateEditorCode;
 
-			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+				UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
+				UInt32 Length = Convert.ToUInt32(txtEditorLength.Text, 16);
+
+
+				if (!IsValidMemregion(Address, Length))
+				{
+					LogLine("Invalid Address / Length. No valid memregions found!");
+					return;
+				}
+
+
+				if (cbPointer.Checked)
+				{
+					UInt32 PtrOffset = Convert.ToUInt32(txtEditorOffset.Text, 16);
+					if (!WaitForReadMemory(Address, 4, GetPid())) return;
+
+					Address = BitConverter.ToUInt32(this.ReadMemory, 0);
+					Address += PtrOffset;
+				}
+
+				this.ReadMemoryType = ReadMemoryType.CreateEditorCode;
+				this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+			}).Start();
 		}
 
 
@@ -696,11 +766,7 @@ namespace NewNtrClient
 		{
 			TextBox txt = sender as TextBox;
 			Regex ValidRegex = new Regex(@"^[0-9A-F]{8}$");
-			String Validator = txt.Text.ToUpper();
-			for (int i = Validator.Length; i < 8; i++)
-			{
-				Validator = "0" + Validator;
-			}
+			String Validator = txt.Text.ToUpper().PadLeft(8, '0');
 
 			if (!ValidRegex.IsMatch(Validator))
 			{
@@ -763,9 +829,24 @@ namespace NewNtrClient
 		{
 			ReadMemoryType Rmt = this.ReadMemoryType;
 			this.ReadMemoryType = ReadMemoryType.None;
+
+			this.ReadMemory = Buffer;
+
+			if (Rmt == ReadMemoryType.None)
+			{
+				LogLine("HRM: " + ByteArrayToHexString(Buffer));
+			}
+			else if (Rmt == ReadMemoryType.Wait)
+			{
+				// kind of messy, but it works - for now
+				this.NewReadMemory = true;
+				LogLine("HRM: " + ByteArrayToHexString(Buffer));
+			}
 			if (Rmt == ReadMemoryType.DumpAsFile)
 			{
-				File.WriteAllBytes(txtDumpMemFilename.Text, Buffer);
+				new DirectoryInfo("Dump").Create();
+
+				File.WriteAllBytes("Dump\\" + txtDumpMemFilename.Text, Buffer);
 				LogLine("Saved 0x{0:X} bytes to {1}", Buffer.Length, txtDumpMemFilename.Text);
 			}
 			else if (Rmt == ReadMemoryType.DumpAsConsole)
@@ -807,11 +888,12 @@ namespace NewNtrClient
 			{
 				List<byte> byteCode = new List<byte>();
 
-				UInt32 Address = Convert.ToUInt32(txtBaseAddress.Text, 16);
-				UInt32 Length = Convert.ToUInt32(txtBaseLength.Text, 16);
+				UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
+				UInt32 Length = Convert.ToUInt32(txtEditorLength.Text, 16);
+				UInt32 PtrOffset = cbPointer.Checked ? Convert.ToUInt32(txtEditorOffset.Text, 16) : 0xffffffffu;
 				
 
-				String Base64 = ToBase64Code(Address, GetProcessName(), Buffer);
+				String Base64 = ToBase64Code(Address, GetProcessName(), Buffer, PtrOffset);
 				this.txtEditorBase.TryInvoke(new Action(() =>
 				{
 					this.txtEditorBase.Text = Base64;
@@ -830,11 +912,7 @@ namespace NewNtrClient
 
 				//LogLine(ByteArrayToHexString(Buffer));
 
-				Boolean IsLittleEndian = false;
-				cbEditModeLittleEndian.TryInvoke(new Action(() =>
-				{
-					IsLittleEndian = cbEditModeLittleEndian.Checked;
-				}));
+				Boolean IsLittleEndian = cbEditModeLittleEndian.Checked;
 
 				if (!IsLittleEndian) Buffer.Reverse();
 
@@ -846,12 +924,7 @@ namespace NewNtrClient
 
 				txtEditModeHex.TryInvoke(new Action(() =>
 				{
-					String k = Convert.ToString(Hex, 16).ToUpper();
-
-					for (int i = k.Length; i < 8; i++)
-					{
-						k = "0" + k;
-					}
+					String k = Convert.ToString(Hex, 16).ToUpper().PadLeft(8, '0');
 
 					txtEditModeHex.Text = k;
 				}));
@@ -859,6 +932,50 @@ namespace NewNtrClient
 				txtEditModeDecimal.TryInvoke(new Action(() =>
 				{
 					txtEditModeDecimal.Text = Hex.ToString();
+				}));
+			} else if (Rmt == ReadMemoryType.DumpAllMemregions)
+			{
+				// add 00 padding
+
+
+				this.ReadAllMemIndex++;
+
+				this.cmbMemlayout.TryInvoke(new Action(() =>
+				{
+					if (this.ReadAllMemIndex < this.cmbMemlayout.Items.Count)
+					{
+						String pMem = this.cmbMemlayout.Items[this.ReadAllMemIndex - 1].ToString();
+						UInt32 pMemEnd = Convert.ToUInt32(pMem.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray()[1], 16);
+
+
+						String mem0 = this.cmbMemlayout.Items[this.ReadAllMemIndex].ToString();
+						String[] m = mem0.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+						if (m.Length == 3)
+						{
+							UInt32 Start = Convert.ToUInt32(m[0], 16);
+							UInt32 Size = Convert.ToUInt32(m[2], 16);
+							// must be a valid memregion. No need to check it. 
+
+							DumpData.AddRange(Buffer);
+
+							// padding
+							DumpData.AddRange(new byte[Start - pMemEnd - 1]);
+							LogLine("Added padding... {0:X08} => {1:X08} = {2:X08}", pMemEnd, Start, Start - pMemEnd);
+
+							//
+							this.ReadMemoryType = ReadMemoryType.DumpAllMemregions;
+
+							this.NtrClient.SendReadMemPacket(Start, Size, GetPid());
+						}
+					}
+					else
+					{
+						FileInfo k = new FileInfo("Dump\\" + txtDumpAll.Text);
+						k.Directory.Create();
+						File.WriteAllBytes(k.FullName, DumpData.ToArray());
+						LogLine("Wrote file: {0}", k.FullName);
+						DumpData = null;
+					}
 				}));
 			}
 		}
@@ -953,7 +1070,7 @@ namespace NewNtrClient
 				}));
 				return Output;
 			}
-			catch (Exception) { return 0u; }
+			catch (Exception) { return 0xffffffffu; }
 		}
 
 		public String GetProcessName()
@@ -1037,7 +1154,7 @@ namespace NewNtrClient
 			return output;
 		}
 
-		private String ToBase64Code(UInt32 Address, String Process, IEnumerable<byte> Buffer)
+		private String ToBase64Code(UInt32 Address, String Process, IEnumerable<byte> Buffer, UInt32 PtrOffset = 0xffffffff)
 		{
 			if (String.IsNullOrEmpty(Process)) return null;
 
@@ -1045,6 +1162,7 @@ namespace NewNtrClient
 
 			byteCode.AddRange(Encoding.ASCII.GetBytes("BASE")); // magic
 			byteCode.AddRange(BitConverter.GetBytes(Address));
+			byteCode.AddRange(BitConverter.GetBytes(PtrOffset));
 			byteCode.AddRange(BitConverter.GetBytes(Process.Length));
 			byteCode.AddRange(Encoding.ASCII.GetBytes(Process));
 			//byte[] DataBuffer = Compression.Compress(Buffer, COMPRESSION_MODE);
@@ -1055,16 +1173,123 @@ namespace NewNtrClient
 			String Base64 = Convert.ToBase64String(Compression.Compress(byteCode.ToArray(), COMPRESSION_MODE));
 			return Base64;
 		}
+
+		// this will freeze the window application. Run in a separate thread/task
+		private Boolean WaitForReadMemory(UInt32 Address, UInt32 Length, UInt32 Pid)
+		{
+			if (this.NtrClient == null)
+			{
+				LogLine("NtrClient is null");
+				return false;
+			}
+
+			this.ReadMemoryType = ReadMemoryType.Wait;
+			this.ReadMemory = null;
+
+			this.NtrClient.SendReadMemPacket(Address, Length, Pid);
+			LogLine("Send packet");
+			int RefreshRate = 100;
+			int MaxRetry = 100;
+			int CurrentRetry = 0;
+
+
+			do
+			{
+				if (CurrentRetry == MaxRetry)
+				{
+					LogLine("Timed out. {0} tries @{1}ms (Total {2}ms)", CurrentRetry, RefreshRate, CurrentRetry * RefreshRate);
+					return false;
+				}
+				Thread.Sleep(RefreshRate);
+				CurrentRetry++;
+			} while (!NewReadMemory);
+			NewReadMemory = false;
+			//LogLine("Is RM null? {0}", ReadMemory == null);
+			return (ReadMemory != null);
+
+		}
+
+		private void buttonReadTest_Click(object sender, EventArgs e)
+		{
+
+			new Task(() =>
+			{
+				UInt32 Address = Convert.ToUInt32(txtReadTestAddress.Text, 16);
+				UInt32 Length = Convert.ToUInt32(txtReadTestLength.Text, 16);
+
+				if (!IsValidMemregion(Address, Length))
+				{
+					LogLine("Not a valid memregion, and so on.");
+					return;
+				}
+
+				if (!WaitForReadMemory(Address, Length, GetPid()))
+				{
+					LogLine("Unable to read stuff");
+					return;
+				}
+
+				LogLine(ByteArrayToHexString(this.ReadMemory));
+
+				UInt32 p_ = BitConverter.ToUInt32(this.ReadMemory, 0);
+
+				this.ReadMemoryType = ReadMemoryType.None;
+				this.NtrClient.SendReadMemPacket(p_ + 0x1c, 4, GetPid());
+			}).Start();
+		}
+
+		private void buttonDumpAll_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				UInt32 Pid = GetPid();
+				if (Pid != 0xffffffff)
+				{
+
+					//(sender as Button).Enabled = false;
+					this.ReadAllMemIndex = 0;
+					this.DumpData = new List<byte>();
+
+					String mem0 = this.cmbMemlayout.Items[0].ToString();
+					String[] m = mem0.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+					if (m.Length == 3)
+					{
+						UInt32 Start = Convert.ToUInt32(m[0], 16);
+						UInt32 Size = Convert.ToUInt32(m[2], 16);
+
+						DumpData.AddRange(new byte[Start]);
+
+						// must be a valid memregion. No need to check it. 
+						this.ReadMemoryType = ReadMemoryType.DumpAllMemregions;
+
+						this.NtrClient.SendReadMemPacket(Start, Size, Pid);
+					}
+				}
+			}
+			catch (Exception) { }
+		}
+
+		private void openWorkDirToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start("explorer.exe", Directory.GetCurrentDirectory());
+		}
+
+		private void cbPointer_CheckedChanged(object sender, EventArgs e)
+		{
+			this.txtEditorOffset.Enabled = (sender as CheckBox).Checked;
+		}
 	}
 
 	public enum ReadMemoryType
 	{
 		None,
+		Wait,
 		DumpAsFile,
 		DumpAsConsole,
 		CreateCode,
 		CreateEditorCode,
 		EditMode,
+		DumpAllMemregions,
 	}
 
 	public enum ReadNtrStringType

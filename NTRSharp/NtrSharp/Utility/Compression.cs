@@ -12,7 +12,7 @@ namespace NtrSharp.Utility
 	{
 		public static byte[] Compress(byte[] Data, Int32 Cycle = 1)
 		{
-			if (Cycle < 1) Cycle = 1;
+			if (Cycle <= 0) return Data;
 			List<byte> lData = new List<byte>();
 
 			for (int i = 0; i < Cycle; i++)
@@ -43,7 +43,7 @@ namespace NtrSharp.Utility
 		}
 		public static byte[] Decompress(byte[] Data, int Cycle)
 		{
-			if (Cycle < 1) Cycle = 1;
+			if (Cycle <= 0) return Data;
 			Console.WriteLine("DC >> {0:X}", Data.Length);
 			for (int i = 0; i < Cycle; i++)
 			{

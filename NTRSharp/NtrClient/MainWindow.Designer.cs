@@ -33,6 +33,9 @@
 			this.ContentPanel = new System.Windows.Forms.Panel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.label10 = new System.Windows.Forms.Label();
+			this.buttonDumpAll = new System.Windows.Forms.Button();
+			this.txtDumpAll = new System.Windows.Forms.TextBox();
 			this.cbEditModeLittleEndian = new System.Windows.Forms.CheckBox();
 			this.buttonEditModeWriteHex = new System.Windows.Forms.Button();
 			this.txtEditModeDecimal = new System.Windows.Forms.TextBox();
@@ -66,14 +69,25 @@
 			this.tabPage3 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.buttonEditorClear = new System.Windows.Forms.Button();
+			this.cbPointer = new System.Windows.Forms.CheckBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.txtEditorLength = new System.Windows.Forms.TextBox();
+			this.label11 = new System.Windows.Forms.Label();
+			this.txtEditorOffset = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
+			this.buttonEditorCreate = new System.Windows.Forms.Button();
+			this.buttonEditorUse = new System.Windows.Forms.Button();
+			this.buttonEditorHelp = new System.Windows.Forms.Button();
 			this.buttonEditorEncrypt = new System.Windows.Forms.Button();
 			this.buttonEditorDecrypt = new System.Windows.Forms.Button();
 			this.txtEditorAddress = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtEditorBase = new System.Windows.Forms.TextBox();
 			this.txtEditorByte = new System.Windows.Forms.TextBox();
+			this.tabPage4 = new System.Windows.Forms.TabPage();
+			this.buttonReadTest = new System.Windows.Forms.Button();
+			this.txtReadTestLength = new System.Windows.Forms.TextBox();
+			this.txtReadTestAddress = new System.Windows.Forms.TextBox();
 			this.cmbMemlayout = new System.Windows.Forms.ComboBox();
 			this.buttonMemlayout = new System.Windows.Forms.Button();
 			this.cmbProcesses = new System.Windows.Forms.ComboBox();
@@ -87,10 +101,7 @@
 			this.disconnectfalseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.disconnecttrueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.buttonEditorHelp = new System.Windows.Forms.Button();
-			this.buttonEditorUse = new System.Windows.Forms.Button();
-			this.buttonEditorCreate = new System.Windows.Forms.Button();
-			this.txtEditorLength = new System.Windows.Forms.TextBox();
+			this.openWorkDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ContentTable.SuspendLayout();
 			this.ContentPanel.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -100,6 +111,7 @@
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
+			this.tabPage4.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -154,6 +166,7 @@
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.tabControl1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tabControl1.Location = new System.Drawing.Point(0, 37);
@@ -164,6 +177,9 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.label10);
+			this.tabPage1.Controls.Add(this.buttonDumpAll);
+			this.tabPage1.Controls.Add(this.txtDumpAll);
 			this.tabPage1.Controls.Add(this.cbEditModeLittleEndian);
 			this.tabPage1.Controls.Add(this.buttonEditModeWriteHex);
 			this.tabPage1.Controls.Add(this.txtEditModeDecimal);
@@ -191,6 +207,37 @@
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "General";
 			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label10.Location = new System.Drawing.Point(6, 139);
+			this.label10.Name = "label10";
+			this.label10.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.label10.Size = new System.Drawing.Size(91, 15);
+			this.label10.TabIndex = 23;
+			this.label10.Text = "Dump all Mem";
+			// 
+			// buttonDumpAll
+			// 
+			this.buttonDumpAll.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonDumpAll.Location = new System.Drawing.Point(289, 135);
+			this.buttonDumpAll.Name = "buttonDumpAll";
+			this.buttonDumpAll.Size = new System.Drawing.Size(156, 23);
+			this.buttonDumpAll.TabIndex = 22;
+			this.buttonDumpAll.Text = "Dump all Memregions";
+			this.buttonDumpAll.UseVisualStyleBackColor = true;
+			this.buttonDumpAll.Click += new System.EventHandler(this.buttonDumpAll_Click);
+			// 
+			// txtDumpAll
+			// 
+			this.txtDumpAll.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtDumpAll.Location = new System.Drawing.Point(103, 135);
+			this.txtDumpAll.Name = "txtDumpAll";
+			this.txtDumpAll.Size = new System.Drawing.Size(179, 23);
+			this.txtDumpAll.TabIndex = 21;
+			this.txtDumpAll.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemFilename_Validating);
 			// 
 			// cbEditModeLittleEndian
 			// 
@@ -560,19 +607,22 @@
 			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 18.98734F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 81.01266F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30.37975F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 69.62025F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(738, 158);
 			this.tableLayoutPanel1.TabIndex = 7;
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.cbPointer);
+			this.panel1.Controls.Add(this.label12);
 			this.panel1.Controls.Add(this.txtEditorLength);
+			this.panel1.Controls.Add(this.label11);
+			this.panel1.Controls.Add(this.txtEditorOffset);
+			this.panel1.Controls.Add(this.label9);
 			this.panel1.Controls.Add(this.buttonEditorCreate);
 			this.panel1.Controls.Add(this.buttonEditorUse);
 			this.panel1.Controls.Add(this.buttonEditorHelp);
-			this.panel1.Controls.Add(this.buttonEditorClear);
-			this.panel1.Controls.Add(this.label9);
 			this.panel1.Controls.Add(this.buttonEditorEncrypt);
 			this.panel1.Controls.Add(this.buttonEditorDecrypt);
 			this.panel1.Controls.Add(this.txtEditorAddress);
@@ -580,35 +630,107 @@
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Margin = new System.Windows.Forms.Padding(0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(738, 29);
+			this.panel1.Size = new System.Drawing.Size(738, 48);
 			this.panel1.TabIndex = 0;
 			// 
-			// buttonEditorClear
+			// cbPointer
 			// 
-			this.buttonEditorClear.Location = new System.Drawing.Point(323, 3);
-			this.buttonEditorClear.Name = "buttonEditorClear";
-			this.buttonEditorClear.Size = new System.Drawing.Size(77, 23);
-			this.buttonEditorClear.TabIndex = 15;
-			this.buttonEditorClear.Text = "Clear";
-			this.buttonEditorClear.UseVisualStyleBackColor = true;
-			this.buttonEditorClear.Click += new System.EventHandler(this.buttonEditorClear_Click);
+			this.cbPointer.AutoSize = true;
+			this.cbPointer.Location = new System.Drawing.Point(209, 21);
+			this.cbPointer.Name = "cbPointer";
+			this.cbPointer.Size = new System.Drawing.Size(75, 19);
+			this.cbPointer.TabIndex = 25;
+			this.cbPointer.Text = "Pointer";
+			this.cbPointer.UseVisualStyleBackColor = true;
+			this.cbPointer.CheckedChanged += new System.EventHandler(this.cbPointer_CheckedChanged);
+			// 
+			// label12
+			// 
+			this.label12.Location = new System.Drawing.Point(141, 3);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(62, 13);
+			this.label12.TabIndex = 24;
+			this.label12.Text = "Length";
+			this.label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// txtEditorLength
+			// 
+			this.txtEditorLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorLength.Location = new System.Drawing.Point(141, 19);
+			this.txtEditorLength.MaxLength = 8;
+			this.txtEditorLength.Name = "txtEditorLength";
+			this.txtEditorLength.Size = new System.Drawing.Size(62, 23);
+			this.txtEditorLength.TabIndex = 23;
+			this.txtEditorLength.Text = "00000000";
+			this.txtEditorLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// label11
+			// 
+			this.label11.Location = new System.Drawing.Point(73, 3);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(62, 13);
+			this.label11.TabIndex = 22;
+			this.label11.Text = "Offset";
+			this.label11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// txtEditorOffset
+			// 
+			this.txtEditorOffset.Enabled = false;
+			this.txtEditorOffset.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtEditorOffset.Location = new System.Drawing.Point(73, 19);
+			this.txtEditorOffset.MaxLength = 8;
+			this.txtEditorOffset.Name = "txtEditorOffset";
+			this.txtEditorOffset.Size = new System.Drawing.Size(62, 23);
+			this.txtEditorOffset.TabIndex = 21;
+			this.txtEditorOffset.Text = "00000000";
+			this.txtEditorOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtEditorOffset.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// label9
 			// 
-			this.label9.AutoSize = true;
-			this.label9.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(3, 6);
+			this.label9.Location = new System.Drawing.Point(5, 3);
 			this.label9.Name = "label9";
-			this.label9.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.label9.Size = new System.Drawing.Size(84, 15);
-			this.label9.TabIndex = 16;
-			this.label9.Text = "Code Editor";
+			this.label9.Size = new System.Drawing.Size(62, 13);
+			this.label9.TabIndex = 20;
+			this.label9.Text = "Address";
+			this.label9.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// buttonEditorCreate
+			// 
+			this.buttonEditorCreate.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditorCreate.Location = new System.Drawing.Point(377, 3);
+			this.buttonEditorCreate.Name = "buttonEditorCreate";
+			this.buttonEditorCreate.Size = new System.Drawing.Size(85, 23);
+			this.buttonEditorCreate.TabIndex = 17;
+			this.buttonEditorCreate.Text = "Create Code";
+			this.buttonEditorCreate.UseVisualStyleBackColor = true;
+			this.buttonEditorCreate.Click += new System.EventHandler(this.buttonEditorCreate_Click);
+			// 
+			// buttonEditorUse
+			// 
+			this.buttonEditorUse.Location = new System.Drawing.Point(377, 25);
+			this.buttonEditorUse.Name = "buttonEditorUse";
+			this.buttonEditorUse.Size = new System.Drawing.Size(85, 23);
+			this.buttonEditorUse.TabIndex = 18;
+			this.buttonEditorUse.Text = "Use Code";
+			this.buttonEditorUse.UseVisualStyleBackColor = true;
+			this.buttonEditorUse.Click += new System.EventHandler(this.buttonEditorUse_Click);
+			// 
+			// buttonEditorHelp
+			// 
+			this.buttonEditorHelp.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonEditorHelp.Location = new System.Drawing.Point(702, 3);
+			this.buttonEditorHelp.Name = "buttonEditorHelp";
+			this.buttonEditorHelp.Size = new System.Drawing.Size(36, 23);
+			this.buttonEditorHelp.TabIndex = 19;
+			this.buttonEditorHelp.Text = "[?]";
+			this.buttonEditorHelp.UseVisualStyleBackColor = true;
 			// 
 			// buttonEditorEncrypt
 			// 
-			this.buttonEditorEncrypt.Location = new System.Drawing.Point(161, 3);
+			this.buttonEditorEncrypt.Location = new System.Drawing.Point(286, 3);
 			this.buttonEditorEncrypt.Name = "buttonEditorEncrypt";
-			this.buttonEditorEncrypt.Size = new System.Drawing.Size(75, 23);
+			this.buttonEditorEncrypt.Size = new System.Drawing.Size(85, 23);
 			this.buttonEditorEncrypt.TabIndex = 13;
 			this.buttonEditorEncrypt.Text = "Encrypt";
 			this.buttonEditorEncrypt.UseVisualStyleBackColor = true;
@@ -616,9 +738,9 @@
 			// 
 			// buttonEditorDecrypt
 			// 
-			this.buttonEditorDecrypt.Location = new System.Drawing.Point(242, 3);
+			this.buttonEditorDecrypt.Location = new System.Drawing.Point(286, 25);
 			this.buttonEditorDecrypt.Name = "buttonEditorDecrypt";
-			this.buttonEditorDecrypt.Size = new System.Drawing.Size(75, 23);
+			this.buttonEditorDecrypt.Size = new System.Drawing.Size(85, 23);
 			this.buttonEditorDecrypt.TabIndex = 14;
 			this.buttonEditorDecrypt.Text = "Decrypt";
 			this.buttonEditorDecrypt.UseVisualStyleBackColor = true;
@@ -627,7 +749,7 @@
 			// txtEditorAddress
 			// 
 			this.txtEditorAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtEditorAddress.Location = new System.Drawing.Point(93, 3);
+			this.txtEditorAddress.Location = new System.Drawing.Point(5, 19);
 			this.txtEditorAddress.MaxLength = 8;
 			this.txtEditorAddress.Name = "txtEditorAddress";
 			this.txtEditorAddress.Size = new System.Drawing.Size(62, 23);
@@ -644,12 +766,12 @@
 			this.tableLayoutPanel2.Controls.Add(this.txtEditorBase, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.txtEditorByte, 0, 0);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 29);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 48);
 			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(738, 129);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(738, 110);
 			this.tableLayoutPanel2.TabIndex = 1;
 			// 
 			// txtEditorBase
@@ -660,7 +782,7 @@
 			this.txtEditorBase.Multiline = true;
 			this.txtEditorBase.Name = "txtEditorBase";
 			this.txtEditorBase.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtEditorBase.Size = new System.Drawing.Size(365, 123);
+			this.txtEditorBase.Size = new System.Drawing.Size(365, 104);
 			this.txtEditorBase.TabIndex = 10;
 			this.txtEditorBase.Text = "BASE64 CODE";
 			// 
@@ -672,12 +794,59 @@
 			this.txtEditorByte.Multiline = true;
 			this.txtEditorByte.Name = "txtEditorByte";
 			this.txtEditorByte.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtEditorByte.Size = new System.Drawing.Size(361, 123);
+			this.txtEditorByte.Size = new System.Drawing.Size(361, 104);
 			this.txtEditorByte.TabIndex = 9;
 			this.txtEditorByte.Text = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \r\n";
 			this.txtEditorByte.TextChanged += new System.EventHandler(this.txtEditorByte_TextChanged);
 			this.txtEditorByte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEditorByte_KeyPress);
 			this.txtEditorByte.Validating += new System.ComponentModel.CancelEventHandler(this.txtEditorByte_Validating);
+			// 
+			// tabPage4
+			// 
+			this.tabPage4.Controls.Add(this.buttonReadTest);
+			this.tabPage4.Controls.Add(this.txtReadTestLength);
+			this.tabPage4.Controls.Add(this.txtReadTestAddress);
+			this.tabPage4.Location = new System.Drawing.Point(4, 27);
+			this.tabPage4.Name = "tabPage4";
+			this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage4.Size = new System.Drawing.Size(744, 164);
+			this.tabPage4.TabIndex = 3;
+			this.tabPage4.Text = "Test / Debug";
+			this.tabPage4.UseVisualStyleBackColor = true;
+			// 
+			// buttonReadTest
+			// 
+			this.buttonReadTest.Location = new System.Drawing.Point(144, 6);
+			this.buttonReadTest.Name = "buttonReadTest";
+			this.buttonReadTest.Size = new System.Drawing.Size(75, 23);
+			this.buttonReadTest.TabIndex = 14;
+			this.buttonReadTest.Text = "ReadTest";
+			this.buttonReadTest.UseVisualStyleBackColor = true;
+			this.buttonReadTest.Click += new System.EventHandler(this.buttonReadTest_Click);
+			// 
+			// txtReadTestLength
+			// 
+			this.txtReadTestLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtReadTestLength.Location = new System.Drawing.Point(76, 6);
+			this.txtReadTestLength.MaxLength = 8;
+			this.txtReadTestLength.Name = "txtReadTestLength";
+			this.txtReadTestLength.Size = new System.Drawing.Size(62, 23);
+			this.txtReadTestLength.TabIndex = 13;
+			this.txtReadTestLength.Text = "00000000";
+			this.txtReadTestLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtReadTestLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
+			// 
+			// txtReadTestAddress
+			// 
+			this.txtReadTestAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtReadTestAddress.Location = new System.Drawing.Point(8, 6);
+			this.txtReadTestAddress.MaxLength = 8;
+			this.txtReadTestAddress.Name = "txtReadTestAddress";
+			this.txtReadTestAddress.Size = new System.Drawing.Size(62, 23);
+			this.txtReadTestAddress.TabIndex = 12;
+			this.txtReadTestAddress.Text = "00000000";
+			this.txtReadTestAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtReadTestAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// cmbMemlayout
 			// 
@@ -768,7 +937,8 @@
 			// testToolStripMenuItem
 			// 
 			this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.test1ToolStripMenuItem});
+            this.test1ToolStripMenuItem,
+            this.openWorkDirToolStripMenuItem});
 			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
 			this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
 			this.testToolStripMenuItem.Text = "Test";
@@ -802,48 +972,12 @@
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(162, 6);
 			// 
-			// buttonEditorHelp
+			// openWorkDirToolStripMenuItem
 			// 
-			this.buttonEditorHelp.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonEditorHelp.Location = new System.Drawing.Point(702, 3);
-			this.buttonEditorHelp.Name = "buttonEditorHelp";
-			this.buttonEditorHelp.Size = new System.Drawing.Size(36, 23);
-			this.buttonEditorHelp.TabIndex = 19;
-			this.buttonEditorHelp.Text = "[?]";
-			this.buttonEditorHelp.UseVisualStyleBackColor = true;
-			// 
-			// buttonEditorUse
-			// 
-			this.buttonEditorUse.Location = new System.Drawing.Point(603, 3);
-			this.buttonEditorUse.Name = "buttonEditorUse";
-			this.buttonEditorUse.Size = new System.Drawing.Size(93, 23);
-			this.buttonEditorUse.TabIndex = 18;
-			this.buttonEditorUse.Text = "Use Code";
-			this.buttonEditorUse.UseVisualStyleBackColor = true;
-			this.buttonEditorUse.Click += new System.EventHandler(this.buttonEditorUse_Click);
-			// 
-			// buttonEditorCreate
-			// 
-			this.buttonEditorCreate.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonEditorCreate.Location = new System.Drawing.Point(504, 3);
-			this.buttonEditorCreate.Name = "buttonEditorCreate";
-			this.buttonEditorCreate.Size = new System.Drawing.Size(93, 23);
-			this.buttonEditorCreate.TabIndex = 17;
-			this.buttonEditorCreate.Text = "Create Code";
-			this.buttonEditorCreate.UseVisualStyleBackColor = true;
-			this.buttonEditorCreate.Click += new System.EventHandler(this.buttonEditorCreate_Click);
-			// 
-			// txtEditorLength
-			// 
-			this.txtEditorLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtEditorLength.Location = new System.Drawing.Point(436, 3);
-			this.txtEditorLength.MaxLength = 8;
-			this.txtEditorLength.Name = "txtEditorLength";
-			this.txtEditorLength.Size = new System.Drawing.Size(62, 23);
-			this.txtEditorLength.TabIndex = 16;
-			this.txtEditorLength.Text = "00000000";
-			this.txtEditorLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtEditorLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
+			this.openWorkDirToolStripMenuItem.Name = "openWorkDirToolStripMenuItem";
+			this.openWorkDirToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.openWorkDirToolStripMenuItem.Text = "Open WorkDir";
+			this.openWorkDirToolStripMenuItem.Click += new System.EventHandler(this.openWorkDirToolStripMenuItem_Click);
 			// 
 			// MainWindow
 			// 
@@ -871,6 +1005,8 @@
 			this.panel1.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel2.PerformLayout();
+			this.tabPage4.ResumeLayout(false);
+			this.tabPage4.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -937,12 +1073,23 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.TextBox txtEditorBase;
 		private System.Windows.Forms.TextBox txtEditorByte;
-		private System.Windows.Forms.Button buttonEditorClear;
-		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Button buttonEditorHelp;
 		private System.Windows.Forms.Button buttonEditorUse;
-		private System.Windows.Forms.TextBox txtEditorLength;
 		private System.Windows.Forms.Button buttonEditorCreate;
+		private System.Windows.Forms.TabPage tabPage4;
+		private System.Windows.Forms.Button buttonReadTest;
+		private System.Windows.Forms.TextBox txtReadTestLength;
+		private System.Windows.Forms.TextBox txtReadTestAddress;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Button buttonDumpAll;
+		private System.Windows.Forms.TextBox txtDumpAll;
+		private System.Windows.Forms.ToolStripMenuItem openWorkDirToolStripMenuItem;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.TextBox txtEditorLength;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.TextBox txtEditorOffset;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.CheckBox cbPointer;
 	}
 }
 
