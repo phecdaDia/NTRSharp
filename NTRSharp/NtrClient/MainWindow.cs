@@ -214,6 +214,8 @@ namespace NewNtrClient
 				});
 				Log(".");
 
+				//txtIpAddress.SelectionLength = 0;
+
 				LogLine(Environment.NewLine + "Finished setup");
 			}
 			catch (Exception ex)
@@ -263,13 +265,6 @@ namespace NewNtrClient
 		}
 
 		private void cmbProcesses_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
-			UInt32 Pid = GetPid();
-			this.NtrClient?.SendMemLayoutPacket(Pid);
-		}
-
-		private void buttonMemlayout_Click(object sender, EventArgs e)
 		{
 			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
 			UInt32 Pid = GetPid();
@@ -1207,35 +1202,6 @@ namespace NewNtrClient
 			//LogLine("Is RM null? {0}", ReadMemory == null);
 			return (ReadMemory != null);
 
-		}
-
-		private void buttonReadTest_Click(object sender, EventArgs e)
-		{
-
-			new Task(() =>
-			{
-				UInt32 Address = Convert.ToUInt32(txtReadTestAddress.Text, 16);
-				UInt32 Length = Convert.ToUInt32(txtReadTestLength.Text, 16);
-
-				if (!IsValidMemregion(Address, Length))
-				{
-					LogLine("Not a valid memregion, and so on.");
-					return;
-				}
-
-				if (!WaitForReadMemory(Address, Length, GetPid()))
-				{
-					LogLine("Unable to read stuff");
-					return;
-				}
-
-				LogLine(ByteArrayToHexString(this.ReadMemory));
-
-				UInt32 p_ = BitConverter.ToUInt32(this.ReadMemory, 0);
-
-				this.ReadMemoryType = ReadMemoryType.None;
-				this.NtrClient.SendReadMemPacket(p_ + 0x1c, 4, GetPid());
-			}).Start();
 		}
 
 		private void buttonDumpAll_Click(object sender, EventArgs e)

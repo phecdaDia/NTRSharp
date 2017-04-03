@@ -84,12 +84,7 @@
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtEditorBase = new System.Windows.Forms.TextBox();
 			this.txtEditorByte = new System.Windows.Forms.TextBox();
-			this.tabPage4 = new System.Windows.Forms.TabPage();
-			this.buttonReadTest = new System.Windows.Forms.Button();
-			this.txtReadTestLength = new System.Windows.Forms.TextBox();
-			this.txtReadTestAddress = new System.Windows.Forms.TextBox();
 			this.cmbMemlayout = new System.Windows.Forms.ComboBox();
-			this.buttonMemlayout = new System.Windows.Forms.Button();
 			this.cmbProcesses = new System.Windows.Forms.ComboBox();
 			this.buttonProcesses = new System.Windows.Forms.Button();
 			this.txtIpAddress = new System.Windows.Forms.TextBox();
@@ -111,7 +106,6 @@
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
-			this.tabPage4.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -148,7 +142,6 @@
 			// 
 			this.ContentPanel.Controls.Add(this.tabControl1);
 			this.ContentPanel.Controls.Add(this.cmbMemlayout);
-			this.ContentPanel.Controls.Add(this.buttonMemlayout);
 			this.ContentPanel.Controls.Add(this.cmbProcesses);
 			this.ContentPanel.Controls.Add(this.buttonProcesses);
 			this.ContentPanel.Controls.Add(this.txtIpAddress);
@@ -166,7 +159,6 @@
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
-			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.tabControl1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tabControl1.Location = new System.Drawing.Point(0, 37);
@@ -225,7 +217,7 @@
 			this.buttonDumpAll.Location = new System.Drawing.Point(289, 135);
 			this.buttonDumpAll.Name = "buttonDumpAll";
 			this.buttonDumpAll.Size = new System.Drawing.Size(156, 23);
-			this.buttonDumpAll.TabIndex = 22;
+			this.buttonDumpAll.TabIndex = 21;
 			this.buttonDumpAll.Text = "Dump all Memregions";
 			this.buttonDumpAll.UseVisualStyleBackColor = true;
 			this.buttonDumpAll.Click += new System.EventHandler(this.buttonDumpAll_Click);
@@ -236,7 +228,7 @@
 			this.txtDumpAll.Location = new System.Drawing.Point(103, 135);
 			this.txtDumpAll.Name = "txtDumpAll";
 			this.txtDumpAll.Size = new System.Drawing.Size(179, 23);
-			this.txtDumpAll.TabIndex = 21;
+			this.txtDumpAll.TabIndex = 20;
 			this.txtDumpAll.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemFilename_Validating);
 			// 
 			// cbEditModeLittleEndian
@@ -247,7 +239,7 @@
 			this.cbEditModeLittleEndian.Location = new System.Drawing.Point(333, 53);
 			this.cbEditModeLittleEndian.Name = "cbEditModeLittleEndian";
 			this.cbEditModeLittleEndian.Size = new System.Drawing.Size(117, 19);
-			this.cbEditModeLittleEndian.TabIndex = 20;
+			this.cbEditModeLittleEndian.TabIndex = 15;
 			this.cbEditModeLittleEndian.Text = "Little Endian";
 			this.cbEditModeLittleEndian.UseVisualStyleBackColor = true;
 			// 
@@ -269,7 +261,7 @@
 			this.txtEditModeDecimal.MaxLength = 10;
 			this.txtEditModeDecimal.Name = "txtEditModeDecimal";
 			this.txtEditModeDecimal.Size = new System.Drawing.Size(78, 23);
-			this.txtEditModeDecimal.TabIndex = 18;
+			this.txtEditModeDecimal.TabIndex = 16;
 			this.txtEditModeDecimal.Text = "0";
 			this.txtEditModeDecimal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
@@ -280,7 +272,7 @@
 			this.txtEditModeHex.MaxLength = 8;
 			this.txtEditModeHex.Name = "txtEditModeHex";
 			this.txtEditModeHex.Size = new System.Drawing.Size(79, 23);
-			this.txtEditModeHex.TabIndex = 17;
+			this.txtEditModeHex.TabIndex = 18;
 			this.txtEditModeHex.Text = "00000000";
 			this.txtEditModeHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtEditModeHex.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -313,7 +305,7 @@
 			this.buttonEditModeWriteDecimal.Location = new System.Drawing.Point(654, 50);
 			this.buttonEditModeWriteDecimal.Name = "buttonEditModeWriteDecimal";
 			this.buttonEditModeWriteDecimal.Size = new System.Drawing.Size(85, 23);
-			this.buttonEditModeWriteDecimal.TabIndex = 14;
+			this.buttonEditModeWriteDecimal.TabIndex = 17;
 			this.buttonEditModeWriteDecimal.Text = "Write";
 			this.buttonEditModeWriteDecimal.UseVisualStyleBackColor = true;
 			this.buttonEditModeWriteDecimal.Click += new System.EventHandler(this.buttonEditModeWriteDecimal_Click);
@@ -324,7 +316,7 @@
 			this.buttonEditModeRead.Location = new System.Drawing.Point(242, 50);
 			this.buttonEditModeRead.Name = "buttonEditModeRead";
 			this.buttonEditModeRead.Size = new System.Drawing.Size(85, 23);
-			this.buttonEditModeRead.TabIndex = 13;
+			this.buttonEditModeRead.TabIndex = 14;
 			this.buttonEditModeRead.Text = "Read";
 			this.buttonEditModeRead.UseVisualStyleBackColor = true;
 			this.buttonEditModeRead.Click += new System.EventHandler(this.buttonEditModeRead_Click);
@@ -341,7 +333,7 @@
 			this.cmbEditModeType.Location = new System.Drawing.Point(171, 50);
 			this.cmbEditModeType.Name = "cmbEditModeType";
 			this.cmbEditModeType.Size = new System.Drawing.Size(62, 22);
-			this.cmbEditModeType.TabIndex = 12;
+			this.cmbEditModeType.TabIndex = 13;
 			// 
 			// label6
 			// 
@@ -383,7 +375,7 @@
 			this.txtEditModeAddress.MaxLength = 8;
 			this.txtEditModeAddress.Name = "txtEditModeAddress";
 			this.txtEditModeAddress.Size = new System.Drawing.Size(62, 23);
-			this.txtEditModeAddress.TabIndex = 8;
+			this.txtEditModeAddress.TabIndex = 12;
 			this.txtEditModeAddress.Text = "00000000";
 			this.txtEditModeAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtEditModeAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -405,7 +397,7 @@
 			this.buttonDumpMemoryConsole.Location = new System.Drawing.Point(583, 21);
 			this.buttonDumpMemoryConsole.Name = "buttonDumpMemoryConsole";
 			this.buttonDumpMemoryConsole.Size = new System.Drawing.Size(156, 23);
-			this.buttonDumpMemoryConsole.TabIndex = 6;
+			this.buttonDumpMemoryConsole.TabIndex = 11;
 			this.buttonDumpMemoryConsole.Text = "Dump to Console";
 			this.buttonDumpMemoryConsole.UseVisualStyleBackColor = true;
 			this.buttonDumpMemoryConsole.Click += new System.EventHandler(this.buttonDumpMemoryConsole_Click);
@@ -416,7 +408,7 @@
 			this.buttonDumpMemoryFile.Location = new System.Drawing.Point(424, 21);
 			this.buttonDumpMemoryFile.Name = "buttonDumpMemoryFile";
 			this.buttonDumpMemoryFile.Size = new System.Drawing.Size(156, 23);
-			this.buttonDumpMemoryFile.TabIndex = 5;
+			this.buttonDumpMemoryFile.TabIndex = 10;
 			this.buttonDumpMemoryFile.Text = "Dump as File";
 			this.buttonDumpMemoryFile.UseVisualStyleBackColor = true;
 			this.buttonDumpMemoryFile.Click += new System.EventHandler(this.buttonDumpMemoryFile_Click);
@@ -427,7 +419,7 @@
 			this.txtDumpMemFilename.Location = new System.Drawing.Point(239, 21);
 			this.txtDumpMemFilename.Name = "txtDumpMemFilename";
 			this.txtDumpMemFilename.Size = new System.Drawing.Size(179, 23);
-			this.txtDumpMemFilename.TabIndex = 4;
+			this.txtDumpMemFilename.TabIndex = 9;
 			this.txtDumpMemFilename.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemFilename_Validating);
 			// 
 			// txtDumpMemAddrLength
@@ -437,7 +429,7 @@
 			this.txtDumpMemAddrLength.MaxLength = 8;
 			this.txtDumpMemAddrLength.Name = "txtDumpMemAddrLength";
 			this.txtDumpMemAddrLength.Size = new System.Drawing.Size(62, 23);
-			this.txtDumpMemAddrLength.TabIndex = 3;
+			this.txtDumpMemAddrLength.TabIndex = 8;
 			this.txtDumpMemAddrLength.Text = "00000000";
 			this.txtDumpMemAddrLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtDumpMemAddrLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -449,7 +441,7 @@
 			this.txtDumpMemAddrStart.MaxLength = 8;
 			this.txtDumpMemAddrStart.Name = "txtDumpMemAddrStart";
 			this.txtDumpMemAddrStart.Size = new System.Drawing.Size(62, 23);
-			this.txtDumpMemAddrStart.TabIndex = 1;
+			this.txtDumpMemAddrStart.TabIndex = 7;
 			this.txtDumpMemAddrStart.Text = "00000000";
 			this.txtDumpMemAddrStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtDumpMemAddrStart.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -490,7 +482,7 @@
 			this.buttonBaseHelp.Location = new System.Drawing.Point(708, 6);
 			this.buttonBaseHelp.Name = "buttonBaseHelp";
 			this.buttonBaseHelp.Size = new System.Drawing.Size(36, 23);
-			this.buttonBaseHelp.TabIndex = 14;
+			this.buttonBaseHelp.TabIndex = 13;
 			this.buttonBaseHelp.Text = "[?]";
 			this.buttonBaseHelp.UseVisualStyleBackColor = true;
 			this.buttonBaseHelp.Click += new System.EventHandler(this.buttonBaseHelp_Click);
@@ -501,7 +493,7 @@
 			this.buttonBaseClipboardPaste.Location = new System.Drawing.Point(614, 7);
 			this.buttonBaseClipboardPaste.Name = "buttonBaseClipboardPaste";
 			this.buttonBaseClipboardPaste.Size = new System.Drawing.Size(88, 23);
-			this.buttonBaseClipboardPaste.TabIndex = 11;
+			this.buttonBaseClipboardPaste.TabIndex = 12;
 			this.buttonBaseClipboardPaste.Text = "Paste";
 			this.buttonBaseClipboardPaste.UseVisualStyleBackColor = true;
 			this.buttonBaseClipboardPaste.Click += new System.EventHandler(this.buttonBaseClipboardPaste_Click);
@@ -512,7 +504,7 @@
 			this.buttonBaseClipboardCopy.Location = new System.Drawing.Point(520, 7);
 			this.buttonBaseClipboardCopy.Name = "buttonBaseClipboardCopy";
 			this.buttonBaseClipboardCopy.Size = new System.Drawing.Size(88, 23);
-			this.buttonBaseClipboardCopy.TabIndex = 10;
+			this.buttonBaseClipboardCopy.TabIndex = 11;
 			this.buttonBaseClipboardCopy.Text = "Copy";
 			this.buttonBaseClipboardCopy.UseVisualStyleBackColor = true;
 			this.buttonBaseClipboardCopy.Click += new System.EventHandler(this.buttonBaseClipboardCopy_Click);
@@ -523,7 +515,7 @@
 			this.buttonUseBaseCode.Location = new System.Drawing.Point(331, 6);
 			this.buttonUseBaseCode.Name = "buttonUseBaseCode";
 			this.buttonUseBaseCode.Size = new System.Drawing.Size(93, 23);
-			this.buttonUseBaseCode.TabIndex = 9;
+			this.buttonUseBaseCode.TabIndex = 10;
 			this.buttonUseBaseCode.Text = "Use Code";
 			this.buttonUseBaseCode.UseVisualStyleBackColor = true;
 			this.buttonUseBaseCode.Click += new System.EventHandler(this.buttonUseBaseCode_Click);
@@ -537,7 +529,7 @@
 			this.txtBaseCode.Name = "txtBaseCode";
 			this.txtBaseCode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtBaseCode.Size = new System.Drawing.Size(738, 128);
-			this.txtBaseCode.TabIndex = 8;
+			this.txtBaseCode.TabIndex = 14;
 			// 
 			// buttonCreateBaseCode
 			// 
@@ -545,7 +537,7 @@
 			this.buttonCreateBaseCode.Location = new System.Drawing.Point(232, 6);
 			this.buttonCreateBaseCode.Name = "buttonCreateBaseCode";
 			this.buttonCreateBaseCode.Size = new System.Drawing.Size(93, 23);
-			this.buttonCreateBaseCode.TabIndex = 7;
+			this.buttonCreateBaseCode.TabIndex = 9;
 			this.buttonCreateBaseCode.Text = "Create Code";
 			this.buttonCreateBaseCode.UseVisualStyleBackColor = true;
 			this.buttonCreateBaseCode.Click += new System.EventHandler(this.buttonCreateBaseCode_Click);
@@ -568,7 +560,7 @@
 			this.txtBaseLength.MaxLength = 8;
 			this.txtBaseLength.Name = "txtBaseLength";
 			this.txtBaseLength.Size = new System.Drawing.Size(62, 23);
-			this.txtBaseLength.TabIndex = 5;
+			this.txtBaseLength.TabIndex = 8;
 			this.txtBaseLength.Text = "00000000";
 			this.txtBaseLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtBaseLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -580,7 +572,7 @@
 			this.txtBaseAddress.MaxLength = 8;
 			this.txtBaseAddress.Name = "txtBaseAddress";
 			this.txtBaseAddress.Size = new System.Drawing.Size(62, 23);
-			this.txtBaseAddress.TabIndex = 4;
+			this.txtBaseAddress.TabIndex = 7;
 			this.txtBaseAddress.Text = "00000000";
 			this.txtBaseAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtBaseAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -636,10 +628,10 @@
 			// cbPointer
 			// 
 			this.cbPointer.AutoSize = true;
-			this.cbPointer.Location = new System.Drawing.Point(209, 21);
+			this.cbPointer.Location = new System.Drawing.Point(205, 19);
 			this.cbPointer.Name = "cbPointer";
 			this.cbPointer.Size = new System.Drawing.Size(75, 19);
-			this.cbPointer.TabIndex = 25;
+			this.cbPointer.TabIndex = 10;
 			this.cbPointer.Text = "Pointer";
 			this.cbPointer.UseVisualStyleBackColor = true;
 			this.cbPointer.CheckedChanged += new System.EventHandler(this.cbPointer_CheckedChanged);
@@ -660,7 +652,7 @@
 			this.txtEditorLength.MaxLength = 8;
 			this.txtEditorLength.Name = "txtEditorLength";
 			this.txtEditorLength.Size = new System.Drawing.Size(62, 23);
-			this.txtEditorLength.TabIndex = 23;
+			this.txtEditorLength.TabIndex = 9;
 			this.txtEditorLength.Text = "00000000";
 			this.txtEditorLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
@@ -681,7 +673,7 @@
 			this.txtEditorOffset.MaxLength = 8;
 			this.txtEditorOffset.Name = "txtEditorOffset";
 			this.txtEditorOffset.Size = new System.Drawing.Size(62, 23);
-			this.txtEditorOffset.TabIndex = 21;
+			this.txtEditorOffset.TabIndex = 8;
 			this.txtEditorOffset.Text = "00000000";
 			this.txtEditorOffset.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtEditorOffset.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -701,7 +693,7 @@
 			this.buttonEditorCreate.Location = new System.Drawing.Point(377, 3);
 			this.buttonEditorCreate.Name = "buttonEditorCreate";
 			this.buttonEditorCreate.Size = new System.Drawing.Size(85, 23);
-			this.buttonEditorCreate.TabIndex = 17;
+			this.buttonEditorCreate.TabIndex = 13;
 			this.buttonEditorCreate.Text = "Create Code";
 			this.buttonEditorCreate.UseVisualStyleBackColor = true;
 			this.buttonEditorCreate.Click += new System.EventHandler(this.buttonEditorCreate_Click);
@@ -711,7 +703,7 @@
 			this.buttonEditorUse.Location = new System.Drawing.Point(377, 25);
 			this.buttonEditorUse.Name = "buttonEditorUse";
 			this.buttonEditorUse.Size = new System.Drawing.Size(85, 23);
-			this.buttonEditorUse.TabIndex = 18;
+			this.buttonEditorUse.TabIndex = 14;
 			this.buttonEditorUse.Text = "Use Code";
 			this.buttonEditorUse.UseVisualStyleBackColor = true;
 			this.buttonEditorUse.Click += new System.EventHandler(this.buttonEditorUse_Click);
@@ -731,7 +723,7 @@
 			this.buttonEditorEncrypt.Location = new System.Drawing.Point(286, 3);
 			this.buttonEditorEncrypt.Name = "buttonEditorEncrypt";
 			this.buttonEditorEncrypt.Size = new System.Drawing.Size(85, 23);
-			this.buttonEditorEncrypt.TabIndex = 13;
+			this.buttonEditorEncrypt.TabIndex = 11;
 			this.buttonEditorEncrypt.Text = "Encrypt";
 			this.buttonEditorEncrypt.UseVisualStyleBackColor = true;
 			this.buttonEditorEncrypt.Click += new System.EventHandler(this.buttonEditorEncrypt_Click);
@@ -741,7 +733,7 @@
 			this.buttonEditorDecrypt.Location = new System.Drawing.Point(286, 25);
 			this.buttonEditorDecrypt.Name = "buttonEditorDecrypt";
 			this.buttonEditorDecrypt.Size = new System.Drawing.Size(85, 23);
-			this.buttonEditorDecrypt.TabIndex = 14;
+			this.buttonEditorDecrypt.TabIndex = 12;
 			this.buttonEditorDecrypt.Text = "Decrypt";
 			this.buttonEditorDecrypt.UseVisualStyleBackColor = true;
 			this.buttonEditorDecrypt.Click += new System.EventHandler(this.buttonEditorDecrypt_Click);
@@ -753,7 +745,7 @@
 			this.txtEditorAddress.MaxLength = 8;
 			this.txtEditorAddress.Name = "txtEditorAddress";
 			this.txtEditorAddress.Size = new System.Drawing.Size(62, 23);
-			this.txtEditorAddress.TabIndex = 11;
+			this.txtEditorAddress.TabIndex = 7;
 			this.txtEditorAddress.Text = "00000000";
 			this.txtEditorAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.txtEditorAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
@@ -783,7 +775,7 @@
 			this.txtEditorBase.Name = "txtEditorBase";
 			this.txtEditorBase.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtEditorBase.Size = new System.Drawing.Size(365, 104);
-			this.txtEditorBase.TabIndex = 10;
+			this.txtEditorBase.TabIndex = 16;
 			this.txtEditorBase.Text = "BASE64 CODE";
 			// 
 			// txtEditorByte
@@ -795,58 +787,11 @@
 			this.txtEditorByte.Name = "txtEditorByte";
 			this.txtEditorByte.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtEditorByte.Size = new System.Drawing.Size(361, 104);
-			this.txtEditorByte.TabIndex = 9;
+			this.txtEditorByte.TabIndex = 15;
 			this.txtEditorByte.Text = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 \r\n";
 			this.txtEditorByte.TextChanged += new System.EventHandler(this.txtEditorByte_TextChanged);
 			this.txtEditorByte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEditorByte_KeyPress);
 			this.txtEditorByte.Validating += new System.ComponentModel.CancelEventHandler(this.txtEditorByte_Validating);
-			// 
-			// tabPage4
-			// 
-			this.tabPage4.Controls.Add(this.buttonReadTest);
-			this.tabPage4.Controls.Add(this.txtReadTestLength);
-			this.tabPage4.Controls.Add(this.txtReadTestAddress);
-			this.tabPage4.Location = new System.Drawing.Point(4, 27);
-			this.tabPage4.Name = "tabPage4";
-			this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage4.Size = new System.Drawing.Size(744, 164);
-			this.tabPage4.TabIndex = 3;
-			this.tabPage4.Text = "Test / Debug";
-			this.tabPage4.UseVisualStyleBackColor = true;
-			// 
-			// buttonReadTest
-			// 
-			this.buttonReadTest.Location = new System.Drawing.Point(144, 6);
-			this.buttonReadTest.Name = "buttonReadTest";
-			this.buttonReadTest.Size = new System.Drawing.Size(75, 23);
-			this.buttonReadTest.TabIndex = 14;
-			this.buttonReadTest.Text = "ReadTest";
-			this.buttonReadTest.UseVisualStyleBackColor = true;
-			this.buttonReadTest.Click += new System.EventHandler(this.buttonReadTest_Click);
-			// 
-			// txtReadTestLength
-			// 
-			this.txtReadTestLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtReadTestLength.Location = new System.Drawing.Point(76, 6);
-			this.txtReadTestLength.MaxLength = 8;
-			this.txtReadTestLength.Name = "txtReadTestLength";
-			this.txtReadTestLength.Size = new System.Drawing.Size(62, 23);
-			this.txtReadTestLength.TabIndex = 13;
-			this.txtReadTestLength.Text = "00000000";
-			this.txtReadTestLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtReadTestLength.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
-			// 
-			// txtReadTestAddress
-			// 
-			this.txtReadTestAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtReadTestAddress.Location = new System.Drawing.Point(8, 6);
-			this.txtReadTestAddress.MaxLength = 8;
-			this.txtReadTestAddress.Name = "txtReadTestAddress";
-			this.txtReadTestAddress.Size = new System.Drawing.Size(62, 23);
-			this.txtReadTestAddress.TabIndex = 12;
-			this.txtReadTestAddress.Text = "00000000";
-			this.txtReadTestAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.txtReadTestAddress.Validating += new System.ComponentModel.CancelEventHandler(this.ValidateHex32);
 			// 
 			// cmbMemlayout
 			// 
@@ -861,17 +806,6 @@
 			this.cmbMemlayout.Size = new System.Drawing.Size(247, 23);
 			this.cmbMemlayout.TabIndex = 6;
 			// 
-			// buttonMemlayout
-			// 
-			this.buttonMemlayout.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonMemlayout.Location = new System.Drawing.Point(420, 7);
-			this.buttonMemlayout.Name = "buttonMemlayout";
-			this.buttonMemlayout.Size = new System.Drawing.Size(75, 23);
-			this.buttonMemlayout.TabIndex = 5;
-			this.buttonMemlayout.Text = "Memlayout";
-			this.buttonMemlayout.UseVisualStyleBackColor = true;
-			this.buttonMemlayout.Click += new System.EventHandler(this.buttonMemlayout_Click);
-			// 
 			// cmbProcesses
 			// 
 			this.cmbProcesses.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -881,7 +815,7 @@
             "Processes"});
 			this.cmbProcesses.Location = new System.Drawing.Point(293, 7);
 			this.cmbProcesses.Name = "cmbProcesses";
-			this.cmbProcesses.Size = new System.Drawing.Size(121, 23);
+			this.cmbProcesses.Size = new System.Drawing.Size(202, 23);
 			this.cmbProcesses.TabIndex = 4;
 			this.cmbProcesses.SelectedIndexChanged += new System.EventHandler(this.cmbProcesses_SelectedIndexChanged);
 			// 
@@ -902,7 +836,7 @@
 			this.txtIpAddress.Location = new System.Drawing.Point(12, 8);
 			this.txtIpAddress.Name = "txtIpAddress";
 			this.txtIpAddress.Size = new System.Drawing.Size(113, 23);
-			this.txtIpAddress.TabIndex = 2;
+			this.txtIpAddress.TabIndex = 1;
 			this.txtIpAddress.Text = "192.168.0.17";
 			// 
 			// buttonConnect
@@ -911,7 +845,7 @@
 			this.buttonConnect.Location = new System.Drawing.Point(131, 7);
 			this.buttonConnect.Name = "buttonConnect";
 			this.buttonConnect.Size = new System.Drawing.Size(75, 23);
-			this.buttonConnect.TabIndex = 0;
+			this.buttonConnect.TabIndex = 2;
 			this.buttonConnect.Text = "Connect";
 			this.buttonConnect.UseVisualStyleBackColor = true;
 			this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
@@ -1005,8 +939,6 @@
 			this.panel1.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel2.PerformLayout();
-			this.tabPage4.ResumeLayout(false);
-			this.tabPage4.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -1027,7 +959,6 @@
 		private System.Windows.Forms.TextBox txtIpAddress;
 		private System.Windows.Forms.Button buttonProcesses;
 		private System.Windows.Forms.ComboBox cmbProcesses;
-		private System.Windows.Forms.Button buttonMemlayout;
 		private System.Windows.Forms.ComboBox cmbMemlayout;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
@@ -1076,10 +1007,6 @@
 		private System.Windows.Forms.Button buttonEditorHelp;
 		private System.Windows.Forms.Button buttonEditorUse;
 		private System.Windows.Forms.Button buttonEditorCreate;
-		private System.Windows.Forms.TabPage tabPage4;
-		private System.Windows.Forms.Button buttonReadTest;
-		private System.Windows.Forms.TextBox txtReadTestLength;
-		private System.Windows.Forms.TextBox txtReadTestAddress;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Button buttonDumpAll;
 		private System.Windows.Forms.TextBox txtDumpAll;
