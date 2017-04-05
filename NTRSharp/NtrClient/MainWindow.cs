@@ -20,6 +20,7 @@ namespace NewNtrClient
 	public partial class MainWindow : Form
 	{
 		public NtrClient NtrClient;
+		private ConfigFile Config;
 		private ReadMemoryType ReadMemoryType = ReadMemoryType.None;
 		private ReadNtrStringType ReadNtrStringType = ReadNtrStringType.None;
 
@@ -51,7 +52,13 @@ namespace NewNtrClient
 			InitializeComponent();
 			this.Load += MainWindow_Load;
 
-			this.FormClosing += (s, e_) => { this.NtrClient?.Disconnect(false); };
+			this.FormClosing += (s, e_) => 
+			{
+				this.NtrClient?.Disconnect(false);
+				ConfigFile.SaveToXml("Config.xml", Config);
+			};
+
+			Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
 
 			// debugging
 			if (IsDebug) AllocConsole();
@@ -214,6 +221,8 @@ namespace NewNtrClient
 				});
 				Log(".");
 
+				this.txtIpAddress.Text = Config.IpAddress;
+
 				//txtIpAddress.SelectionLength = 0;
 
 				LogLine(Environment.NewLine + "Finished setup");
@@ -240,9 +249,10 @@ namespace NewNtrClient
 			this.ReadMemoryType = ReadMemoryType.None;
 			this.ReadNtrStringType = ReadNtrStringType.None;
 
+			this.Config.IpAddress = txtIpAddress.Text;
+
 			new Task(() =>
 			{
-				Console.WriteLine("Derpy");
 				int Retry = 0;
 				LogLine("Trying to connect to {0}", txtIpAddress.Text);
 				do
