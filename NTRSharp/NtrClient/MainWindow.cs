@@ -29,10 +29,10 @@ namespace NewNtrClient
 		private Boolean NewReadMemory = false;
 
 		private int ReadAllMemIndex = 0;
-		List<byte> DumpData = null;
+		byte[] DumpData = null;
 
 		private readonly Int32 COMPRESSION_MODE = 2;
-		private readonly UInt32 MAX_CONSOLE_DUMP = 0x100;
+		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
 
 #if DEBUG
 		private readonly Boolean IsDebug = true;
@@ -437,7 +437,7 @@ namespace NewNtrClient
 			UInt32 Length = GetEditModeLength();
 
 			byte[] b = BitConverter.GetBytes(Convert.ToUInt32(txtEditModeHex.Text, 16));
-			if (cbEditModeLittleEndian.Checked) b.Reverse();
+			if (cbEditModeLittleEndian.Checked) b = b.Reverse().ToArray();
 			b = b.SubArray(4 - (int)Length, (int)Length);
 
 			if (!IsValidMemregion(Address, Length))
@@ -459,6 +459,7 @@ namespace NewNtrClient
 				TextBox txt = sender as TextBox;
 
 				byte[] t = BitConverter.GetBytes(Convert.ToUInt32(txt.Text));
+				if (cbEditModeLittleEndian.Checked) t = t.Reverse().ToArray();
 				t = t.SubArray(0, (int)Length);
 
 
@@ -625,7 +626,7 @@ namespace NewNtrClient
 
 				this.txtEditorAddress.Text = Address.ToString("X08").ToUpper();
 
-				Console.WriteLine("PTRO: {0:X08}", PtrOffset);
+				//Console.WriteLine("PTRO: {0:X08}", PtrOffset);
 				if (PtrOffset != 0xffffffff)
 				{
 					cbPointer.Checked = true;
@@ -909,7 +910,7 @@ namespace NewNtrClient
 
 				Boolean IsLittleEndian = cbEditModeLittleEndian.Checked;
 
-				if (!IsLittleEndian) Buffer.Reverse();
+				if (!IsLittleEndian) Buffer = Buffer.Reverse().ToArray();
 
 				UInt32 Hex = 0u;
 				for (int i = 0; i < Buffer.Length && i < 4; i++)
@@ -934,16 +935,19 @@ namespace NewNtrClient
 
 
 				this.ReadAllMemIndex++;
+				LogLine("Current Index: {0}", ReadAllMemIndex);
 
 				this.cmbMemlayout.TryInvoke(new Action(() =>
 				{
 					if (this.ReadAllMemIndex < this.cmbMemlayout.Items.Count)
 					{
 						String pMem = this.cmbMemlayout.Items[this.ReadAllMemIndex - 1].ToString();
+						UInt32 pMemStart = Convert.ToUInt32(pMem.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray()[0], 16);
 						UInt32 pMemEnd = Convert.ToUInt32(pMem.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray()[1], 16);
 
 
 						String mem0 = this.cmbMemlayout.Items[this.ReadAllMemIndex].ToString();
+						LogLine("Memregion: {0}", mem0);
 						String[] m = mem0.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray();
 						if (m.Length == 3)
 						{
@@ -951,10 +955,7 @@ namespace NewNtrClient
 							UInt32 Size = Convert.ToUInt32(m[2], 16);
 							// must be a valid memregion. No need to check it. 
 
-							DumpData.AddRange(Buffer);
-
-							// padding
-							DumpData.AddRange(new byte[Start - pMemEnd - 1]);
+							Buffer.CopyTo(DumpData, (int)pMemStart);
 							LogLine("Added padding... {0:X08} => {1:X08} = {2:X08}", pMemEnd, Start, Start - pMemEnd);
 
 							//
@@ -965,11 +966,15 @@ namespace NewNtrClient
 					}
 					else
 					{
-						FileInfo k = new FileInfo("Dump\\" + txtDumpAll.Text);
-						k.Directory.Create();
-						File.WriteAllBytes(k.FullName, DumpData.ToArray());
-						LogLine("Wrote file: {0}", k.FullName);
-						DumpData = null;
+						new Task(() =>
+						{
+							LogLine("Now writing file...");
+							FileInfo k = new FileInfo("Dump\\" + txtDumpAll.Text);
+							k.Directory.Create();
+							File.WriteAllBytes(k.FullName, DumpData.ToArray());
+							LogLine("Wrote file: {0}", k.FullName);
+							DumpData = null;
+						}).Start();
 					}
 				}));
 			}
@@ -1209,12 +1214,16 @@ namespace NewNtrClient
 			try
 			{
 				UInt32 Pid = GetPid();
-				if (Pid != 0xffffffff)
+				if (Pid != 0xffffffff && cmbMemlayout.Items.Count > 0)
 				{
 
 					//(sender as Button).Enabled = false;
 					this.ReadAllMemIndex = 0;
-					this.DumpData = new List<byte>();
+
+					// I'm sorry
+					int LastMemEnd = Convert.ToInt32(this.cmbMemlayout.Items[cmbMemlayout.Items.Count - 1].ToString().Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray()[1], 16);
+
+					this.DumpData = new byte[LastMemEnd];
 
 					String mem0 = this.cmbMemlayout.Items[0].ToString();
 					String[] m = mem0.Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray();
@@ -1222,8 +1231,6 @@ namespace NewNtrClient
 					{
 						UInt32 Start = Convert.ToUInt32(m[0], 16);
 						UInt32 Size = Convert.ToUInt32(m[2], 16);
-
-						DumpData.AddRange(new byte[Start]);
 
 						// must be a valid memregion. No need to check it. 
 						this.ReadMemoryType = ReadMemoryType.DumpAllMemregions;

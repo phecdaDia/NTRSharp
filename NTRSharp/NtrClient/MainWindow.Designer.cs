@@ -33,7 +33,6 @@
 			this.ContentPanel = new System.Windows.Forms.Panel();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.label10 = new System.Windows.Forms.Label();
 			this.buttonDumpAll = new System.Windows.Forms.Button();
 			this.txtDumpAll = new System.Windows.Forms.TextBox();
 			this.cbEditModeLittleEndian = new System.Windows.Forms.CheckBox();
@@ -169,7 +168,6 @@
 			// 
 			// tabPage1
 			// 
-			this.tabPage1.Controls.Add(this.label10);
 			this.tabPage1.Controls.Add(this.buttonDumpAll);
 			this.tabPage1.Controls.Add(this.txtDumpAll);
 			this.tabPage1.Controls.Add(this.cbEditModeLittleEndian);
@@ -200,21 +198,10 @@
 			this.tabPage1.Text = "General";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
-			// label10
-			// 
-			this.label10.AutoSize = true;
-			this.label10.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(6, 139);
-			this.label10.Name = "label10";
-			this.label10.RightToLeft = System.Windows.Forms.RightToLeft.No;
-			this.label10.Size = new System.Drawing.Size(91, 15);
-			this.label10.TabIndex = 23;
-			this.label10.Text = "Dump all Mem";
-			// 
 			// buttonDumpAll
 			// 
 			this.buttonDumpAll.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonDumpAll.Location = new System.Drawing.Point(289, 135);
+			this.buttonDumpAll.Location = new System.Drawing.Point(583, 134);
 			this.buttonDumpAll.Name = "buttonDumpAll";
 			this.buttonDumpAll.Size = new System.Drawing.Size(156, 23);
 			this.buttonDumpAll.TabIndex = 21;
@@ -225,9 +212,9 @@
 			// txtDumpAll
 			// 
 			this.txtDumpAll.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtDumpAll.Location = new System.Drawing.Point(103, 135);
+			this.txtDumpAll.Location = new System.Drawing.Point(424, 134);
 			this.txtDumpAll.Name = "txtDumpAll";
-			this.txtDumpAll.Size = new System.Drawing.Size(179, 23);
+			this.txtDumpAll.Size = new System.Drawing.Size(156, 23);
 			this.txtDumpAll.TabIndex = 20;
 			this.txtDumpAll.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemFilename_Validating);
 			// 
@@ -1007,7 +994,6 @@
 		private System.Windows.Forms.Button buttonEditorHelp;
 		private System.Windows.Forms.Button buttonEditorUse;
 		private System.Windows.Forms.Button buttonEditorCreate;
-		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.Button buttonDumpAll;
 		private System.Windows.Forms.TextBox txtDumpAll;
 		private System.Windows.Forms.ToolStripMenuItem openWorkDirToolStripMenuItem;
