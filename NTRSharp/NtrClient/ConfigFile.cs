@@ -1,4 +1,5 @@
-﻿using NtrSharp.Utility;
+﻿using NtrSharp.NtrObject;
+using NtrSharp.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ namespace NewNtrClient
 
 		protected override void Init()
 		{
-			if (this.IpAddress == null) this.IpAddress = "192.168.0.10";
+			if (String.IsNullOrEmpty(IpAddress)) IpAddress = "192.168.0.10";
 		}
 	}
 }

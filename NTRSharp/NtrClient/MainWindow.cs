@@ -1,5 +1,4 @@
-﻿using NewNtrClient.NtrObject;
-using NtrSharp;
+﻿using NtrSharp;
 using NtrSharp.Utility;
 using System;
 using System.Collections.Generic;
@@ -24,13 +23,14 @@ namespace NewNtrClient
 		private ReadMemoryType ReadMemoryType = ReadMemoryType.None;
 		private ReadNtrStringType ReadNtrStringType = ReadNtrStringType.None;
 
-		private NtrProcess[] Processes = null;
+		//private NtrProcess[] Processes = null;
 
 		private byte[] ReadMemory;
 		private Boolean NewReadMemory = false;
 
 		private int ReadAllMemIndex = 0;
-		byte[] DumpData = null;
+		private byte[] DumpData = null;
+		private String[] RestrictedProcesses;
 
 		private readonly Int32 COMPRESSION_MODE = 2;
 		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
@@ -59,6 +59,7 @@ namespace NewNtrClient
 			};
 
 			Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
+			this.RestrictedProcesses = File.ReadAllLines("restricted.txt");
 
 			// debugging
 			if (IsDebug) AllocConsole();
@@ -226,6 +227,12 @@ namespace NewNtrClient
 				//txtIpAddress.SelectionLength = 0;
 
 				LogLine(Environment.NewLine + "Finished setup");
+
+				//LogLine("Loaded RestrictedProcesses:");
+				//foreach (var p in Config.Processes)
+				//{
+				//	LogLine(p.Name);
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -278,7 +285,16 @@ namespace NewNtrClient
 		{
 			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
 			UInt32 Pid = GetPid();
-			this.NtrClient?.SendMemLayoutPacket(Pid);
+			cmbMemlayout.Enabled = true;
+
+			if (!IsRestricted(GetProcessName())) this.NtrClient?.SendMemLayoutPacket(Pid);
+			else
+			{
+				cmbMemlayout.Enabled = false;
+				cmbMemlayout.Items.Clear();
+				LogLine("Memregions unavailable. Check Github for more information.");
+				LogLine("If you want to get memregions anyways, click the button on the lower left of the General Tab");
+			}
 		}
 
 		private void buttonDumpMemoryFile_Click(object sender, EventArgs e)
@@ -943,7 +959,6 @@ namespace NewNtrClient
 			{
 				// add 00 padding
 
-
 				this.ReadAllMemIndex++;
 				LogLine("Current Index: {0}", ReadAllMemIndex);
 
@@ -1006,18 +1021,13 @@ namespace NewNtrClient
 
 				List<String> ProcessStringList = Message.Split(Environment.NewLine).ToList();
 				List<String> cList = new List<string>();
-				List<NtrProcess> pList = new List<NtrProcess>();
-				for (int i = 0; i < ProcessStringList.Count - 1; i++)
-				{
-					NtrProcess p = new NtrProcess(ProcessStringList[i]);
-					if (!String.IsNullOrEmpty(p.Name))
-					{
-						cList.Add(p.ToString());
-						pList.Add(p);
-					}
-				}
 
-				this.Processes = pList.ToArray();
+				//String processString = "{0} - {1}", PID, ProcessName
+				for (int i = 0; i < ProcessStringList.Count; i++)
+				{
+					String[] sSplit = ProcessStringList[i].Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+					if (sSplit.Length > 4) cList.Add(String.Format("{0} - {1}", sSplit[1].Substring(2, 8), sSplit[3].Replace(",", "")));
+				}
 
 				this.cmbProcesses.TryInvoke(new Action(() =>
 				{
@@ -1033,8 +1043,9 @@ namespace NewNtrClient
 					@"00100000 - 00dd7fff , size: 00cd8000"
 					  0        1 2        3 4     5	 
 				 */
-				
-				
+				//if (IsRestricted(GetProcessName())) return;
+
+
 				List<String> MemoryLayoutList = Message.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries).ToList();
 				if (MemoryLayoutList.Count >= 3)
 				{
@@ -1058,6 +1069,7 @@ namespace NewNtrClient
 
 					cmbMemlayout.TryInvoke(new Action(() =>
 					{
+						cmbMemlayout.Enabled = true;
 						cmbMemlayout.Items.Clear();
 						cmbMemlayout.Items.AddRange(MemLayouts.ToArray());
 						cmbMemlayout.SelectedIndex = 0;
@@ -1104,6 +1116,8 @@ namespace NewNtrClient
 		public Boolean IsValidMemregion(UInt32 Address, UInt32 Length)
 		{
 			Boolean output = false;
+
+			if (cmbMemlayout.Items.Count == 0) return IsRestricted(GetProcessName());
 
 			this.cmbMemlayout.TryInvoke(new Action(() =>
 			{
@@ -1221,6 +1235,8 @@ namespace NewNtrClient
 
 		private void buttonDumpAll_Click(object sender, EventArgs e)
 		{
+			
+
 			try
 			{
 				UInt32 Pid = GetPid();
@@ -1260,6 +1276,27 @@ namespace NewNtrClient
 		private void cbPointer_CheckedChanged(object sender, EventArgs e)
 		{
 			this.txtEditorOffset.Enabled = (sender as CheckBox).Checked;
+		}
+
+		private void saveConfigToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ConfigFile.SaveToXml("Config.xml", Config);
+		}
+
+		private void relaodConfigToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Config = ConfigFile.LoadFromXml("Config.xml");
+		}
+
+		public Boolean IsRestricted(String pName)
+		{
+			return this.RestrictedProcesses.Where(x => x == pName).Count() > 0;
+		}
+
+		private void buttonMemregions_Click(object sender, EventArgs e)
+		{
+			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
+			this.NtrClient?.SendMemLayoutPacket(GetPid());
 		}
 	}
 

@@ -11,73 +11,145 @@ namespace NtrSharp
 {
     public class NtrClient
     {
-		//
+		/// <summary>
+		/// Ip Address the client tries to connect to
+		/// </summary>
 		public String ServerHost;
+		/// <summary>
+		/// Port to connect
+		/// Should be 8000 for normal debugging
+		/// </summary>
 		public int ServerPort;  // Should be 8000
+		/// <summary>
+		/// Can the Heartbeat package be send
+		/// </summary>
 		public Boolean HeartbeatSendable;
 
+		/// <summary>
+		/// Used for larger data transfers
+		/// </summary>
 		public int Progress { get; private set; }
+		/// <summary>
+		/// returns true if there's a connection. Otherwise returns false
+		/// </summary>
 		public Boolean IsConnected { get { return Tcp?.Connected ?? false; } }
 
+		/// <summary>
+		/// Current packet sequence
+		/// </summary>
 		private UInt32 CurrentSequence;
+		/// <summary>
+		/// Last packet sequence when we send a ReadMem Packet
+		/// </summary>
 		private UInt32 LastReadMemorySequence;
+		/// <summary>
+		/// SyncLock
+		/// </summary>
 		private Object SyncLock = new object();
 
+		/// <summary>
+		/// TcpClient to connect to the 3ds
+		/// </summary>
 		private TcpClient Tcp;
+		/// <summary>
+		/// Thread used to handle basic communication
+		/// </summary>
 		private Thread PacketRecvThread;
+		/// <summary>
+		/// Sends a heartbeat when HeartbeatSendable is true and the delay passed
+		/// </summary>
 		private Thread HeartbeatThread;
+		/// <summary>
+		/// Network stream used for reading/writing
+		/// </summary>
 		private NetworkStream NetStream;
 
-		private readonly int HEARTBEAT_INTERVAL = 1000; // How long shall the HeartbeatThread wait after every beat.
+		/// <summary>
+		/// How long shall the HeartbeatThread wait after every beat.
+		/// </summary>
+		private readonly int HEARTBEAT_INTERVAL = 1000;
 
 		// Output Vars
 		public byte[] ReadMemory;
 
 		// Events
+		/// <summary>
+		/// Event for handling received messages
+		/// </summary>
 		public event MessageReceivedEventHandler EvtMessageReceived;
 		public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
 		protected void OnMessageReceived(MessageReceivedEventArgs e) { EvtMessageReceived?.Invoke(this, e); }
 		protected void Log(String Message, params object[] Format) { OnMessageReceived(new MessageReceivedEventArgs(String.Format(Message, Format))); }
-
-		// UTF8 return
-		// Temporary
+		
+		/// <summary>
+		/// Event for handing process and memregion strings
+		/// </summary>
 		public event NtrStringReceivedEventHandler EvtNtrStringReceived;
 		public delegate void NtrStringReceivedEventHandler(object sender, MessageReceivedEventArgs e);
 		protected void OnNtrStringReceived(MessageReceivedEventArgs e) { EvtNtrStringReceived?.Invoke(this, e); }
 
 		// Read Memory
+		/// <summary>
+		/// Event for handling read memory
+		/// </summary>
 		public event ReadMemoryReceivedEventHandler EvtReadMemoryReceived;
 		public delegate void ReadMemoryReceivedEventHandler(object sender, ReadMemoryReceivedEventArgs e);
 		protected void OnReadMemoryReceived(ReadMemoryReceivedEventArgs e) { EvtReadMemoryReceived?.Invoke(this, e); }
 
 		// Connect
+		/// <summary>
+		/// Event that fires once the debugger is connected
+		/// </summary>
 		public event ConnectEventHandler EvtConnect;
 		public delegate void ConnectEventHandler(object sender, EventArgs e);
 		protected void OnConnection() { EvtConnect?.Invoke(this, new EventArgs()); }
 
 		// Disconnect
+		/// <summary>
+		/// Event that fires once the debugger is disconnected
+		/// </summary>
 		public event DisconnectEventHandler EvtDisconnect;
 		public delegate void DisconnectEventHandler(object sender, EventArgs e);
 		protected void OnDisconnect() { EvtDisconnect?.Invoke(this, new EventArgs()); }
 
 		// Progress changed
+		/// <summary>
+		/// Event that fires once the progress changed
+		/// </summary>
 		public event ProgressEventHandler EvtProgress;
 		public delegate void ProgressEventHandler(object sender, EventArgs e);
 		protected void OnProgressChanged() { EvtProgress?.Invoke(this, new EventArgs()); }
 
+		/// <summary>
+		/// Constructor which also sets the ServerHost and Port
+		/// </summary>
+		/// <param name="ServerHost"></param>
 		public NtrClient(String ServerHost)
 		{
 			SetServer(ServerHost, 8000);
 		}
 
+		/// <summary>
+		/// Default Constructor
+		/// </summary>
 		public NtrClient() { }
 
+		/// <summary>
+		/// Set ServerHost and ServerPort of the NTRClient
+		/// ServerPort should be 8000 for normal debugging
+		/// </summary>
+		/// <param name="ServerHost"></param>
+		/// <param name="ServerPort"></param>
 		public void SetServer(String ServerHost, int ServerPort)
 		{
 			this.ServerHost = ServerHost;
 			this.ServerPort = ServerPort;
 		}
 
+		/// <summary>
+		/// Tries to connect to the 3ds.
+		/// If there's already an established connection, it will disconnect.
+		/// </summary>
 		public void ConnectToServer()
 		{
 			try
@@ -107,6 +179,10 @@ namespace NtrSharp
 
 		}
 
+		/// <summary>
+		/// Disconnects the NTRClient.
+		/// </summary>
+		/// <param name="WaitPacketThread"></param>
 		public void Disconnect(Boolean WaitPacketThread = true)
 		{
 			try
@@ -125,6 +201,9 @@ namespace NtrSharp
 			}
 		}
 
+		/// <summary>
+		/// Handle received packets
+		/// </summary>
 		private void PacketRecvThreadStart()
 		{
 			byte[] Buffer = new byte[84];
@@ -210,6 +289,9 @@ namespace NtrSharp
 			Disconnect(false);
 		}
 
+		/// <summary>
+		/// Handles heartbeat packets
+		/// </summary>
 		private void HeartbeatThreadStart()
 		{
 			while (IsConnected)
@@ -221,6 +303,13 @@ namespace NtrSharp
 			OnDisconnect();
 		}
 
+		/// <summary>
+		/// Copies the readable Inputstream of the Networkstream to Buffer
+		/// </summary>
+		/// <param name="Stream"></param>
+		/// <param name="Buffer"></param>
+		/// <param name="Length"></param>
+		/// <returns></returns>
 		private int ReadNetworkStream(NetworkStream Stream, byte[] Buffer, int Length)
 		{
 			int Index = 0;
@@ -246,6 +335,12 @@ namespace NtrSharp
 			return Length;
 		}
 
+		/// <summary>
+		/// Handles received packets
+		/// </summary>
+		/// <param name="Command"></param>
+		/// <param name="Sequence"></param>
+		/// <param name="DataBuffer"></param>
 		private void HandlePacket(UInt32 Command, UInt32 Sequence, byte[] DataBuffer)
 		{
 			if (Command == 9)
@@ -254,6 +349,11 @@ namespace NtrSharp
 			}
 		}
 
+		/// <summary>
+		/// Handles Read Memory
+		/// </summary>
+		/// <param name="Sequence"></param>
+		/// <param name="DataBuffer"></param>
 		private void HandleReadMemory(UInt32 Sequence, byte[] DataBuffer)
 		{
 			if (Sequence != LastReadMemorySequence)
@@ -269,6 +369,13 @@ namespace NtrSharp
 
 		// Send Packets
 
+		/// <summary>
+		/// Sends a packet with the specified arguments
+		/// </summary>
+		/// <param name="Type"></param>
+		/// <param name="Command"></param>
+		/// <param name="Args"></param>
+		/// <param name="DataLen"></param>
 		public void SendPacket(UInt32 Type, UInt32 Command, UInt32[] Args, UInt32 DataLen)
 		{
 			if (!IsConnected) return;
@@ -295,6 +402,11 @@ namespace NtrSharp
 			NetStream.Write(Buffer, 0, Buffer.Length);
 		}
 
+		/// <summary>
+		/// Sends an empty packet with the specified command and arguments
+		/// </summary>
+		/// <param name="Command"></param>
+		/// <param name="Args"></param>
 		public void SendEmptyPacket(UInt32 Command, params UInt32[] Args)
 		{
 			SendPacket(0, Command, Args, 0);
@@ -302,6 +414,9 @@ namespace NtrSharp
 
 		// Sending Packets
 
+		/// <summary>
+		/// Sends a "Heartbeat" packet
+		/// </summary>
 		public void SendHeartbeatPacket()
 		{
 			if (Tcp != null)
@@ -317,30 +432,48 @@ namespace NtrSharp
 			}
 		}
 
+		/// <summary>
+		/// Sends a "Hello" Packet
+		/// </summary>
 		public void SendHelloPacket()
 		{
 			Log("Sending 'HELLO' Packet");
 			SendPacket(0, 3, null, 0);
 		}
 
+		/// <summary>
+		/// Sends a "Reload" Packet
+		/// </summary>
 		public void SendReloadPacket()
 		{
 			Log("Sending 'RELOAD' Packet");
 			SendPacket(0, 4, null, 0);
 		}
 
+		/// <summary>
+		/// Sends a "Process" Packet
+		/// Lists all processes
+		/// </summary>
 		public void SendProcessPacket()
 		{
 			Log("Sending 'PROCESS' Packet");
 			SendEmptyPacket(5);
 		}
 
+		/// <summary>
+		/// Sends a "MemLayout" Packet
+		/// Returns an String with the Memlayout of the process with the specified PID
+		/// </summary>
 		public void SendMemLayoutPacket(UInt32 Pid)
 		{
 			Log("Sending 'MEMLAYOUT' Packet (0x{0:X})", Pid);
 			SendEmptyPacket(8, Pid);
 		}
 
+		/// <summary>
+		/// Sends a "ReadMem" Packet
+		/// Reads data from Address on the process with the specified PID
+		/// </summary>
 		public void SendReadMemPacket(UInt32 Address, UInt32 Size, UInt32 Pid)
 		{
 			Log("Sending 'READMEM' Packet ({0:X08} {1:X08} @0x{2:X})", Address, Size, Pid);
@@ -348,6 +481,10 @@ namespace NtrSharp
 			LastReadMemorySequence = CurrentSequence;
 		}
 
+		/// <summary>
+		/// Sends a "WriteMem" Packet
+		/// Writes Buffer at the specified address on the process with the specified PID
+		/// </summary>
 		public void SendWriteMemPacket(UInt32 Address, UInt32 Pid, byte[] Buffer)
 		{
 			Log("Sending 'WRITEMEM' Packet ({0:X08} @0x{1:X} 0x{2:X})", Address, Pid, Buffer.Length);

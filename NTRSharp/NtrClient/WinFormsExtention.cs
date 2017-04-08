@@ -11,7 +11,7 @@ namespace NewNtrClient
 	{
 
 		// Extention Methods
-
+		// 
 
 		public static void AppendLine(this TextBox Source, string Value)
 		{

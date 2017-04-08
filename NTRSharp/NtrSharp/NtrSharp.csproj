@@ -45,6 +45,8 @@
     <Compile Include="Events\MessageReceivedEventArgs.cs" />
     <Compile Include="Events\ReadMemoryReceivedEventArgs.cs" />
     <Compile Include="NtrClient.cs" />
+    <Compile Include="NtrObject\MemoryRegion.cs" />
+    <Compile Include="NtrObject\Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\Adler32.cs" />
     <Compile Include="Utility\Compression.cs" />

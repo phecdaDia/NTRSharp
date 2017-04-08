@@ -83,6 +83,7 @@
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtEditorBase = new System.Windows.Forms.TextBox();
 			this.txtEditorByte = new System.Windows.Forms.TextBox();
+			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.cmbMemlayout = new System.Windows.Forms.ComboBox();
 			this.cmbProcesses = new System.Windows.Forms.ComboBox();
 			this.buttonProcesses = new System.Windows.Forms.Button();
@@ -96,6 +97,10 @@
 			this.disconnecttrueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.openWorkDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.relaodConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.buttonMemregions = new System.Windows.Forms.Button();
 			this.ContentTable.SuspendLayout();
 			this.ContentPanel.SuspendLayout();
 			this.tabControl1.SuspendLayout();
@@ -158,6 +163,7 @@
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage3);
+			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.tabControl1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tabControl1.Location = new System.Drawing.Point(0, 37);
@@ -168,6 +174,7 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.buttonMemregions);
 			this.tabPage1.Controls.Add(this.buttonDumpAll);
 			this.tabPage1.Controls.Add(this.txtDumpAll);
 			this.tabPage1.Controls.Add(this.cbEditModeLittleEndian);
@@ -780,6 +787,16 @@
 			this.txtEditorByte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEditorByte_KeyPress);
 			this.txtEditorByte.Validating += new System.ComponentModel.CancelEventHandler(this.txtEditorByte_Validating);
 			// 
+			// tabPage4
+			// 
+			this.tabPage4.Location = new System.Drawing.Point(4, 27);
+			this.tabPage4.Name = "tabPage4";
+			this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage4.Size = new System.Drawing.Size(744, 164);
+			this.tabPage4.TabIndex = 3;
+			this.tabPage4.Text = "tabPage4";
+			this.tabPage4.UseVisualStyleBackColor = true;
+			// 
 			// cmbMemlayout
 			// 
 			this.cmbMemlayout.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -859,7 +876,8 @@
 			// 
 			this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.test1ToolStripMenuItem,
-            this.openWorkDirToolStripMenuItem});
+            this.openWorkDirToolStripMenuItem,
+            this.configToolStripMenuItem});
 			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
 			this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
 			this.testToolStripMenuItem.Text = "Test";
@@ -899,6 +917,40 @@
 			this.openWorkDirToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
 			this.openWorkDirToolStripMenuItem.Text = "Open WorkDir";
 			this.openWorkDirToolStripMenuItem.Click += new System.EventHandler(this.openWorkDirToolStripMenuItem_Click);
+			// 
+			// configToolStripMenuItem
+			// 
+			this.configToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.relaodConfigToolStripMenuItem,
+            this.saveConfigToolStripMenuItem});
+			this.configToolStripMenuItem.Name = "configToolStripMenuItem";
+			this.configToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.configToolStripMenuItem.Text = "Config";
+			// 
+			// relaodConfigToolStripMenuItem
+			// 
+			this.relaodConfigToolStripMenuItem.Name = "relaodConfigToolStripMenuItem";
+			this.relaodConfigToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.relaodConfigToolStripMenuItem.Text = "Relaod Config";
+			this.relaodConfigToolStripMenuItem.Click += new System.EventHandler(this.relaodConfigToolStripMenuItem_Click);
+			// 
+			// saveConfigToolStripMenuItem
+			// 
+			this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
+			this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.saveConfigToolStripMenuItem.Text = "Save Config";
+			this.saveConfigToolStripMenuItem.Click += new System.EventHandler(this.saveConfigToolStripMenuItem_Click);
+			// 
+			// buttonMemregions
+			// 
+			this.buttonMemregions.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonMemregions.Location = new System.Drawing.Point(16, 133);
+			this.buttonMemregions.Name = "buttonMemregions";
+			this.buttonMemregions.Size = new System.Drawing.Size(149, 23);
+			this.buttonMemregions.TabIndex = 22;
+			this.buttonMemregions.Text = "Read Memregions";
+			this.buttonMemregions.UseVisualStyleBackColor = true;
+			this.buttonMemregions.Click += new System.EventHandler(this.buttonMemregions_Click);
 			// 
 			// MainWindow
 			// 
@@ -1003,6 +1055,11 @@
 		private System.Windows.Forms.TextBox txtEditorOffset;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.CheckBox cbPointer;
+		private System.Windows.Forms.TabPage tabPage4;
+		private System.Windows.Forms.ToolStripMenuItem configToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem relaodConfigToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem saveConfigToolStripMenuItem;
+		private System.Windows.Forms.Button buttonMemregions;
 	}
 }
 
