@@ -59,6 +59,9 @@ namespace NewNtrClient
 			};
 
 			Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
+
+			if (!File.Exists("restricted.txt")) File.WriteAllLines("restricted.txt", new String[] { "DUMMY_PROCESS" });
+
 			this.RestrictedProcesses = File.ReadAllLines("restricted.txt");
 
 			// debugging
@@ -646,8 +649,13 @@ namespace NewNtrClient
 
 				if (ProcessName != GetProcessName())
 				{
+#if DEBUG
+					DialogResult dr = MessageBox.Show(String.Format("You can't use this code on this process. \nExpected: {0}\n\nDo you want to continue?", ProcessName), "Invalid process", MessageBoxButtons.OKCancel);
+					if (dr != DialogResult.OK) return;
+#else
 					LogLine("You can't use this code on this process. Expected: {0}", ProcessName);
 					return;
+#endif
 				}
 
 				this.txtEditorAddress.Text = Address.ToString("X08").ToUpper();
