@@ -52,13 +52,16 @@ namespace NewNtrClient
 			InitializeComponent();
 			this.Load += MainWindow_Load;
 
-			this.FormClosing += (s, e_) => 
+			this.FormClosing += (s, e_) =>
 			{
 				this.NtrClient?.Disconnect(false);
 				ConfigFile.SaveToXml("Config.xml", Config);
 			};
 
 			Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
+
+			if (!File.Exists("restricted.txt")) File.WriteAllLines("restricted.txt", new String[] { "DUMMY_PROCESS" });
+
 			this.RestrictedProcesses = File.ReadAllLines("restricted.txt");
 
 			// debugging
@@ -104,7 +107,7 @@ namespace NewNtrClient
 		{
 			if (txtOutput.IsDisposed) return;
 			txtOutput.TryInvoke(new Action(() => txtOutput.AppendText(String.Format(Message, Format) + Environment.NewLine)));
-			
+
 		}
 
 		// Form Events
@@ -308,7 +311,7 @@ namespace NewNtrClient
 				return;
 			}
 
-			
+
 
 			this.ReadMemoryType = ReadMemoryType.DumpAsFile;
 			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
@@ -325,7 +328,7 @@ namespace NewNtrClient
 				Length = MAX_CONSOLE_DUMP;
 				LogLine("Length exceeded 0x{0:X}, shortened to 0x{0:X}", MAX_CONSOLE_DUMP);
 			}
-			
+
 			if (!IsValidMemregion(Address, Length))
 			{
 				LogLine("Invalid Address / Length. No valid memregions found!");
@@ -589,7 +592,7 @@ namespace NewNtrClient
 			k = String.Join(null, k.Split(Environment.NewLine));
 
 			//Console.WriteLine(k.Length);
-			for (int i = 0; i <= k.Length - 2; i+=2)
+			for (int i = 0; i <= k.Length - 2; i += 2)
 			{
 				String j = k.Substring(i, 2);
 				//Console.WriteLine(j);
@@ -646,8 +649,13 @@ namespace NewNtrClient
 
 				if (ProcessName != GetProcessName())
 				{
+#if DEBUG
+					DialogResult dr = MessageBox.Show(String.Format("You can't use this code on this process. \nExpected: {0}\n\nDo you want to continue?", ProcessName), "Invalid process", MessageBoxButtons.OKCancel);
+					if (dr != DialogResult.OK) return;
+#else
 					LogLine("You can't use this code on this process. Expected: {0}", ProcessName);
 					return;
+#endif
 				}
 
 				this.txtEditorAddress.Text = Address.ToString("X08").ToUpper();
@@ -661,7 +669,7 @@ namespace NewNtrClient
 				else cbPointer.Checked = false;
 
 				this.txtEditorLength.Text = DataBuffer.Length.ToString("X08").ToUpper();
-				
+
 
 				txtEditorByte.Text = ByteArrayToHexString(DataBuffer);
 
@@ -807,7 +815,7 @@ namespace NewNtrClient
 			String Validator = txt.Text;
 
 			if (String.IsNullOrEmpty(Validator)) return;
-			
+
 			if (Validator.Split(".", StringSplitOptions.RemoveEmptyEntries).ToArray().Length == 1)
 			{
 				Validator += @".bin";
@@ -896,7 +904,7 @@ namespace NewNtrClient
 				////byte[] DataBuffer = Compression.Compress(Buffer, COMPRESSION_MODE);
 				//byteCode.AddRange(BitConverter.GetBytes(Buffer.Length));
 				//byteCode.AddRange(Buffer);
-				
+
 
 				//String Base64 = Convert.ToBase64String(Compression.Compress(byteCode.ToArray(), COMPRESSION_MODE));
 
@@ -905,7 +913,7 @@ namespace NewNtrClient
 				{
 					this.txtBaseCode.Text = Base64;
 				}));
-			} 
+			}
 			else if (Rmt == ReadMemoryType.CreateEditorCode)
 			{
 				List<byte> byteCode = new List<byte>();
@@ -913,7 +921,7 @@ namespace NewNtrClient
 				UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
 				UInt32 Length = Convert.ToUInt32(txtEditorLength.Text, 16);
 				UInt32 PtrOffset = cbPointer.Checked ? Convert.ToUInt32(txtEditorOffset.Text, 16) : 0xffffffffu;
-				
+
 
 				String Base64 = ToBase64Code(Address, GetProcessName(), Buffer, PtrOffset);
 				this.txtEditorBase.TryInvoke(new Action(() =>
@@ -941,7 +949,7 @@ namespace NewNtrClient
 				UInt32 Hex = 0u;
 				for (int i = 0; i < Buffer.Length && i < 4; i++)
 				{
-					Hex |= (uint)(Buffer[i] << (int)((l-1)*8 - (8 * i)));
+					Hex |= (uint)(Buffer[i] << (int)((l - 1) * 8 - (8 * i)));
 				}
 
 				txtEditModeHex.TryInvoke(new Action(() =>
@@ -955,7 +963,8 @@ namespace NewNtrClient
 				{
 					txtEditModeDecimal.Text = Hex.ToString();
 				}));
-			} else if (Rmt == ReadMemoryType.DumpAllMemregions)
+			}
+			else if (Rmt == ReadMemoryType.DumpAllMemregions)
 			{
 				// add 00 padding
 
@@ -1011,7 +1020,7 @@ namespace NewNtrClient
 			this.ReadNtrStringType = ReadNtrStringType.None;
 
 			LogLine(Message);
-			
+
 			if (Rnst == ReadNtrStringType.Process)
 			{
 				// Now replace regex:" {2,}" with a single space.
@@ -1062,9 +1071,9 @@ namespace NewNtrClient
 							// split this later with @" | "
 							String k = String.Format("{0} | {1} | {2}", s[0], s[2], s[5]);
 							MemLayouts.Add(k);
-							
+
 						}
-						catch (Exception) {}
+						catch (Exception) { }
 					}
 
 					cmbMemlayout.TryInvoke(new Action(() =>
@@ -1088,7 +1097,7 @@ namespace NewNtrClient
 				UInt32 Output = 0u;
 				this.cmbProcesses.TryInvoke(new Action(() =>
 				{
-					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 1) Output = Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0], 16);
+					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 2) Output = Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0], 16);
 				}));
 				return Output;
 			}
@@ -1102,7 +1111,7 @@ namespace NewNtrClient
 				String Output = null;
 				this.cmbProcesses.TryInvoke(new Action(() =>
 				{
-					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 1) Output = this.cmbProcesses.Text.Split(' ')[2];
+					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 2) Output = this.cmbProcesses.Text.Split(' ')[2];
 				}));
 				return Output;
 			}
@@ -1235,7 +1244,7 @@ namespace NewNtrClient
 
 		private void buttonDumpAll_Click(object sender, EventArgs e)
 		{
-			
+
 
 			try
 			{
