@@ -19,7 +19,7 @@ namespace NewNtrClient
 	public partial class MainWindow : Form
 	{
 		public NtrClient NtrClient;
-		private ConfigFile Config;
+		//private ConfigFile Config;
 		private ReadMemoryType ReadMemoryType = ReadMemoryType.None;
 		private ReadNtrStringType ReadNtrStringType = ReadNtrStringType.None;
 
@@ -34,12 +34,6 @@ namespace NewNtrClient
 
 		private readonly Int32 COMPRESSION_MODE = 2;
 		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
-
-#if DEBUG
-		private readonly Boolean IsDebug = true;
-#else
-		private readonly Boolean IsDebug = false;
-#endif
 
 		// Extern
 		[System.Runtime.InteropServices.DllImportAttribute("kernel32.dll", EntryPoint = "AllocConsole")]
@@ -58,15 +52,16 @@ namespace NewNtrClient
 				//ConfigFile.SaveToXml("Config.xml", Config);
 			};
 
-			Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
+			//Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
 
 			if (!File.Exists("restricted.txt")) File.WriteAllLines("restricted.txt", new String[] { "DUMMY_PROCESS" });
 
 			this.RestrictedProcesses = File.ReadAllLines("restricted.txt");
-
-			// debugging
-			if (IsDebug) AllocConsole();
-		}
+            
+#if DEBUG
+            AllocConsole();
+#endif
+        }
 
 		// Static Methods
 
@@ -227,8 +222,7 @@ namespace NewNtrClient
 
                 //txtIpAddress.Text = Config.IpAddress;
                 //portBox.Text = Config.port;
-                txtIpAddress.Text = Properties.Settings.Default.ipAddress;
-                portBox.Text = Properties.Settings.Default.port;
+                load();
 
                 //txtIpAddress.SelectionLength = 0;
 
@@ -269,16 +263,16 @@ namespace NewNtrClient
 			{
 				int Retry = 0;
 				LogLine("Trying to connect to {0}:{1}", txtIpAddress.Text,portBox.Text);
-				do
+                do
 				{
 					NtrClient.ConnectToServer();
-				} while (!NtrClient.IsConnected && ++Retry < 3);
-				if (!NtrClient.IsConnected)
-				{
-					LogLine("Unable to connect. :(");
-					EnableConnect();
-				}
-			}).Start();
+                    if (!NtrClient.IsConnected)
+                    {
+                        LogLine("Unable to connect. :(");
+                        EnableConnect();
+                    }
+                } while (!NtrClient.IsConnected && ++Retry < 3);
+            }).Start();
 		}
 
         private void getProcs()
@@ -326,8 +320,6 @@ namespace NewNtrClient
 				return;
 			}
 
-
-
 			ReadMemoryType = ReadMemoryType.DumpAsFile;
 			NtrClient?.SendReadMemPacket(Address, Length, GetPid());
 		}
@@ -336,8 +328,7 @@ namespace NewNtrClient
 		{
 			UInt32 Address = Convert.ToUInt32(txtDumpMemAddrStart.Text, 16);
 			UInt32 Length = Convert.ToUInt32(txtDumpMemAddrLength.Text, 16);
-
-
+            
 			if (Length > MAX_CONSOLE_DUMP)
 			{
 				Length = MAX_CONSOLE_DUMP;
@@ -374,9 +365,7 @@ namespace NewNtrClient
 
 						return;
 					}
-
-
-
+                    
 					UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
 					Index += 4;
 					UInt32 PtrOffset = BitConverter.ToUInt32(baseCode, Index);
@@ -410,13 +399,11 @@ namespace NewNtrClient
 
 					if (PtrOffset != 0xffffffff)
 					{
-
 						if (!WaitForReadMemory(Address, 4, GetPid())) return;
 						Address = BitConverter.ToUInt32(this.ReadMemory, 0) + PtrOffset;
 
 						if (!IsValidMemregion(Address, (uint)DataLength))
 						{
-
 							LogLine("Invalid Address / Length. No valid memregions found!");
 							return;
 						}
@@ -427,8 +414,10 @@ namespace NewNtrClient
 				catch (Exception ex)
 				{
 					LogLine("Not a valid Base64 Code");
-					if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-					return;
+#if DEBUG
+                    LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
+#endif
+                    return;
 				}
 			}).Start();
 		}
@@ -488,7 +477,7 @@ namespace NewNtrClient
 				return;
 			}
 
-			this.NtrClient?.SendWriteMemPacket(Address, GetPid(), b);
+			NtrClient?.SendWriteMemPacket(Address, GetPid(), b);
 		}
 
 		private void buttonEditModeWriteDecimal_Click(object sender, EventArgs e)
@@ -539,19 +528,12 @@ namespace NewNtrClient
 			TextBox txt = sender as TextBox;
 			char[] AllowedChars = new char[]
 			{
-				'0', '1', '2', '3',
-				'4', '5', '6', '7',
-				'8', '9',
-
-				'A', 'B',
-				'C', 'D', 'E', 'F',
-
-				'a', 'b',			// figure out how to cast "toupper" and remove this
-				'c', 'd', 'e', 'f',
-
-				(char)Keys.Back,
-
+				'0', '1', '2', '3','4', '5', '6', '7','8', '9',
+				'A', 'B','C', 'D', 'E', 'F',
+				'a', 'b','c', 'd', 'e', 'f',
+                (char)Keys.Back,
 			};
+
 			char Key = e.KeyChar;
 			if (!AllowedChars.Contains(Key))
 			{
@@ -579,13 +561,10 @@ namespace NewNtrClient
 
 			Code = Code.Replace(Environment.NewLine, String.Empty);
 			Code = Code.Replace(" ", String.Empty);
-
-
+            
 			// Now split every 2
 			String[] CodeSplit = Code.Split(2, true).ToArray();
-
-
-
+            
 			Code = String.Join(" ", CodeSplit);
 
 			//LogLine(Code);
@@ -614,7 +593,6 @@ namespace NewNtrClient
 			}
 
 			//Console.WriteLine(byteCode.Count);
-
 			//LogLine(ByteArrayToHexString(byteCode.ToArray()));
 
 			UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
@@ -637,11 +615,8 @@ namespace NewNtrClient
 				{
 					LogLine("Received {0:X08}, expected {1:X08}", magic, BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0));
 					LogLine("Invalid Magic. It might be a broken code or an outdated one");
-
 					return;
 				}
-
-
 
 				UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
 				Index += 4;
@@ -671,29 +646,27 @@ namespace NewNtrClient
 #endif
 				}
 
-				this.txtEditorAddress.Text = Address.ToString("X08").ToUpper();
+				txtEditorAddress.Text = Address.ToString("X08").ToUpper();
 
 				//Console.WriteLine("PTRO: {0:X08}", PtrOffset);
 				if (PtrOffset != 0xffffffff)
 				{
 					cbPointer.Checked = true;
-					this.txtEditorOffset.Text = PtrOffset.ToString("X08").ToUpper();
+					txtEditorOffset.Text = PtrOffset.ToString("X08").ToUpper();
 				}
-				else cbPointer.Checked = false;
+				else
+                    cbPointer.Checked = false;
 
-				this.txtEditorLength.Text = DataBuffer.Length.ToString("X08").ToUpper();
-
-
+				txtEditorLength.Text = DataBuffer.Length.ToString("X08").ToUpper();
 				txtEditorByte.Text = ByteArrayToHexString(DataBuffer);
-
-
-
 			}
 			catch (Exception ex)
 			{
 				LogLine("Not a valid Base64 Code");
-				if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-				return;
+#if DEBUG
+                LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
+#endif
+                return;
 			}
 		}
 
@@ -743,8 +716,10 @@ namespace NewNtrClient
 				catch (Exception ex)
 				{
 					LogLine("Unable to parse code");
-					if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-					return;
+#if DEBUG
+                    LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
+#endif
+                    return;
 				}
 
 			}).Start();
@@ -760,15 +735,14 @@ namespace NewNtrClient
 		}
 
 		// toolstrip
-
 		private void disconnectfalseToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.NtrClient?.Disconnect(false);
+			NtrClient?.Disconnect(false);
 		}
 
 		private void disconnecttrueToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.NtrClient.Disconnect(true);
+			NtrClient.Disconnect(true);
 		}
 
 		private void buttonEditorCreate_Click(object sender, EventArgs e)
@@ -840,30 +814,26 @@ namespace NewNtrClient
 			k = String.Join(null, k.Split(" "));
 			if (!(k.Length % 2 == 0)) e.Cancel = true;
 		}
-		// Handling stuff
+        // Handling stuff
 
-		private void EnableConnect()
-		{
-			try
-			{
-				// enable the button
-				buttonConnect.TryInvoke(new Action(() =>
-				{
-					buttonConnect.Enabled = true;
-				}));
+        private void EnableConnect()
+        {
+            // enable the button
+            buttonConnect.TryInvoke(new Action(() =>
+            {
+                buttonConnect.Enabled = true;
+            }));
 
-				txtIpAddress.TryInvoke(new Action(() =>
-				{
-					txtIpAddress.Enabled = true;
-				}));
+            txtIpAddress.TryInvoke(new Action(() =>
+            {
+                txtIpAddress.Enabled = true;
+            }));
 
-                portBox.TryInvoke(new Action(() =>
-                {
-                    portBox.Enabled = true;
-                }));
-            }
-			catch (Exception) { }
-		}
+            portBox.TryInvoke(new Action(() =>
+            {
+                portBox.Enabled = true;
+            }));
+        }
 
 		private void HandleReadMemory(byte[] Buffer)
 		{
@@ -884,10 +854,16 @@ namespace NewNtrClient
 			}
 			if (Rmt == ReadMemoryType.DumpAsFile)
 			{
-				new DirectoryInfo("Dump").Create();
-
-				File.WriteAllBytes("Dump\\" + txtDumpMemFilename.Text, Buffer);
-				LogLine("Saved 0x{0:X} bytes to {1}", Buffer.Length, txtDumpMemFilename.Text);
+                saveFileDialog1.Filter = "Memory Dump File (*.dmp)|*.dmp";
+                saveFileDialog1.DefaultExt = ".dmp";
+                saveFileDialog1.InitialDirectory = Application.StartupPath;
+                saveFileDialog1.FileName = "memory";
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.FileName.Length > 0)
+                {
+                    new DirectoryInfo("Dump").Create();
+                    File.WriteAllBytes(saveFileDialog1.FileName, Buffer);
+                    LogLine("Saved 0x{0:X} bytes to {1}", Buffer.Length, saveFileDialog1.FileName);
+                }
 			}
 			else if (Rmt == ReadMemoryType.DumpAsConsole)
 			{
@@ -1012,12 +988,19 @@ namespace NewNtrClient
 					{
 						new Task(() =>
 						{
-							LogLine("Now writing file...");
-							FileInfo k = new FileInfo("Dump\\" + txtDumpAll.Text);
-							k.Directory.Create();
-							File.WriteAllBytes(k.FullName, DumpData.ToArray());
-							LogLine("Wrote file: {0}", k.FullName);
-							DumpData = null;
+                            saveFileDialog1.Filter = "Memory Dump File (*.dmp)|*.dmp";
+                            saveFileDialog1.DefaultExt = ".dmp";
+                            saveFileDialog1.InitialDirectory = Application.StartupPath;
+                            saveFileDialog1.FileName = "memory";
+                            if (saveFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.FileName.Length > 0)
+                            {
+                                LogLine("Now writing file...");
+                                FileInfo k = new FileInfo(saveFileDialog1.FileName);
+                                k.Directory.Create();
+                                File.WriteAllBytes(k.FullName, DumpData.ToArray());
+                                LogLine("Wrote file: {0}", k.FullName);
+                                DumpData = null;
+                            }
 						}).Start();
 					}
 				}));
@@ -1111,7 +1094,8 @@ namespace NewNtrClient
 				UInt32 Output = 0u;
 				cmbProcesses.TryInvoke(new Action(() =>
 				{
-					if (this.cmbProcesses.SelectedIndex >= 0 && cmbProcesses.Items.Count >= 2) Output = Convert.ToUInt32(cmbProcesses.Text.Split(' ')[0], 16);
+                    if (cmbProcesses.SelectedIndex >= 0 && cmbProcesses.Items.Count >= 2)
+                        Output = Convert.ToUInt32(cmbProcesses.Text.Split(' ')[0], 16);
 				}));
 				return Output;
 			}
@@ -1295,8 +1279,23 @@ namespace NewNtrClient
 
 		private void openWorkDirToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Process.Start(/*"explorer.exe",*/ Directory.GetCurrentDirectory());
+			Process.Start(Directory.GetCurrentDirectory());
 		}
+
+        private void save()
+        {
+            Properties.Settings.Default.ipAddress = txtIpAddress.Text;
+            Properties.Settings.Default.port = portBox.Text;
+            Properties.Settings.Default.autoProcs = autoProcs.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void load()
+        {
+            txtIpAddress.Text = Properties.Settings.Default.ipAddress;
+            portBox.Text = Properties.Settings.Default.port;
+            autoProcs.Checked = Properties.Settings.Default.autoProcs;
+        }
 
 		private void cbPointer_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1306,16 +1305,13 @@ namespace NewNtrClient
 		private void saveConfigToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             //ConfigFile.SaveToXml("Config.xml", Config);
-            Properties.Settings.Default.ipAddress = txtIpAddress.Text;
-            Properties.Settings.Default.port = portBox.Text;
-            Properties.Settings.Default.Save();
+            save();
         }
 
-		private void relaodConfigToolStripMenuItem_Click(object sender, EventArgs e)
+		private void reloadConfigToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             //Config = ConfigFile.LoadFromXml("Config.xml");
-            txtIpAddress.Text = Properties.Settings.Default.ipAddress;
-            portBox.Text = Properties.Settings.Default.port;
+            load();
         }
 
 		public Boolean IsRestricted(String pName)
@@ -1332,9 +1328,16 @@ namespace NewNtrClient
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             //ConfigFile.SaveToXml("Config.xml", Config); //save upon exiting
-            Properties.Settings.Default.ipAddress = txtIpAddress.Text;
-            Properties.Settings.Default.port = portBox.Text;
-            Properties.Settings.Default.Save();
+            save();
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.SetToolTip(buttonConnect, "Connect to IP:Port");
+            toolTip.SetToolTip(buttonProcesses, "Refresh Processes");
+            toolTip.SetToolTip(txtIpAddress, "3DS Console IP Address");
+            toolTip.SetToolTip(portBox, "Debug Port (NTR CFW Default: 8000)");
         }
     }
 

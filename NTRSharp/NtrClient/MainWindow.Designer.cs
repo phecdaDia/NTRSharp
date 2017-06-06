@@ -31,11 +31,12 @@
             this.ContentTable = new System.Windows.Forms.TableLayoutPanel();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.ContentPanel = new System.Windows.Forms.Panel();
+            this.autoProcs = new System.Windows.Forms.CheckBox();
+            this.portBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.buttonMemregions = new System.Windows.Forms.Button();
             this.buttonDumpAll = new System.Windows.Forms.Button();
-            this.txtDumpAll = new System.Windows.Forms.TextBox();
             this.cbEditModeLittleEndian = new System.Windows.Forms.CheckBox();
             this.buttonEditModeWriteHex = new System.Windows.Forms.Button();
             this.txtEditModeDecimal = new System.Windows.Forms.TextBox();
@@ -45,14 +46,12 @@
             this.buttonEditModeWriteDecimal = new System.Windows.Forms.Button();
             this.buttonEditModeRead = new System.Windows.Forms.Button();
             this.cmbEditModeType = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtEditModeAddress = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonDumpMemoryConsole = new System.Windows.Forms.Button();
             this.buttonDumpMemoryFile = new System.Windows.Forms.Button();
-            this.txtDumpMemFilename = new System.Windows.Forms.TextBox();
             this.txtDumpMemAddrLength = new System.Windows.Forms.TextBox();
             this.txtDumpMemAddrStart = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -84,7 +83,6 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.txtEditorBase = new System.Windows.Forms.TextBox();
             this.txtEditorByte = new System.Windows.Forms.TextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.cmbMemlayout = new System.Windows.Forms.ComboBox();
             this.cmbProcesses = new System.Windows.Forms.ComboBox();
             this.buttonProcesses = new System.Windows.Forms.Button();
@@ -94,15 +92,13 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.test1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.disconnectfalseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnecttrueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.openWorkDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disconnectfalseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.portBox = new System.Windows.Forms.TextBox();
-            this.autoProcs = new System.Windows.Forms.CheckBox();
+            this.openWorkDirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ContentTable.SuspendLayout();
             this.ContentPanel.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -161,13 +157,33 @@
             this.ContentPanel.Size = new System.Drawing.Size(752, 232);
             this.ContentPanel.TabIndex = 1;
             // 
+            // autoProcs
+            // 
+            this.autoProcs.AutoSize = true;
+            this.autoProcs.Checked = true;
+            this.autoProcs.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoProcs.Location = new System.Drawing.Point(215, 12);
+            this.autoProcs.Name = "autoProcs";
+            this.autoProcs.Size = new System.Drawing.Size(47, 17);
+            this.autoProcs.TabIndex = 8;
+            this.autoProcs.Text = "auto";
+            this.autoProcs.UseVisualStyleBackColor = true;
+            // 
+            // portBox
+            // 
+            this.portBox.Font = new System.Drawing.Font("Consolas", 9.75F);
+            this.portBox.Location = new System.Drawing.Point(118, 8);
+            this.portBox.Name = "portBox";
+            this.portBox.Size = new System.Drawing.Size(38, 23);
+            this.portBox.TabIndex = 2;
+            this.portBox.Text = "8000";
+            // 
             // tabControl1
             // 
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.Buttons;
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(0, 37);
@@ -180,7 +196,6 @@
             // 
             this.tabPage1.Controls.Add(this.buttonMemregions);
             this.tabPage1.Controls.Add(this.buttonDumpAll);
-            this.tabPage1.Controls.Add(this.txtDumpAll);
             this.tabPage1.Controls.Add(this.cbEditModeLittleEndian);
             this.tabPage1.Controls.Add(this.buttonEditModeWriteHex);
             this.tabPage1.Controls.Add(this.txtEditModeDecimal);
@@ -190,14 +205,12 @@
             this.tabPage1.Controls.Add(this.buttonEditModeWriteDecimal);
             this.tabPage1.Controls.Add(this.buttonEditModeRead);
             this.tabPage1.Controls.Add(this.cmbEditModeType);
-            this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.txtEditModeAddress);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.buttonDumpMemoryConsole);
             this.tabPage1.Controls.Add(this.buttonDumpMemoryFile);
-            this.tabPage1.Controls.Add(this.txtDumpMemFilename);
             this.tabPage1.Controls.Add(this.txtDumpMemAddrLength);
             this.tabPage1.Controls.Add(this.txtDumpMemAddrStart);
             this.tabPage1.Controls.Add(this.label1);
@@ -212,9 +225,9 @@
             // buttonMemregions
             // 
             this.buttonMemregions.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonMemregions.Location = new System.Drawing.Point(16, 133);
+            this.buttonMemregions.Location = new System.Drawing.Point(570, 49);
             this.buttonMemregions.Name = "buttonMemregions";
-            this.buttonMemregions.Size = new System.Drawing.Size(149, 23);
+            this.buttonMemregions.Size = new System.Drawing.Size(168, 23);
             this.buttonMemregions.TabIndex = 22;
             this.buttonMemregions.Text = "Read Memregions";
             this.buttonMemregions.UseVisualStyleBackColor = true;
@@ -223,29 +236,20 @@
             // buttonDumpAll
             // 
             this.buttonDumpAll.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDumpAll.Location = new System.Drawing.Point(583, 134);
+            this.buttonDumpAll.Location = new System.Drawing.Point(570, 134);
             this.buttonDumpAll.Name = "buttonDumpAll";
-            this.buttonDumpAll.Size = new System.Drawing.Size(156, 23);
+            this.buttonDumpAll.Size = new System.Drawing.Size(169, 23);
             this.buttonDumpAll.TabIndex = 21;
             this.buttonDumpAll.Text = "Dump all Memregions";
             this.buttonDumpAll.UseVisualStyleBackColor = true;
             this.buttonDumpAll.Click += new System.EventHandler(this.buttonDumpAll_Click);
-            // 
-            // txtDumpAll
-            // 
-            this.txtDumpAll.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDumpAll.Location = new System.Drawing.Point(424, 134);
-            this.txtDumpAll.Name = "txtDumpAll";
-            this.txtDumpAll.Size = new System.Drawing.Size(156, 23);
-            this.txtDumpAll.TabIndex = 20;
-            this.txtDumpAll.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemFilename_Validating);
             // 
             // cbEditModeLittleEndian
             // 
             this.cbEditModeLittleEndian.AutoSize = true;
             this.cbEditModeLittleEndian.Checked = true;
             this.cbEditModeLittleEndian.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbEditModeLittleEndian.Location = new System.Drawing.Point(333, 53);
+            this.cbEditModeLittleEndian.Location = new System.Drawing.Point(109, 134);
             this.cbEditModeLittleEndian.Name = "cbEditModeLittleEndian";
             this.cbEditModeLittleEndian.Size = new System.Drawing.Size(117, 19);
             this.cbEditModeLittleEndian.TabIndex = 15;
@@ -255,9 +259,9 @@
             // buttonEditModeWriteHex
             // 
             this.buttonEditModeWriteHex.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonEditModeWriteHex.Location = new System.Drawing.Point(654, 79);
+            this.buttonEditModeWriteHex.Location = new System.Drawing.Point(177, 58);
             this.buttonEditModeWriteHex.Name = "buttonEditModeWriteHex";
-            this.buttonEditModeWriteHex.Size = new System.Drawing.Size(85, 23);
+            this.buttonEditModeWriteHex.Size = new System.Drawing.Size(62, 23);
             this.buttonEditModeWriteHex.TabIndex = 19;
             this.buttonEditModeWriteHex.Text = "Write";
             this.buttonEditModeWriteHex.UseVisualStyleBackColor = true;
@@ -266,10 +270,10 @@
             // txtEditModeDecimal
             // 
             this.txtEditModeDecimal.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEditModeDecimal.Location = new System.Drawing.Point(570, 50);
+            this.txtEditModeDecimal.Location = new System.Drawing.Point(109, 29);
             this.txtEditModeDecimal.MaxLength = 10;
             this.txtEditModeDecimal.Name = "txtEditModeDecimal";
-            this.txtEditModeDecimal.Size = new System.Drawing.Size(78, 23);
+            this.txtEditModeDecimal.Size = new System.Drawing.Size(63, 23);
             this.txtEditModeDecimal.TabIndex = 16;
             this.txtEditModeDecimal.Text = "0";
             this.txtEditModeDecimal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -277,10 +281,10 @@
             // txtEditModeHex
             // 
             this.txtEditModeHex.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEditModeHex.Location = new System.Drawing.Point(569, 79);
+            this.txtEditModeHex.Location = new System.Drawing.Point(109, 58);
             this.txtEditModeHex.MaxLength = 8;
             this.txtEditModeHex.Name = "txtEditModeHex";
-            this.txtEditModeHex.Size = new System.Drawing.Size(79, 23);
+            this.txtEditModeHex.Size = new System.Drawing.Size(63, 23);
             this.txtEditModeHex.TabIndex = 18;
             this.txtEditModeHex.Text = "00000000";
             this.txtEditModeHex.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -290,7 +294,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(479, 82);
+            this.label8.Location = new System.Drawing.Point(20, 61);
             this.label8.Name = "label8";
             this.label8.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label8.Size = new System.Drawing.Size(84, 15);
@@ -301,7 +305,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(507, 53);
+            this.label7.Location = new System.Drawing.Point(48, 32);
             this.label7.Name = "label7";
             this.label7.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label7.Size = new System.Drawing.Size(56, 15);
@@ -311,9 +315,9 @@
             // buttonEditModeWriteDecimal
             // 
             this.buttonEditModeWriteDecimal.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonEditModeWriteDecimal.Location = new System.Drawing.Point(654, 50);
+            this.buttonEditModeWriteDecimal.Location = new System.Drawing.Point(178, 29);
             this.buttonEditModeWriteDecimal.Name = "buttonEditModeWriteDecimal";
-            this.buttonEditModeWriteDecimal.Size = new System.Drawing.Size(85, 23);
+            this.buttonEditModeWriteDecimal.Size = new System.Drawing.Size(61, 23);
             this.buttonEditModeWriteDecimal.TabIndex = 17;
             this.buttonEditModeWriteDecimal.Text = "Write";
             this.buttonEditModeWriteDecimal.UseVisualStyleBackColor = true;
@@ -322,9 +326,9 @@
             // buttonEditModeRead
             // 
             this.buttonEditModeRead.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonEditModeRead.Location = new System.Drawing.Point(242, 50);
+            this.buttonEditModeRead.Location = new System.Drawing.Point(244, 86);
             this.buttonEditModeRead.Name = "buttonEditModeRead";
-            this.buttonEditModeRead.Size = new System.Drawing.Size(85, 23);
+            this.buttonEditModeRead.Size = new System.Drawing.Size(47, 23);
             this.buttonEditModeRead.TabIndex = 14;
             this.buttonEditModeRead.Text = "Read";
             this.buttonEditModeRead.UseVisualStyleBackColor = true;
@@ -339,26 +343,15 @@
             "Byte",
             "UInt16",
             "UInt32"});
-            this.cmbEditModeType.Location = new System.Drawing.Point(171, 50);
+            this.cmbEditModeType.Location = new System.Drawing.Point(177, 86);
             this.cmbEditModeType.Name = "cmbEditModeType";
             this.cmbEditModeType.Size = new System.Drawing.Size(62, 22);
             this.cmbEditModeType.TabIndex = 13;
             // 
-            // label6
-            // 
-            this.label6.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(239, 3);
-            this.label6.Name = "label6";
-            this.label6.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label6.Size = new System.Drawing.Size(179, 15);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "Filename";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(171, 3);
+            this.label5.Location = new System.Drawing.Point(664, 3);
             this.label5.Name = "label5";
             this.label5.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label5.Size = new System.Drawing.Size(62, 15);
@@ -369,7 +362,7 @@
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(100, 3);
+            this.label4.Location = new System.Drawing.Point(574, 3);
             this.label4.Name = "label4";
             this.label4.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label4.Size = new System.Drawing.Size(65, 15);
@@ -380,7 +373,7 @@
             // txtEditModeAddress
             // 
             this.txtEditModeAddress.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEditModeAddress.Location = new System.Drawing.Point(103, 50);
+            this.txtEditModeAddress.Location = new System.Drawing.Point(109, 86);
             this.txtEditModeAddress.MaxLength = 8;
             this.txtEditModeAddress.Name = "txtEditModeAddress";
             this.txtEditModeAddress.Size = new System.Drawing.Size(62, 23);
@@ -393,7 +386,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(6, 53);
+            this.label2.Location = new System.Drawing.Point(12, 89);
             this.label2.Name = "label2";
             this.label2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label2.Size = new System.Drawing.Size(91, 15);
@@ -403,9 +396,9 @@
             // buttonDumpMemoryConsole
             // 
             this.buttonDumpMemoryConsole.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDumpMemoryConsole.Location = new System.Drawing.Point(583, 21);
+            this.buttonDumpMemoryConsole.Location = new System.Drawing.Point(570, 110);
             this.buttonDumpMemoryConsole.Name = "buttonDumpMemoryConsole";
-            this.buttonDumpMemoryConsole.Size = new System.Drawing.Size(156, 23);
+            this.buttonDumpMemoryConsole.Size = new System.Drawing.Size(169, 23);
             this.buttonDumpMemoryConsole.TabIndex = 11;
             this.buttonDumpMemoryConsole.Text = "Dump to Console";
             this.buttonDumpMemoryConsole.UseVisualStyleBackColor = true;
@@ -414,30 +407,21 @@
             // buttonDumpMemoryFile
             // 
             this.buttonDumpMemoryFile.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDumpMemoryFile.Location = new System.Drawing.Point(424, 21);
+            this.buttonDumpMemoryFile.Location = new System.Drawing.Point(570, 86);
             this.buttonDumpMemoryFile.Name = "buttonDumpMemoryFile";
-            this.buttonDumpMemoryFile.Size = new System.Drawing.Size(156, 23);
+            this.buttonDumpMemoryFile.Size = new System.Drawing.Size(168, 23);
             this.buttonDumpMemoryFile.TabIndex = 10;
             this.buttonDumpMemoryFile.Text = "Dump as File";
             this.buttonDumpMemoryFile.UseVisualStyleBackColor = true;
             this.buttonDumpMemoryFile.Click += new System.EventHandler(this.buttonDumpMemoryFile_Click);
             // 
-            // txtDumpMemFilename
-            // 
-            this.txtDumpMemFilename.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDumpMemFilename.Location = new System.Drawing.Point(239, 21);
-            this.txtDumpMemFilename.Name = "txtDumpMemFilename";
-            this.txtDumpMemFilename.Size = new System.Drawing.Size(179, 23);
-            this.txtDumpMemFilename.TabIndex = 9;
-            this.txtDumpMemFilename.Validating += new System.ComponentModel.CancelEventHandler(this.txtDumpMemFilename_Validating);
-            // 
             // txtDumpMemAddrLength
             // 
             this.txtDumpMemAddrLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDumpMemAddrLength.Location = new System.Drawing.Point(171, 21);
+            this.txtDumpMemAddrLength.Location = new System.Drawing.Point(649, 21);
             this.txtDumpMemAddrLength.MaxLength = 8;
             this.txtDumpMemAddrLength.Name = "txtDumpMemAddrLength";
-            this.txtDumpMemAddrLength.Size = new System.Drawing.Size(62, 23);
+            this.txtDumpMemAddrLength.Size = new System.Drawing.Size(88, 23);
             this.txtDumpMemAddrLength.TabIndex = 8;
             this.txtDumpMemAddrLength.Text = "00000000";
             this.txtDumpMemAddrLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -446,10 +430,10 @@
             // txtDumpMemAddrStart
             // 
             this.txtDumpMemAddrStart.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDumpMemAddrStart.Location = new System.Drawing.Point(103, 21);
+            this.txtDumpMemAddrStart.Location = new System.Drawing.Point(571, 21);
             this.txtDumpMemAddrStart.MaxLength = 8;
             this.txtDumpMemAddrStart.Name = "txtDumpMemAddrStart";
-            this.txtDumpMemAddrStart.Size = new System.Drawing.Size(62, 23);
+            this.txtDumpMemAddrStart.Size = new System.Drawing.Size(72, 23);
             this.txtDumpMemAddrStart.TabIndex = 7;
             this.txtDumpMemAddrStart.Text = "00000000";
             this.txtDumpMemAddrStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -459,7 +443,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 24);
+            this.label1.Location = new System.Drawing.Point(481, 24);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.label1.Size = new System.Drawing.Size(84, 15);
@@ -789,6 +773,7 @@
             // 
             // txtEditorByte
             // 
+            this.txtEditorByte.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtEditorByte.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtEditorByte.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEditorByte.Location = new System.Drawing.Point(3, 3);
@@ -801,16 +786,6 @@
             this.txtEditorByte.TextChanged += new System.EventHandler(this.txtEditorByte_TextChanged);
             this.txtEditorByte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEditorByte_KeyPress);
             this.txtEditorByte.Validating += new System.ComponentModel.CancelEventHandler(this.txtEditorByte_Validating);
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 27);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(744, 164);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "tabPage4";
-            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // cmbMemlayout
             // 
@@ -840,12 +815,14 @@
             // 
             // buttonProcesses
             // 
-            this.buttonProcesses.Font = new System.Drawing.Font("Consolas", 9.75F);
+            this.buttonProcesses.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonProcesses.Font = new System.Drawing.Font("Webdings", 9.75F);
+            this.buttonProcesses.ForeColor = System.Drawing.Color.Teal;
             this.buttonProcesses.Location = new System.Drawing.Point(464, 9);
             this.buttonProcesses.Name = "buttonProcesses";
-            this.buttonProcesses.Size = new System.Drawing.Size(38, 23);
+            this.buttonProcesses.Size = new System.Drawing.Size(25, 23);
             this.buttonProcesses.TabIndex = 3;
-            this.buttonProcesses.Text = "Get";
+            this.buttonProcesses.Text = "q";
             this.buttonProcesses.UseVisualStyleBackColor = true;
             this.buttonProcesses.Click += new System.EventHandler(this.buttonProcesses_Click);
             // 
@@ -860,13 +837,16 @@
             // 
             // buttonConnect
             // 
-            this.buttonConnect.Font = new System.Drawing.Font("Consolas", 9.75F);
+            this.buttonConnect.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonConnect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonConnect.Font = new System.Drawing.Font("Webdings", 9F, System.Drawing.FontStyle.Bold);
+            this.buttonConnect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.buttonConnect.Location = new System.Drawing.Point(158, 8);
             this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(44, 23);
+            this.buttonConnect.Size = new System.Drawing.Size(31, 23);
             this.buttonConnect.TabIndex = 3;
-            this.buttonConnect.Text = "Conn";
-            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.Text = "~";
+            this.buttonConnect.UseVisualStyleBackColor = false;
             this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 
             // pgbProgress
@@ -891,8 +871,8 @@
             // 
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.test1ToolStripMenuItem,
-            this.openWorkDirToolStripMenuItem,
-            this.configToolStripMenuItem});
+            this.configToolStripMenuItem,
+            this.openWorkDirToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.testToolStripMenuItem.Text = "File";
@@ -900,38 +880,25 @@
             // test1ToolStripMenuItem
             // 
             this.test1ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.disconnectfalseToolStripMenuItem,
             this.disconnecttrueToolStripMenuItem,
-            this.toolStripSeparator1});
+            this.disconnectfalseToolStripMenuItem});
             this.test1ToolStripMenuItem.Name = "test1ToolStripMenuItem";
-            this.test1ToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.test1ToolStripMenuItem.Text = "Disconnect Test";
-            // 
-            // disconnectfalseToolStripMenuItem
-            // 
-            this.disconnectfalseToolStripMenuItem.Name = "disconnectfalseToolStripMenuItem";
-            this.disconnectfalseToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.disconnectfalseToolStripMenuItem.Text = "Disconnect(false)";
-            this.disconnectfalseToolStripMenuItem.Click += new System.EventHandler(this.disconnectfalseToolStripMenuItem_Click);
+            this.test1ToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.test1ToolStripMenuItem.Text = "Disconnect";
             // 
             // disconnecttrueToolStripMenuItem
             // 
             this.disconnecttrueToolStripMenuItem.Name = "disconnecttrueToolStripMenuItem";
-            this.disconnecttrueToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.disconnecttrueToolStripMenuItem.Text = "Disconnect(true)";
+            this.disconnecttrueToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.disconnecttrueToolStripMenuItem.Text = "Safe Disconnect";
             this.disconnecttrueToolStripMenuItem.Click += new System.EventHandler(this.disconnecttrueToolStripMenuItem_Click);
             // 
-            // toolStripSeparator1
+            // disconnectfalseToolStripMenuItem
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(162, 6);
-            // 
-            // openWorkDirToolStripMenuItem
-            // 
-            this.openWorkDirToolStripMenuItem.Name = "openWorkDirToolStripMenuItem";
-            this.openWorkDirToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.openWorkDirToolStripMenuItem.Text = "Open WorkDir";
-            this.openWorkDirToolStripMenuItem.Click += new System.EventHandler(this.openWorkDirToolStripMenuItem_Click);
+            this.disconnectfalseToolStripMenuItem.Name = "disconnectfalseToolStripMenuItem";
+            this.disconnectfalseToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.disconnectfalseToolStripMenuItem.Text = "Hard Disconnect";
+            this.disconnectfalseToolStripMenuItem.Click += new System.EventHandler(this.disconnectfalseToolStripMenuItem_Click);
             // 
             // configToolStripMenuItem
             // 
@@ -939,43 +906,29 @@
             this.reloadConfigToolStripMenuItem,
             this.saveConfigToolStripMenuItem});
             this.configToolStripMenuItem.Name = "configToolStripMenuItem";
-            this.configToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.configToolStripMenuItem.Text = "Config";
+            this.configToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.configToolStripMenuItem.Text = "Settings";
             // 
             // reloadConfigToolStripMenuItem
             // 
             this.reloadConfigToolStripMenuItem.Name = "reloadConfigToolStripMenuItem";
-            this.reloadConfigToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.reloadConfigToolStripMenuItem.Text = "Reload Config";
-            this.reloadConfigToolStripMenuItem.Click += new System.EventHandler(this.relaodConfigToolStripMenuItem_Click);
+            this.reloadConfigToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.reloadConfigToolStripMenuItem.Text = "Reload Settings";
+            this.reloadConfigToolStripMenuItem.Click += new System.EventHandler(this.reloadConfigToolStripMenuItem_Click);
             // 
             // saveConfigToolStripMenuItem
             // 
             this.saveConfigToolStripMenuItem.Name = "saveConfigToolStripMenuItem";
-            this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.saveConfigToolStripMenuItem.Text = "Save Config";
+            this.saveConfigToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.saveConfigToolStripMenuItem.Text = "Save Settings";
             this.saveConfigToolStripMenuItem.Click += new System.EventHandler(this.saveConfigToolStripMenuItem_Click);
             // 
-            // portBox
+            // openWorkDirToolStripMenuItem
             // 
-            this.portBox.Font = new System.Drawing.Font("Consolas", 9.75F);
-            this.portBox.Location = new System.Drawing.Point(118, 8);
-            this.portBox.Name = "portBox";
-            this.portBox.Size = new System.Drawing.Size(38, 23);
-            this.portBox.TabIndex = 2;
-            this.portBox.Text = "8000";
-            // 
-            // autoProcs
-            // 
-            this.autoProcs.AutoSize = true;
-            this.autoProcs.Checked = true;
-            this.autoProcs.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.autoProcs.Location = new System.Drawing.Point(215, 12);
-            this.autoProcs.Name = "autoProcs";
-            this.autoProcs.Size = new System.Drawing.Size(47, 17);
-            this.autoProcs.TabIndex = 8;
-            this.autoProcs.Text = "auto";
-            this.autoProcs.UseVisualStyleBackColor = true;
+            this.openWorkDirToolStripMenuItem.Name = "openWorkDirToolStripMenuItem";
+            this.openWorkDirToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.openWorkDirToolStripMenuItem.Text = "Open Directory";
+            this.openWorkDirToolStripMenuItem.Click += new System.EventHandler(this.openWorkDirToolStripMenuItem_Click);
             // 
             // MainWindow
             // 
@@ -990,6 +943,7 @@
             this.ShowIcon = false;
             this.Text = "NTRClient";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.ContentTable.ResumeLayout(false);
             this.ContentTable.PerformLayout();
             this.ContentPanel.ResumeLayout(false);
@@ -1032,7 +986,6 @@
 		private System.Windows.Forms.TextBox txtDumpMemAddrStart;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox txtDumpMemAddrLength;
-		private System.Windows.Forms.TextBox txtDumpMemFilename;
 		private System.Windows.Forms.Button buttonDumpMemoryConsole;
 		private System.Windows.Forms.Button buttonDumpMemoryFile;
 		private System.Windows.Forms.Label label2;
@@ -1045,7 +998,6 @@
 		private System.Windows.Forms.Button buttonBaseClipboardPaste;
 		private System.Windows.Forms.Button buttonBaseClipboardCopy;
 		private System.Windows.Forms.ComboBox cmbEditModeType;
-		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox txtEditModeAddress;
@@ -1059,7 +1011,6 @@
 		private System.Windows.Forms.CheckBox cbEditModeLittleEndian;
 		private System.Windows.Forms.ToolStripMenuItem disconnectfalseToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem disconnecttrueToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.Button buttonBaseHelp;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
@@ -1074,7 +1025,6 @@
 		private System.Windows.Forms.Button buttonEditorUse;
 		private System.Windows.Forms.Button buttonEditorCreate;
 		private System.Windows.Forms.Button buttonDumpAll;
-		private System.Windows.Forms.TextBox txtDumpAll;
 		private System.Windows.Forms.ToolStripMenuItem openWorkDirToolStripMenuItem;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TextBox txtEditorLength;
@@ -1082,13 +1032,13 @@
 		private System.Windows.Forms.TextBox txtEditorOffset;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.CheckBox cbPointer;
-		private System.Windows.Forms.TabPage tabPage4;
 		private System.Windows.Forms.ToolStripMenuItem configToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem reloadConfigToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveConfigToolStripMenuItem;
 		private System.Windows.Forms.Button buttonMemregions;
         private System.Windows.Forms.TextBox portBox;
         private System.Windows.Forms.CheckBox autoProcs;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

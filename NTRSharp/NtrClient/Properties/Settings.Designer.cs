@@ -46,5 +46,17 @@ namespace NewNtrClient.Properties {
                 this["port"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool autoProcs {
+            get {
+                return ((bool)(this["autoProcs"]));
+            }
+            set {
+                this["autoProcs"] = value;
+            }
+        }
     }
 }
