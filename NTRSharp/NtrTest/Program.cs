@@ -9,11 +9,12 @@ namespace NtrTest
 {
 	class Program
 	{
-		static String IpAddress = @"192.168.0.17";
+		static String IpAddress = @"192.168.1.45";
+        static int port = 8000;
 
 		static void Main(string[] args)
 		{
-			NtrClient ntr = new NtrClient(IpAddress);
+			NtrClient ntr = new NtrClient(IpAddress, port);
 			Console.WriteLine("NTR TEST - plz work");
 			Console.ReadLine();
 			do

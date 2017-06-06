@@ -17,10 +17,12 @@ namespace NewNtrClient
 	{
 		[DataMember]
 		public String IpAddress { get; set; }
+        public String port { get; set; }
 
-		protected override void Init()
+        protected override void Init()
 		{
-			if (String.IsNullOrEmpty(IpAddress)) IpAddress = "192.168.0.10";
-		}
+			if (String.IsNullOrEmpty(IpAddress)) IpAddress = "192.168.1.45";
+            if (String.IsNullOrEmpty(port)) port = "8000";
+        }
 	}
 }
