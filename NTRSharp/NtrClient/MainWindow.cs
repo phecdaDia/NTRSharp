@@ -19,7 +19,7 @@ namespace NewNtrClient
 	public partial class MainWindow : Form
 	{
 		public NtrClient NtrClient;
-		private ConfigFile Config;
+		//private ConfigFile Config;
 		private ReadMemoryType ReadMemoryType = ReadMemoryType.None;
 		private ReadNtrStringType ReadNtrStringType = ReadNtrStringType.None;
 
@@ -35,12 +35,6 @@ namespace NewNtrClient
 		private readonly Int32 COMPRESSION_MODE = 2;
 		private readonly UInt32 MAX_CONSOLE_DUMP = 0x400;
 
-#if DEBUG
-		private readonly Boolean IsDebug = true;
-#else
-		private readonly Boolean IsDebug = false;
-#endif
-
 		// Extern
 		[System.Runtime.InteropServices.DllImportAttribute("kernel32.dll", EntryPoint = "AllocConsole")]
 		[return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
@@ -55,18 +49,19 @@ namespace NewNtrClient
 			this.FormClosing += (s, e_) =>
 			{
 				this.NtrClient?.Disconnect(false);
-				ConfigFile.SaveToXml("Config.xml", Config);
+				//ConfigFile.SaveToXml("Config.xml", Config);
 			};
 
-			Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
+			//Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
 
 			if (!File.Exists("restricted.txt")) File.WriteAllLines("restricted.txt", new String[] { "DUMMY_PROCESS" });
 
 			this.RestrictedProcesses = File.ReadAllLines("restricted.txt");
-
-			// debugging
-			if (IsDebug) AllocConsole();
-		}
+            
+#if DEBUG
+            AllocConsole();
+#endif
+        }
 
 		// Static Methods
 
@@ -119,19 +114,19 @@ namespace NewNtrClient
 				LogLine("NTRSharp by imthe666st");
 
 				Log("Setup");
-				this.cmbEditModeType.SelectedIndex = 0;
-				this.cmbMemlayout.SelectedIndex = 0;
-				this.cmbProcesses.SelectedIndex = 0;
+				cmbEditModeType.SelectedIndex = 0;
+				cmbMemlayout.SelectedIndex = 0;
+				cmbProcesses.SelectedIndex = 0;
 
-				this.NtrClient = new NtrClient();
+				NtrClient = new NtrClient();
 
-				this.NtrClient.EvtMessageReceived += (s, e_) => { LogLine(e_.Message); };
-				this.NtrClient.EvtNtrStringReceived += (s, e_) => { HandleMessageReceived(e_.Message); };
-				this.NtrClient.EvtReadMemoryReceived += (s, e_) => { HandleReadMemory(e_.Buffer); };
+				NtrClient.EvtMessageReceived += (s, e_) => { LogLine(e_.Message); };
+				NtrClient.EvtNtrStringReceived += (s, e_) => { HandleMessageReceived(e_.Message); };
+				NtrClient.EvtReadMemoryReceived += (s, e_) => { HandleReadMemory(e_.Buffer); };
 
-				this.NtrClient.EvtDisconnect += (s, e_) => { EnableConnect(); };
+				NtrClient.EvtDisconnect += (s, e_) => { EnableConnect(); };
 
-				this.NtrClient.EvtProgress += (s, e_) => { SetProgress(this.NtrClient?.Progress ?? 0); };
+				NtrClient.EvtProgress += (s, e_) => { SetProgress(this.NtrClient?.Progress ?? 0); };
 
 				Log(".");
 
@@ -225,11 +220,13 @@ namespace NewNtrClient
 				});
 				Log(".");
 
-				this.txtIpAddress.Text = Config.IpAddress;
+                //txtIpAddress.Text = Config.IpAddress;
+                //portBox.Text = Config.port;
+                load();
 
-				//txtIpAddress.SelectionLength = 0;
+                //txtIpAddress.SelectionLength = 0;
 
-				LogLine(Environment.NewLine + "Finished setup");
+                LogLine(Environment.NewLine + "Finished setup");
 
 				//LogLine("Loaded RestrictedProcesses:");
 				//foreach (var p in Config.Processes)
@@ -249,44 +246,56 @@ namespace NewNtrClient
 		{
 			//if (this.NtrClient? == null) this.NtrClient? = new NtrClient();
 
-			if (this.NtrClient?.IsConnected ?? false) this.NtrClient?.Disconnect();
-			this.buttonConnect.Enabled = false;
-			this.txtIpAddress.Enabled = false;
+			if (NtrClient?.IsConnected ?? false) NtrClient?.Disconnect();
+			buttonConnect.Enabled = false;
+			txtIpAddress.Enabled = false;
+            portBox.Enabled = false;
 
+			NtrClient?.SetServer(txtIpAddress.Text, Convert.ToInt32(portBox.Text)); //Luma3DS debug uses different ports
 
-			this.NtrClient?.SetServer(txtIpAddress.Text, 8000);
+			ReadMemoryType = ReadMemoryType.None;
+			ReadNtrStringType = ReadNtrStringType.None;
 
-			this.ReadMemoryType = ReadMemoryType.None;
-			this.ReadNtrStringType = ReadNtrStringType.None;
+            //Config.IpAddress = txtIpAddress.Text;
+            //Config.port = portBox.Text;
 
-			this.Config.IpAddress = txtIpAddress.Text;
-
-			new Task(() =>
+            new Task(() =>
 			{
 				int Retry = 0;
-				LogLine("Trying to connect to {0}", txtIpAddress.Text);
-				do
+				LogLine("Trying to connect to {0}:{1}", txtIpAddress.Text,portBox.Text);
+                do
 				{
 					NtrClient.ConnectToServer();
-				} while (!NtrClient.IsConnected && ++Retry < 3);
-				if (!NtrClient.IsConnected)
-				{
-					LogLine("Unable to connect. :(");
-					EnableConnect();
-				}
-			}).Start();
-
+                    if (!NtrClient.IsConnected)
+                    {
+                        LogLine("Unable to connect. :(");
+                        EnableConnect();
+                    }
+                } while (!NtrClient.IsConnected && ++Retry < 3);
+            }).Start();
 		}
+
+        private void getProcs()
+        {
+            ReadNtrStringType = ReadNtrStringType.Process;
+            NtrClient?.SendProcessPacket();
+        }
 
 		private void buttonProcesses_Click(object sender, EventArgs e)
 		{
-			this.ReadNtrStringType = ReadNtrStringType.Process;
-			this.NtrClient?.SendProcessPacket();
+            if (portBox.Text != "8000")
+            {
+                DialogResult dialogResult = MessageBox.Show("You don't seem to be using NTR CFW. Do you want to continue?", "WARNING", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                    getProcs();
+            }
+            else
+                getProcs();
 		}
 
 		private void cmbProcesses_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
+			ReadNtrStringType = ReadNtrStringType.MemLayout;
 			UInt32 Pid = GetPid();
 			cmbMemlayout.Enabled = true;
 
@@ -311,18 +320,15 @@ namespace NewNtrClient
 				return;
 			}
 
-
-
-			this.ReadMemoryType = ReadMemoryType.DumpAsFile;
-			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+			ReadMemoryType = ReadMemoryType.DumpAsFile;
+			NtrClient?.SendReadMemPacket(Address, Length, GetPid());
 		}
 
 		private void buttonDumpMemoryConsole_Click(object sender, EventArgs e)
 		{
 			UInt32 Address = Convert.ToUInt32(txtDumpMemAddrStart.Text, 16);
 			UInt32 Length = Convert.ToUInt32(txtDumpMemAddrLength.Text, 16);
-
-
+            
 			if (Length > MAX_CONSOLE_DUMP)
 			{
 				Length = MAX_CONSOLE_DUMP;
@@ -335,8 +341,8 @@ namespace NewNtrClient
 				return;
 			}
 
-			this.ReadMemoryType = ReadMemoryType.DumpAsConsole;
-			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+			ReadMemoryType = ReadMemoryType.DumpAsConsole;
+			NtrClient?.SendReadMemPacket(Address, Length, GetPid());
 		}
 
 		private void buttonUseBaseCode_Click(object sender, EventArgs e)
@@ -359,9 +365,7 @@ namespace NewNtrClient
 
 						return;
 					}
-
-
-
+                    
 					UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
 					Index += 4;
 					UInt32 PtrOffset = BitConverter.ToUInt32(baseCode, Index);
@@ -395,27 +399,25 @@ namespace NewNtrClient
 
 					if (PtrOffset != 0xffffffff)
 					{
-
 						if (!WaitForReadMemory(Address, 4, GetPid())) return;
 						Address = BitConverter.ToUInt32(this.ReadMemory, 0) + PtrOffset;
 
 						if (!IsValidMemregion(Address, (uint)DataLength))
 						{
-
 							LogLine("Invalid Address / Length. No valid memregions found!");
 							return;
 						}
 					}
 
-					this.NtrClient?.SendWriteMemPacket(Address, GetPid(), DataBuffer);
-
-
+					NtrClient?.SendWriteMemPacket(Address, GetPid(), DataBuffer);
 				}
 				catch (Exception ex)
 				{
 					LogLine("Not a valid Base64 Code");
-					if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-					return;
+#if DEBUG
+                    LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
+#endif
+                    return;
 				}
 			}).Start();
 		}
@@ -431,8 +433,8 @@ namespace NewNtrClient
 				return;
 			}
 
-			this.ReadMemoryType = ReadMemoryType.CreateCode;
-			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+			ReadMemoryType = ReadMemoryType.CreateCode;
+			NtrClient?.SendReadMemPacket(Address, Length, GetPid());
 		}
 
 		private void buttonBaseClipboardCopy_Click(object sender, EventArgs e)
@@ -456,8 +458,8 @@ namespace NewNtrClient
 				return;
 			}
 
-			this.ReadMemoryType = ReadMemoryType.EditMode;
-			this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
+			ReadMemoryType = ReadMemoryType.EditMode;
+			NtrClient?.SendReadMemPacket(Address, Length, GetPid());
 		}
 
 		private void buttonEditModeWriteHex_Click(object sender, EventArgs e)
@@ -475,7 +477,7 @@ namespace NewNtrClient
 				return;
 			}
 
-			this.NtrClient?.SendWriteMemPacket(Address, GetPid(), b);
+			NtrClient?.SendWriteMemPacket(Address, GetPid(), b);
 		}
 
 		private void buttonEditModeWriteDecimal_Click(object sender, EventArgs e)
@@ -499,7 +501,7 @@ namespace NewNtrClient
 					return;
 				}
 
-				this.NtrClient.SendWriteMemPacket(Address, GetPid(), t);
+				NtrClient.SendWriteMemPacket(Address, GetPid(), t);
 			}
 			catch (Exception)
 			{
@@ -526,19 +528,12 @@ namespace NewNtrClient
 			TextBox txt = sender as TextBox;
 			char[] AllowedChars = new char[]
 			{
-				'0', '1', '2', '3',
-				'4', '5', '6', '7',
-				'8', '9',
-
-				'A', 'B',
-				'C', 'D', 'E', 'F',
-
-				'a', 'b',			// figure out how to cast "toupper" and remove this
-				'c', 'd', 'e', 'f',
-
-				(char)Keys.Back,
-
+				'0', '1', '2', '3','4', '5', '6', '7','8', '9',
+				'A', 'B','C', 'D', 'E', 'F',
+				'a', 'b','c', 'd', 'e', 'f',
+                (char)Keys.Back,
 			};
+
 			char Key = e.KeyChar;
 			if (!AllowedChars.Contains(Key))
 			{
@@ -566,13 +561,10 @@ namespace NewNtrClient
 
 			Code = Code.Replace(Environment.NewLine, String.Empty);
 			Code = Code.Replace(" ", String.Empty);
-
-
+            
 			// Now split every 2
 			String[] CodeSplit = Code.Split(2, true).ToArray();
-
-
-
+            
 			Code = String.Join(" ", CodeSplit);
 
 			//LogLine(Code);
@@ -601,7 +593,6 @@ namespace NewNtrClient
 			}
 
 			//Console.WriteLine(byteCode.Count);
-
 			//LogLine(ByteArrayToHexString(byteCode.ToArray()));
 
 			UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
@@ -624,11 +615,8 @@ namespace NewNtrClient
 				{
 					LogLine("Received {0:X08}, expected {1:X08}", magic, BitConverter.ToUInt32(Encoding.ASCII.GetBytes("BASE"), 0));
 					LogLine("Invalid Magic. It might be a broken code or an outdated one");
-
 					return;
 				}
-
-
 
 				UInt32 Address = BitConverter.ToUInt32(baseCode, Index);
 				Index += 4;
@@ -658,29 +646,27 @@ namespace NewNtrClient
 #endif
 				}
 
-				this.txtEditorAddress.Text = Address.ToString("X08").ToUpper();
+				txtEditorAddress.Text = Address.ToString("X08").ToUpper();
 
 				//Console.WriteLine("PTRO: {0:X08}", PtrOffset);
 				if (PtrOffset != 0xffffffff)
 				{
 					cbPointer.Checked = true;
-					this.txtEditorOffset.Text = PtrOffset.ToString("X08").ToUpper();
+					txtEditorOffset.Text = PtrOffset.ToString("X08").ToUpper();
 				}
-				else cbPointer.Checked = false;
+				else
+                    cbPointer.Checked = false;
 
-				this.txtEditorLength.Text = DataBuffer.Length.ToString("X08").ToUpper();
-
-
+				txtEditorLength.Text = DataBuffer.Length.ToString("X08").ToUpper();
 				txtEditorByte.Text = ByteArrayToHexString(DataBuffer);
-
-
-
 			}
 			catch (Exception ex)
 			{
 				LogLine("Not a valid Base64 Code");
-				if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-				return;
+#if DEBUG
+                LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
+#endif
+                return;
 			}
 		}
 
@@ -730,8 +716,10 @@ namespace NewNtrClient
 				catch (Exception ex)
 				{
 					LogLine("Unable to parse code");
-					if (IsDebug) LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
-					return;
+#if DEBUG
+                    LogLine(ex.Message + Environment.NewLine + ex.StackTrace); // good enough
+#endif
+                    return;
 				}
 
 			}).Start();
@@ -747,27 +735,23 @@ namespace NewNtrClient
 		}
 
 		// toolstrip
-
 		private void disconnectfalseToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.NtrClient?.Disconnect(false);
+			NtrClient?.Disconnect(false);
 		}
 
 		private void disconnecttrueToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.NtrClient.Disconnect(true);
+			NtrClient.Disconnect(true);
 		}
 
 		private void buttonEditorCreate_Click(object sender, EventArgs e)
 		{
 			new Task(() =>
 			{
-
-
 				UInt32 Address = Convert.ToUInt32(txtEditorAddress.Text, 16);
 				UInt32 Length = Convert.ToUInt32(txtEditorLength.Text, 16);
-
-
+                
 				if (!IsValidMemregion(Address, Length))
 				{
 					LogLine("Invalid Address / Length. No valid memregions found!");
@@ -788,10 +772,8 @@ namespace NewNtrClient
 				this.NtrClient?.SendReadMemPacket(Address, Length, GetPid());
 			}).Start();
 		}
-
-
+        
 		// Validating
-
 		private void ValidateHex32(object sender, CancelEventArgs e)
 		{
 			TextBox txt = sender as TextBox;
@@ -817,15 +799,12 @@ namespace NewNtrClient
 			if (String.IsNullOrEmpty(Validator)) return;
 
 			if (Validator.Split(".", StringSplitOptions.RemoveEmptyEntries).ToArray().Length == 1)
-			{
 				Validator += @".bin";
-			}
 
-			if (!ValidRegex.IsMatch(Validator)) e.Cancel = true;
+			if (!ValidRegex.IsMatch(Validator))
+                e.Cancel = true;
 			else
-			{
 				txt.Text = Validator;
-			}
 		}
 
 		private void txtEditorByte_Validating(object sender, CancelEventArgs e)
@@ -835,25 +814,26 @@ namespace NewNtrClient
 			k = String.Join(null, k.Split(" "));
 			if (!(k.Length % 2 == 0)) e.Cancel = true;
 		}
-		// Handling stuff
+        // Handling stuff
 
-		private void EnableConnect()
-		{
-			try
-			{
-				// enable the button
-				buttonConnect.TryInvoke(new Action(() =>
-				{
-					buttonConnect.Enabled = true;
-				}));
+        private void EnableConnect()
+        {
+            // enable the button
+            buttonConnect.TryInvoke(new Action(() =>
+            {
+                buttonConnect.Enabled = true;
+            }));
 
-				txtIpAddress.TryInvoke(new Action(() =>
-				{
-					txtIpAddress.Enabled = true;
-				}));
-			}
-			catch (Exception) { }
-		}
+            txtIpAddress.TryInvoke(new Action(() =>
+            {
+                txtIpAddress.Enabled = true;
+            }));
+
+            portBox.TryInvoke(new Action(() =>
+            {
+                portBox.Enabled = true;
+            }));
+        }
 
 		private void HandleReadMemory(byte[] Buffer)
 		{
@@ -874,10 +854,16 @@ namespace NewNtrClient
 			}
 			if (Rmt == ReadMemoryType.DumpAsFile)
 			{
-				new DirectoryInfo("Dump").Create();
-
-				File.WriteAllBytes("Dump\\" + txtDumpMemFilename.Text, Buffer);
-				LogLine("Saved 0x{0:X} bytes to {1}", Buffer.Length, txtDumpMemFilename.Text);
+                saveFileDialog1.Filter = "Memory Dump File (*.dmp)|*.dmp";
+                saveFileDialog1.DefaultExt = ".dmp";
+                saveFileDialog1.InitialDirectory = Application.StartupPath;
+                saveFileDialog1.FileName = "memory";
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.FileName.Length > 0)
+                {
+                    new DirectoryInfo("Dump").Create();
+                    File.WriteAllBytes(saveFileDialog1.FileName, Buffer);
+                    LogLine("Saved 0x{0:X} bytes to {1}", Buffer.Length, saveFileDialog1.FileName);
+                }
 			}
 			else if (Rmt == ReadMemoryType.DumpAsConsole)
 			{
@@ -924,9 +910,9 @@ namespace NewNtrClient
 
 
 				String Base64 = ToBase64Code(Address, GetProcessName(), Buffer, PtrOffset);
-				this.txtEditorBase.TryInvoke(new Action(() =>
+				txtEditorBase.TryInvoke(new Action(() =>
 				{
-					this.txtEditorBase.Text = Base64;
+					txtEditorBase.Text = Base64;
 				}));
 
 				this.txtEditorByte.TryInvoke(new Action(() => this.txtEditorByte.Text = ByteArrayToHexString(Buffer)));
@@ -1002,12 +988,19 @@ namespace NewNtrClient
 					{
 						new Task(() =>
 						{
-							LogLine("Now writing file...");
-							FileInfo k = new FileInfo("Dump\\" + txtDumpAll.Text);
-							k.Directory.Create();
-							File.WriteAllBytes(k.FullName, DumpData.ToArray());
-							LogLine("Wrote file: {0}", k.FullName);
-							DumpData = null;
+                            saveFileDialog1.Filter = "Memory Dump File (*.dmp)|*.dmp";
+                            saveFileDialog1.DefaultExt = ".dmp";
+                            saveFileDialog1.InitialDirectory = Application.StartupPath;
+                            saveFileDialog1.FileName = "memory";
+                            if (saveFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.FileName.Length > 0)
+                            {
+                                LogLine("Now writing file...");
+                                FileInfo k = new FileInfo(saveFileDialog1.FileName);
+                                k.Directory.Create();
+                                File.WriteAllBytes(k.FullName, DumpData.ToArray());
+                                LogLine("Wrote file: {0}", k.FullName);
+                                DumpData = null;
+                            }
 						}).Start();
 					}
 				}));
@@ -1017,7 +1010,7 @@ namespace NewNtrClient
 		private void HandleMessageReceived(String Message)
 		{
 			ReadNtrStringType Rnst = this.ReadNtrStringType;
-			this.ReadNtrStringType = ReadNtrStringType.None;
+			ReadNtrStringType = ReadNtrStringType.None;
 
 			LogLine(Message);
 
@@ -1026,25 +1019,29 @@ namespace NewNtrClient
 				// Now replace regex:" {2,}" with a single space.
 				Message = new Regex(@"[ |\t]{2,}").Replace(Message, " ");
 
-				// probably going to rewrite this, I don't like this solution
+                //imthe666st: probably going to rewrite this, I don't like this solution
+                autoProcs.TryInvoke(new Action(() =>
+                {
+                    if (autoProcs.Checked && portBox.Text == "8000") //erfg12: Luma3DS debug can't get procs. Will crash.
+                    {
+                        List<String> ProcessStringList = Message.Split(Environment.NewLine).ToList();
+                        List<String> cList = new List<string>();
 
-				List<String> ProcessStringList = Message.Split(Environment.NewLine).ToList();
-				List<String> cList = new List<string>();
+                        //String processString = "{0} - {1}", PID, ProcessName
+                        for (int i = 0; i < ProcessStringList.Count; i++)
+                        {
+                            String[] sSplit = ProcessStringList[i].Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+                            if (sSplit.Length > 4) cList.Add(String.Format("{0} - {1}", sSplit[1].Substring(2, 8), sSplit[3].Replace(",", "")));
+                        }
 
-				//String processString = "{0} - {1}", PID, ProcessName
-				for (int i = 0; i < ProcessStringList.Count; i++)
-				{
-					String[] sSplit = ProcessStringList[i].Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
-					if (sSplit.Length > 4) cList.Add(String.Format("{0} - {1}", sSplit[1].Substring(2, 8), sSplit[3].Replace(",", "")));
-				}
-
-				this.cmbProcesses.TryInvoke(new Action(() =>
-				{
-					this.cmbProcesses.Items.Clear();
-					this.cmbProcesses.Items.AddRange(cList.ToArray());
-					this.cmbProcesses.SelectedIndex = 0;
-				}));
-
+                        cmbProcesses.TryInvoke(new Action(() =>
+                        {
+                            cmbProcesses.Items.Clear();
+                            cmbProcesses.Items.AddRange(cList.ToArray());
+                            cmbProcesses.SelectedIndex = 0;
+                        }));
+                    }
+                }));
 			}
 			else if (Rnst == ReadNtrStringType.MemLayout)
 			{
@@ -1095,9 +1092,10 @@ namespace NewNtrClient
 			try
 			{
 				UInt32 Output = 0u;
-				this.cmbProcesses.TryInvoke(new Action(() =>
+				cmbProcesses.TryInvoke(new Action(() =>
 				{
-					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 2) Output = Convert.ToUInt32(this.cmbProcesses.Text.Split(' ')[0], 16);
+                    if (cmbProcesses.SelectedIndex >= 0 && cmbProcesses.Items.Count >= 2)
+                        Output = Convert.ToUInt32(cmbProcesses.Text.Split(' ')[0], 16);
 				}));
 				return Output;
 			}
@@ -1106,12 +1104,15 @@ namespace NewNtrClient
 
 		public String GetProcessName()
 		{
+            if (portBox.Text != "8000")
+                return null;
+
 			try
 			{
 				String Output = null;
-				this.cmbProcesses.TryInvoke(new Action(() =>
+				cmbProcesses.TryInvoke(new Action(() =>
 				{
-					if (this.cmbProcesses.SelectedIndex >= 0 && this.cmbProcesses.Items.Count >= 2) Output = this.cmbProcesses.Text.Split(' ')[2];
+					if (cmbProcesses.SelectedIndex >= 0 && cmbProcesses.Items.Count >= 2) Output = cmbProcesses.Text.Split(' ')[2];
 				}));
 				return Output;
 			}
@@ -1210,22 +1211,21 @@ namespace NewNtrClient
 		// this will freeze the window application. Run in a separate thread/task
 		private Boolean WaitForReadMemory(UInt32 Address, UInt32 Length, UInt32 Pid)
 		{
-			if (this.NtrClient == null)
+			if (NtrClient == null)
 			{
 				LogLine("NtrClient is null");
 				return false;
 			}
 
-			this.ReadMemoryType = ReadMemoryType.Wait;
-			this.ReadMemory = null;
+			ReadMemoryType = ReadMemoryType.Wait;
+			ReadMemory = null;
 
-			this.NtrClient.SendReadMemPacket(Address, Length, Pid);
+			NtrClient.SendReadMemPacket(Address, Length, Pid);
 			LogLine("Send packet");
 			int RefreshRate = 100;
 			int MaxRetry = 100;
 			int CurrentRetry = 0;
-
-
+            
 			do
 			{
 				if (CurrentRetry == MaxRetry)
@@ -1253,7 +1253,7 @@ namespace NewNtrClient
 				{
 
 					//(sender as Button).Enabled = false;
-					this.ReadAllMemIndex = 0;
+					ReadAllMemIndex = 0;
 
 					// I'm sorry
 					int LastMemEnd = Convert.ToInt32(this.cmbMemlayout.Items[cmbMemlayout.Items.Count - 1].ToString().Split(" | ", StringSplitOptions.RemoveEmptyEntries).ToArray()[1], 16);
@@ -1268,9 +1268,9 @@ namespace NewNtrClient
 						UInt32 Size = Convert.ToUInt32(m[2], 16);
 
 						// must be a valid memregion. No need to check it. 
-						this.ReadMemoryType = ReadMemoryType.DumpAllMemregions;
+						ReadMemoryType = ReadMemoryType.DumpAllMemregions;
 
-						this.NtrClient.SendReadMemPacket(Start, Size, Pid);
+						NtrClient.SendReadMemPacket(Start, Size, Pid);
 					}
 				}
 			}
@@ -1279,37 +1279,69 @@ namespace NewNtrClient
 
 		private void openWorkDirToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Process.Start("explorer.exe", Directory.GetCurrentDirectory());
+			Process.Start(Directory.GetCurrentDirectory());
 		}
+
+        private void save()
+        {
+            Properties.Settings.Default.ipAddress = txtIpAddress.Text;
+            Properties.Settings.Default.port = portBox.Text;
+            Properties.Settings.Default.autoProcs = autoProcs.Checked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void load()
+        {
+            txtIpAddress.Text = Properties.Settings.Default.ipAddress;
+            portBox.Text = Properties.Settings.Default.port;
+            autoProcs.Checked = Properties.Settings.Default.autoProcs;
+        }
 
 		private void cbPointer_CheckedChanged(object sender, EventArgs e)
 		{
-			this.txtEditorOffset.Enabled = (sender as CheckBox).Checked;
+			txtEditorOffset.Enabled = (sender as CheckBox).Checked;
 		}
 
 		private void saveConfigToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ConfigFile.SaveToXml("Config.xml", Config);
-		}
+            //ConfigFile.SaveToXml("Config.xml", Config);
+            save();
+        }
 
-		private void relaodConfigToolStripMenuItem_Click(object sender, EventArgs e)
+		private void reloadConfigToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Config = ConfigFile.LoadFromXml("Config.xml");
-		}
+            //Config = ConfigFile.LoadFromXml("Config.xml");
+            load();
+        }
 
 		public Boolean IsRestricted(String pName)
 		{
-			return this.RestrictedProcesses.Where(x => x == pName).Count() > 0;
+			return RestrictedProcesses.Where(x => x == pName).Count() > 0;
 		}
 
 		private void buttonMemregions_Click(object sender, EventArgs e)
 		{
-			this.ReadNtrStringType = ReadNtrStringType.MemLayout;
-			this.NtrClient?.SendMemLayoutPacket(GetPid());
+			ReadNtrStringType = ReadNtrStringType.MemLayout;
+			NtrClient?.SendMemLayoutPacket(GetPid());
 		}
-	}
 
-	public enum ReadMemoryType
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //ConfigFile.SaveToXml("Config.xml", Config); //save upon exiting
+            save();
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            ToolTip toolTip = new ToolTip();
+            toolTip.SetToolTip(buttonConnect, "Connect to IP:Port");
+            toolTip.SetToolTip(buttonProcesses, "Refresh Processes");
+            toolTip.SetToolTip(txtIpAddress, "3DS Console IP Address");
+            toolTip.SetToolTip(portBox, "Debug Port (NTR CFW Default: 8000)");
+        }
+    }
+
+    public enum ReadMemoryType
 	{
 		None,
 		Wait,

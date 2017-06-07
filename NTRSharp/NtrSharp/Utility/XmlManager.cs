@@ -41,7 +41,6 @@ namespace NtrSharp.Utility
 
 		public static T LoadFromXml(string FilePath)
 		{
-
 			try
 			{
 				using (FileStream stream = File.OpenRead(FilePath))

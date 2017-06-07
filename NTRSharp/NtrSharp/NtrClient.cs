@@ -124,9 +124,9 @@ namespace NtrSharp
 		/// Constructor which also sets the ServerHost and Port
 		/// </summary>
 		/// <param name="ServerHost"></param>
-		public NtrClient(String ServerHost)
+		public NtrClient(string ServerHost, int ServerPort)
 		{
-			SetServer(ServerHost, 8000);
+			SetServer(ServerHost, ServerPort);
 		}
 
 		/// <summary>
@@ -140,7 +140,7 @@ namespace NtrSharp
 		/// </summary>
 		/// <param name="ServerHost"></param>
 		/// <param name="ServerPort"></param>
-		public void SetServer(String ServerHost, int ServerPort)
+		public void SetServer(string ServerHost, int ServerPort)
 		{
 			this.ServerHost = ServerHost;
 			this.ServerPort = ServerPort;
