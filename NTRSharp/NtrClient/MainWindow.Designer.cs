@@ -418,10 +418,10 @@
             // txtDumpMemAddrLength
             // 
             this.txtDumpMemAddrLength.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDumpMemAddrLength.Location = new System.Drawing.Point(649, 21);
+            this.txtDumpMemAddrLength.Location = new System.Drawing.Point(657, 21);
             this.txtDumpMemAddrLength.MaxLength = 8;
             this.txtDumpMemAddrLength.Name = "txtDumpMemAddrLength";
-            this.txtDumpMemAddrLength.Size = new System.Drawing.Size(88, 23);
+            this.txtDumpMemAddrLength.Size = new System.Drawing.Size(80, 23);
             this.txtDumpMemAddrLength.TabIndex = 8;
             this.txtDumpMemAddrLength.Text = "00000000";
             this.txtDumpMemAddrLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -433,7 +433,7 @@
             this.txtDumpMemAddrStart.Location = new System.Drawing.Point(571, 21);
             this.txtDumpMemAddrStart.MaxLength = 8;
             this.txtDumpMemAddrStart.Name = "txtDumpMemAddrStart";
-            this.txtDumpMemAddrStart.Size = new System.Drawing.Size(72, 23);
+            this.txtDumpMemAddrStart.Size = new System.Drawing.Size(80, 23);
             this.txtDumpMemAddrStart.TabIndex = 7;
             this.txtDumpMemAddrStart.Text = "00000000";
             this.txtDumpMemAddrStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;

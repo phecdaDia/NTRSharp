@@ -49,14 +49,12 @@ namespace NewNtrClient
 			this.FormClosing += (s, e_) =>
 			{
 				this.NtrClient?.Disconnect(false);
-				//ConfigFile.SaveToXml("Config.xml", Config);
 			};
 
-			//Config = ConfigFile.LoadFromXml("Config.xml") ?? new ConfigFile();
+            string resPath = Application.StartupPath + @"\restricted.txt"; //Windows app emulators need paths to file. (ex: Wine)
+            if (!File.Exists(resPath)) File.WriteAllLines(resPath, new String[] { "DUMMY_PROCESS" });
 
-			if (!File.Exists("restricted.txt")) File.WriteAllLines("restricted.txt", new String[] { "DUMMY_PROCESS" });
-
-			this.RestrictedProcesses = File.ReadAllLines("restricted.txt");
+			this.RestrictedProcesses = File.ReadAllLines(resPath);
             
 #if DEBUG
             AllocConsole();
@@ -251,7 +249,7 @@ namespace NewNtrClient
 			txtIpAddress.Enabled = false;
             portBox.Enabled = false;
 
-			NtrClient?.SetServer(txtIpAddress.Text, Convert.ToInt32(portBox.Text)); //Luma3DS debug uses different ports
+			NtrClient?.SetServer(txtIpAddress.Text, Convert.ToInt32(portBox.Text)); //allow different ports
 
 			ReadMemoryType = ReadMemoryType.None;
 			ReadNtrStringType = ReadNtrStringType.None;
@@ -260,20 +258,20 @@ namespace NewNtrClient
             //Config.port = portBox.Text;
 
             new Task(() =>
-			{
-				int Retry = 0;
-				LogLine("Trying to connect to {0}:{1}", txtIpAddress.Text,portBox.Text);
+            {
+                int Retry = 0;
+                LogLine("Trying to connect to {0}", txtIpAddress.Text);
                 do
-				{
-					NtrClient.ConnectToServer();
-                    if (!NtrClient.IsConnected)
-                    {
-                        LogLine("Unable to connect. :(");
-                        EnableConnect();
-                    }
+                {
+                    NtrClient.ConnectToServer();
                 } while (!NtrClient.IsConnected && ++Retry < 3);
+                if (!NtrClient.IsConnected)
+                {
+                    LogLine("Unable to connect. :(");
+                    EnableConnect();
+                }
             }).Start();
-		}
+        }
 
         private void getProcs()
         {
